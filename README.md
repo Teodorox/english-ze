@@ -35,11 +35,11 @@ Cada perfil é uma cópia separada do app, com banco, senha e progresso próprio
    # opcional: como a IA deve tratar essa pessoa na correção
    ENGLISH_ZE_LEARNER=Professora de inglês, escreve em inglês fluente...
    ```
-2. Rode (precisa do `cloudflared`: `winget install Cloudflare.cloudflared`):
+2. Dê dois cliques em **Compartilhar com professora.bat** (para outro perfil, rode o comando abaixo). Precisa do `cloudflared`: `winget install Cloudflare.cloudflared`.
    ```powershell
    .venv\Scripts\python run.py --profile NOME --tunnel --port 8100
    ```
-3. Mande o link `https://....trycloudflare.com` que aparece no terminal e a senha.
+3. O link `https://....trycloudflare.com` aparece na janela e já fica copiado: é só colar na mensagem junto com a senha.
 
 O link funciona de qualquer lugar e tem HTTPS válido (sem aviso, microfone liberado), mas só enquanto o terminal estiver aberto, e **muda a cada vez** que você reinicia. A correção por IA usa a sua chave da API: defina um limite de gasto no console da Anthropic.
 

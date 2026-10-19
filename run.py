@@ -140,14 +140,29 @@ def start_tunnel(port: int) -> subprocess.Popen:
     )
 
     def watch() -> None:
+        announced = False
         for line in proc.stderr:
             match = re.search(r"https://[a-z0-9-]+\.trycloudflare\.com", line)
-            if match:
-                print(f"\n>>> Link público: {match.group(0)}\n")
+            if match and not announced:
+                announced = True
+                link = match.group(0)
+                copied = copy_to_clipboard(link)
+                print(f"\n>>> Link público: {link}")
+                print(">>> (copiado, é só colar na mensagem)\n" if copied else "")
 
     threading.Thread(target=watch, daemon=True).start()
     atexit.register(proc.terminate)
     return proc
+
+
+def copy_to_clipboard(text: str) -> bool:
+    if os.name != "nt":
+        return False
+    try:
+        subprocess.run(["clip"], input=text, text=True, check=True, timeout=5)
+        return True
+    except (OSError, subprocess.SubprocessError):
+        return False
 
 
 if __name__ == "__main__":
