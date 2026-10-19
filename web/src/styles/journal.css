@@ -15,21 +15,28 @@
 .journal-entry-actions { display: flex; gap: 2px; margin: -8px -8px -8px 0; }
 .journal-entry-actions button.icon { width: 40px; min-height: 40px; background: transparent; }
 .journal-text { margin: 0; white-space: pre-wrap; }
+.journal-label { margin: 0 0 -6px; font-size: 13px; font-weight: 600; color: var(--secondary); }
+/* Depois da correção, o texto original fica em segundo plano: o destaque vai pra versão certa. */
+.journal-text.original { color: var(--secondary); }
 
-/* ---------- Correção ---------- */
+/* ---------- Correção: cada parte com cor própria ---------- */
 
-.correction {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding-top: 12px;
-  border-top: 1px solid var(--separator);
-}
-.correction section { display: flex; flex-direction: column; gap: 4px; }
-.correction h4 { margin: 0; font-size: 13px; font-weight: 600; color: var(--secondary); }
+.correction { display: flex; flex-direction: column; gap: 12px; }
+.correction h4 { margin: 0; font-size: 13px; font-weight: 700; }
 .correction p { margin: 0; }
-.correction-natural { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
-.correction-natural button.icon { flex: none; width: 36px; min-height: 36px; }
+
+.correction-block { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 16px; }
+.correction-block p { font-size: 18px; line-height: 1.4; color: var(--label); }
+.correction-block.corrected { background: var(--green-fill); }
+.correction-block.corrected h4 { color: var(--green-text); }
+.correction-block.natural { background: var(--tint-fill); }
+.correction-block.natural h4 { color: var(--tint-text); }
+.correction-block.natural p { font-weight: 600; }
+.correction-block-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.correction-block-head button.icon { flex: none; width: 36px; min-height: 36px; background: var(--segment); }
+
+.correction-mistakes { display: flex; flex-direction: column; gap: 6px; padding: 0 2px; }
+.correction-mistakes h4 { color: var(--secondary); }
 
 .mistakes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .mistakes li { display: flex; flex-direction: column; gap: 2px; }

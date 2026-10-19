@@ -1,6 +1,6 @@
 import type { Card } from "../api/types";
-import { speak } from "../lib/tts";
-import { HeadphonesIcon, PlayIcon, SlowIcon } from "./icons";
+import { HeadphonesIcon } from "./icons";
+import { SpeakButton } from "./SpeakButton";
 
 export type StudyMode = "read" | "listen";
 
@@ -35,14 +35,8 @@ export function Flashcard({ card, mode, revealed, onReveal }: FlashcardProps) {
       )}
 
       <div className="flashcard-audio">
-        <button type="button" className="tinted small" onClick={() => speak(card.front)}>
-          <PlayIcon width={15} height={15} />
-          Ouvir
-        </button>
-        <button type="button" className="small" onClick={() => speak(card.front, 0.7)}>
-          <SlowIcon width={15} height={15} />
-          Devagar
-        </button>
+        <SpeakButton text={card.front} label="Ouvir" className="tinted small" />
+        <SpeakButton text={card.front} label="Devagar" rate={0.7} slow className="small" />
       </div>
 
       {revealed ? (

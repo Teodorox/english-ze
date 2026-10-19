@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { listCards } from "../api/cards";
 import type { Card } from "../api/types";
-import { MicIcon, PlayIcon, ShuffleIcon, SlowIcon } from "../components/icons";
+import { MicIcon, ShuffleIcon } from "../components/icons";
+import { SpeakButton } from "../components/SpeakButton";
 import { LargeTitle } from "../components/LargeTitle";
 import { LivePill } from "../components/LivePill";
 import { ScoreRing } from "../components/ScoreRing";
 import { scorePronunciation, verdict, type WordResult } from "../lib/pronunciation";
-import { listenOnce, recognitionSupported } from "../lib/speechRecognition";
-import { speak } from "../lib/tts";
+import { isIOS, isStandalone, listenOnce, recognitionSupported } from "../lib/speechRecognition";
 import { useRecorder } from "../lib/useRecorder";
 import type { Tab } from "../tabs";
 
@@ -25,6 +25,7 @@ export function Speak({ tab }: { tab: Tab }) {
   const [checkError, setCheckError] = useState("");
   const recorder = useRecorder();
   const canRecognize = recognitionSupported();
+  const iosHomeScreen = isIOS() && isStandalone();
 
   const shuffle = useCallback(async () => {
     try {
@@ -82,14 +83,8 @@ export function Speak({ tab }: { tab: Tab }) {
           />
         </label>
         <div className="button-row">
-          <button type="button" className="tinted small" onClick={() => speak(phrase)} disabled={!phrase.trim()}>
-            <PlayIcon width={15} height={15} />
-            Ouvir
-          </button>
-          <button type="button" className="small" onClick={() => speak(phrase, 0.7)} disabled={!phrase.trim()}>
-            <SlowIcon width={15} height={15} />
-            Devagar
-          </button>
+          <SpeakButton text={phrase} label="Ouvir" className="tinted small" />
+          <SpeakButton text={phrase} label="Devagar" rate={0.7} slow className="small" />
           <button type="button" className="small" onClick={shuffle}>
             <ShuffleIcon width={15} height={15} />
             Sortear
@@ -138,6 +133,12 @@ export function Speak({ tab }: { tab: Tab }) {
         </button>
         {!canRecognize && (
           <p className="footnote">Seu navegador não tem reconhecimento de voz. Use o Chrome, o Edge ou o Safari.</p>
+        )}
+        {canRecognize && iosHomeScreen && (
+          <p className="footnote">
+            Aberto pelo ícone da Tela de Início, o iPhone pode bloquear a checagem de pronúncia. Se der erro, abra o app
+            pelo Safari.
+          </p>
         )}
         {checkError && (
           <p className="banner-error" role="alert">

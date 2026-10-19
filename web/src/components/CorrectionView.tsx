@@ -1,28 +1,25 @@
 import type { Correction } from "../api/types";
-import { speak } from "../lib/tts";
-import { PlayIcon } from "./icons";
+import { SpeakButton } from "./SpeakButton";
 
-/** Correção da IA: texto corrigido, versão natural, erros e incentivo. */
+/** Correção da IA em blocos com cores próprias: corrigido (verde), natural (roxo) e erros. */
 export function CorrectionView({ correction }: { correction: Correction }) {
   const { corrected, natural, mistakes, encouragement } = correction;
   return (
     <div className="correction">
-      <section>
-        <h4>Corrigido</h4>
+      <section className="correction-block corrected">
+        <h4>✓ Corrigido</h4>
         <p lang="en">{corrected}</p>
       </section>
 
-      <section>
-        <h4>Como um americano diria</h4>
-        <div className="correction-natural">
-          <p lang="en">{natural}</p>
-          <button type="button" className="icon tinted" aria-label="Ouvir a versão natural" onClick={() => speak(natural)}>
-            <PlayIcon width={16} height={16} />
-          </button>
+      <section className="correction-block natural">
+        <div className="correction-block-head">
+          <h4>Como um americano diria</h4>
+          <SpeakButton text={natural} label="Ouvir a versão natural" iconOnly className="icon tinted" iconSize={16} />
         </div>
+        <p lang="en">{natural}</p>
       </section>
 
-      <section>
+      <section className="correction-mistakes">
         <h4>{mistakes.length ? `Erros (${mistakes.length})` : "Erros"}</h4>
         {mistakes.length ? (
           <ul className="mistakes">

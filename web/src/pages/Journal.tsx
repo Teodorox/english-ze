@@ -161,7 +161,8 @@ export function Journal({ tab }: { tab: Tab }) {
                 </button>
               </div>
             </header>
-            <p className="journal-text" lang="en">
+            {entry.correction && <h4 className="journal-label">Você escreveu</h4>}
+            <p className={`journal-text${entry.correction ? " original" : ""}`} lang="en">
               {entry.text}
             </p>
             {status && (

@@ -124,3 +124,7 @@ label.field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Botão de áudio tocando: ■ com um leve pulso */
+button.speaking { color: var(--tint-text); }
+button.speaking svg { animation: pulse 1.2s infinite; }

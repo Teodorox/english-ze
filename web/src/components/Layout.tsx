@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { NavLink, Outlet } from "react-router";
 import { TABS } from "../tabs";
-import { LogoutIcon } from "./icons";
+import { GearIcon } from "./icons";
+import { SettingsSheet } from "./SettingsSheet";
 
 interface LayoutProps {
   showLogout: boolean;
@@ -8,15 +10,15 @@ interface LayoutProps {
 }
 
 export function Layout({ showLogout, onLogout }: LayoutProps) {
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
   return (
     <>
       <main className="page">
         <div className="toolbar-top">
-          {showLogout && (
-            <button className="icon glass" aria-label="Sair" title="Sair" onClick={onLogout}>
-              <LogoutIcon />
-            </button>
-          )}
+          <button className="icon glass" aria-label="Ajustes" title="Ajustes" onClick={() => setSettingsOpen(true)}>
+            <GearIcon />
+          </button>
         </div>
         <Outlet />
       </main>
@@ -28,6 +30,15 @@ export function Layout({ showLogout, onLogout }: LayoutProps) {
           </NavLink>
         ))}
       </nav>
+      <SettingsSheet
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        showLogout={showLogout}
+        onLogout={() => {
+          setSettingsOpen(false);
+          onLogout();
+        }}
+      />
     </>
   );
 }

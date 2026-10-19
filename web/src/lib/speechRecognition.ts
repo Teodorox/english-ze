@@ -28,12 +28,35 @@ function getConstructor(): RecognitionConstructor | undefined {
 
 export const recognitionSupported = () => Boolean(getConstructor());
 
+export function isIOS(): boolean {
+  if (typeof navigator === "undefined") return false;
+  // iPad recente se apresenta como Mac, mas tem tela de toque.
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+}
+
+/** Aberto pelo ícone da Tela de Início (modo app), e não pelo navegador. */
+export function isStandalone(): boolean {
+  if (typeof window === "undefined") return false;
+  const nav = navigator as Navigator & { standalone?: boolean };
+  return nav.standalone === true || window.matchMedia?.("(display-mode: standalone)").matches;
+}
+
+const IOS_BLOCKED =
+  "O iPhone bloqueou o reconhecimento de voz. Confira: Ditado ligado (Ajustes › Geral › Teclado › Ativar Ditado), " +
+  "microfone liberado pro site (Ajustes › Apps › Safari › Microfone) e o app aberto pelo Safari, não pelo ícone da Tela de Início.";
+
 const ERRORS: Record<string, string> = {
   "no-speech": "Não ouvi nada. Fale logo depois de tocar no botão.",
-  "not-allowed": "Permissão do microfone negada. Libere nos ajustes do navegador.",
+  "not-allowed": "Permissão do microfone negada. Libere o microfone nos ajustes do navegador.",
+  "service-not-allowed": "O navegador bloqueou o reconhecimento de voz. Libere o microfone nas permissões do site.",
   "audio-capture": "Nenhum microfone encontrado.",
   network: "O reconhecimento de voz precisa de internet.",
 };
+
+function errorMessage(code: string): string {
+  if (isIOS() && (code === "service-not-allowed" || code === "not-allowed")) return IOS_BLOCKED;
+  return ERRORS[code] ?? `Não deu pra ouvir (${code}). Tenta de novo.`;
+}
 
 /** Escuta uma frase em inglês e devolve o que foi entendido. */
 export function listenOnce(lang = "en-US"): Promise<string> {
@@ -52,7 +75,7 @@ export function listenOnce(lang = "en-US"): Promise<string> {
     };
     recognition.onerror = (event) => {
       settled = true;
-      reject(new Error(ERRORS[event.error] ?? `Não deu pra ouvir (${event.error}). Tenta de novo.`));
+      reject(new Error(errorMessage(event.error)));
     };
     recognition.onend = () => {
       if (!settled) reject(new Error(ERRORS["no-speech"]));

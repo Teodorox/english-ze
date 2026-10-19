@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { deleteCard, listCards, listCategories } from "../api/cards";
 import { ApiError } from "../api/client";
 import type { Card } from "../api/types";
-import { PlayIcon, SearchIcon, TrashIcon } from "../components/icons";
+import { SearchIcon, TrashIcon } from "../components/icons";
 import { LargeTitle } from "../components/LargeTitle";
+import { SpeakButton } from "../components/SpeakButton";
 import { dueLabel } from "../lib/dueLabel";
-import { speak } from "../lib/tts";
 import type { Tab } from "../tabs";
 
 const SEARCH_DELAY_MS = 250;
@@ -123,9 +123,7 @@ export function Vault({ tab }: { tab: Tab }) {
                 </div>
               ) : (
                 <div className="vault-actions">
-                  <button type="button" className="icon" aria-label={`Ouvir "${card.front}"`} onClick={() => speak(card.front)}>
-                    <PlayIcon width={18} height={18} />
-                  </button>
+                  <SpeakButton text={card.front} label={`Ouvir "${card.front}"`} iconOnly className="icon" iconSize={18} />
                   <button
                     type="button"
                     className="icon trash"

@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createCard, listCategories } from "../api/cards";
 import { ApiError } from "../api/client";
-import { PlayIcon } from "../components/icons";
 import { LargeTitle } from "../components/LargeTitle";
 import { LivePill } from "../components/LivePill";
+import { SpeakButton } from "../components/SpeakButton";
 import { parseBulkLines, toBulkLine } from "../lib/bulkImport";
-import { speak } from "../lib/tts";
 import type { Tab } from "../tabs";
 
 type Notice = { kind: "success" | "error"; text: string } | null;
@@ -16,7 +15,7 @@ export function Mine({ tab }: { tab: Tab }) {
   const [front, setFront] = useState("");
   const [back, setBack] = useState("");
   const [note, setNote] = useState("");
-  const [category, setCategory] = useState("streamer");
+  const [category, setCategory] = useState("geral");
   const [source, setSource] = useState("");
   const [categories, setCategories] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
@@ -41,7 +40,7 @@ export function Mine({ tab }: { tab: Tab }) {
       setBack("");
       setNote("");
       if (category && !categories.includes(category)) setCategories([...categories, category].sort());
-      frontRef.current?.focus(); // fonte e categoria ficam: normalmente você minera várias da mesma live
+      frontRef.current?.focus(); // fonte e categoria ficam: normalmente você anota várias frases da mesma fonte
     } catch (err) {
       setNotice({ kind: "error", text: errorMessage(err) });
     } finally {
@@ -77,7 +76,8 @@ export function Mine({ tab }: { tab: Tab }) {
     <section>
       <LargeTitle tab={tab} accessory={<LivePill />} />
       <p className="footnote intro">
-        Ouviu algo na live e não entendeu? Pausa, anota aqui e vira card. Seus cards entram antes do deck inicial.
+        Ouviu ou leu uma frase em inglês que não entendeu? Numa série, música, vídeo, jogo ou conversa: anote aqui e ela
+        vira card. Seus cards entram na fila antes do deck inicial.
       </p>
 
       <form onSubmit={handleSave}>
@@ -91,7 +91,7 @@ export function Mine({ tab }: { tab: Tab }) {
               maxLength={500}
               lang="en"
               spellCheck={false}
-              placeholder="Bro is NOT him"
+              placeholder="I'm on my way"
               value={front}
               onChange={(e) => setFront(e.target.value)}
             />
@@ -101,20 +101,17 @@ export function Mine({ tab }: { tab: Tab }) {
             <input
               required
               maxLength={500}
-              placeholder="O cara não é tudo isso"
+              placeholder="Tô a caminho"
               value={back}
               onChange={(e) => setBack(e.target.value)}
             />
           </label>
           <label className="form-row">
             <span>Nota (opcional)</span>
-            <input maxLength={1000} placeholder='"him" = o cara, o melhor' value={note} onChange={(e) => setNote(e.target.value)} />
+            <input maxLength={1000} placeholder='"on my way" = a caminho' value={note} onChange={(e) => setNote(e.target.value)} />
           </label>
         </div>
-        <button type="button" className="tinted small hear-button" onClick={() => speak(front)} disabled={!front.trim()}>
-          <PlayIcon width={15} height={15} />
-          Ouvir a frase
-        </button>
+        <SpeakButton text={front} label="Ouvir a frase" className="tinted small hear-button" />
 
         <h2 className="section-header">Detalhes</h2>
         <div className="glass form-list">
@@ -139,7 +136,7 @@ export function Mine({ tab }: { tab: Tab }) {
           )}
           <label className="form-row">
             <span>Fonte (opcional)</span>
-            <input maxLength={200} placeholder="Live do Speed, 12/10" value={source} onChange={(e) => setSource(e.target.value)} />
+            <input maxLength={200} placeholder="Ex.: série, música, podcast, aula" value={source} onChange={(e) => setSource(e.target.value)} />
           </label>
         </div>
 
@@ -163,7 +160,7 @@ export function Mine({ tab }: { tab: Tab }) {
           lang="en"
           spellCheck={false}
           aria-label="Frases para importar"
-          placeholder={"That's tuff | Isso é muito bom | tuff = tough, elogio\nBet | Fechou"}
+          placeholder={"Break a leg | Boa sorte | expressão comum\nI'm on my way | Tô a caminho"}
           value={bulkText}
           onChange={(e) => setBulkText(e.target.value)}
         />

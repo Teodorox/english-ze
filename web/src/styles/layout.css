@@ -41,3 +41,30 @@
 }
 .tabbar a svg { width: 22px; height: 22px; }
 .tabbar a.active { background: var(--tint-fill); color: var(--tint-text); }
+
+/* ---------- Folha de ajustes (sobe de baixo, estilo iOS) ---------- */
+
+dialog.sheet {
+  position: fixed;
+  inset: auto 0 0 0;
+  width: min(560px, 100%);
+  max-height: 85vh;
+  margin: 0 auto;
+  padding: 8px 20px max(24px, env(safe-area-inset-bottom));
+  border-radius: 28px 28px 0 0;
+  border-bottom: none;
+  background: var(--material-thick);
+  color: var(--label);
+  animation: sheet-up 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+dialog.sheet::backdrop { background: rgba(0, 0, 0, 0.35); }
+@keyframes sheet-up { from { transform: translateY(100%); } }
+
+.sheet-handle { width: 36px; height: 5px; margin: 0 auto 10px; border-radius: 3px; background: var(--fill); }
+.sheet-head { display: flex; align-items: center; justify-content: space-between; }
+.sheet-head h2 { margin: 0; font-size: 20px; font-weight: 700; }
+.sheet .section-header { margin-left: 4px; }
+.sheet .segmented { margin-bottom: 6px; }
+.sheet-hint { margin: 0 4px 20px; }
+
+button.destructive-text { width: 100%; background: var(--fill); color: #ff3b30; }
