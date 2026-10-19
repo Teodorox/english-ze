@@ -9,6 +9,7 @@ import { Login } from "./pages/Login";
 import { Mine } from "./pages/Mine";
 import { Speak } from "./pages/Speak";
 import { Study } from "./pages/Study";
+import { Vault } from "./pages/Vault";
 import { TABS, type Tab } from "./tabs";
 
 // Telas já migradas; as outras mostram "Em migração".
@@ -16,6 +17,7 @@ const PAGES: Record<string, ComponentType<{ tab: Tab }>> = {
   "/estudar": Study,
   "/falar": Speak,
   "/minerar": Mine,
+  "/vault": Vault,
 };
 
 type AuthState =

@@ -1,0 +1,53 @@
+.vault-count { margin-bottom: 6px; }
+
+/* ---------- Barra de busca (iOS) ---------- */
+
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: 12px;
+  background: var(--fill);
+  color: var(--secondary);
+}
+.search-field input { padding: 10px 0; background: transparent; border-radius: 0; }
+.search-field input:focus-visible { outline: none; }
+.search-field:focus-within { outline: 3px solid var(--tint-glow); outline-offset: 1px; }
+
+/* Cápsulas de filtro que deslizam pro lado no celular */
+.filter-chips {
+  display: flex;
+  gap: 6px;
+  margin: 12px -18px 16px;
+  padding: 0 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.filter-chips::-webkit-scrollbar { display: none; }
+.filter-chips .chip { flex: none; }
+
+/* ---------- Lista ---------- */
+
+.vault-list { list-style: none; margin: 0; padding: 0; border-radius: var(--radius-card); overflow: hidden; }
+.vault-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 16px;
+  padding: 12px 10px 12px 0;
+  border-bottom: 1px solid var(--separator);
+}
+.vault-row:last-child { border-bottom: none; }
+.vault-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.vault-front { font-size: 17px; font-weight: 600; }
+.vault-back { font-size: 15px; color: var(--secondary); }
+.vault-text .footnote { font-size: 12px; }
+
+.vault-actions, .vault-confirm { display: flex; gap: 4px; flex: none; }
+.vault-actions button.icon { width: 40px; min-height: 40px; background: transparent; }
+.vault-actions button.trash { color: var(--red-text); }
+button.destructive { background: #ff3b30; color: #ffffff; }
+
+.vault-empty { text-align: center; }
+.vault-empty p { margin: 4px 0 0; }

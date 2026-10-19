@@ -8,6 +8,7 @@ import "./styles/login.css";
 import "./styles/study.css";
 import "./styles/speak.css";
 import "./styles/mine.css";
+import "./styles/vault.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

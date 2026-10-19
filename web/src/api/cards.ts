@@ -12,3 +12,5 @@ export function listCards(filters: { q?: string; category?: string } = {}) {
 export const listCategories = () => api<string[]>("/api/categories");
 
 export const createCard = (card: NewCard) => api<Card>("/api/cards", { method: "POST", body: card });
+
+export const deleteCard = (id: number) => api<void>(`/api/cards/${id}`, { method: "DELETE" });
