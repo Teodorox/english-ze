@@ -7,3 +7,5 @@ data/certs/
 data/secret.key
 .pytest_cache/
 data/profiles/
+web/node_modules/
+web/dist/

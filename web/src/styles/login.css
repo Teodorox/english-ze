@@ -1,0 +1,16 @@
+.login-wrap {
+  max-width: 380px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 22px;
+}
+.login-brand { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.login-brand .logo { font-size: 2.8rem; }
+.login-wrap .card { display: flex; flex-direction: column; gap: 6px; }
+.login-wrap .tag { align-self: flex-start; margin-bottom: 14px; }
+.login-wrap button { width: 100%; padding: 12px; }
+.login-status { min-height: 1.5em; margin: 6px 0 0; }

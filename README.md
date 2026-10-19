@@ -73,6 +73,19 @@ O deck inicial (`data/seed_cards.json`) tem cerca de 70 frases em 4 categorias: 
 .venv\Scripts\python -m pytest
 ```
 
+### Frontend em React (em migração)
+
+O frontend está sendo migrado de `static/` para `web/` (React + TypeScript + Vite). Enquanto a migração não termina, o app servido pelo Python continua sendo o de `static/`.
+
+```powershell
+.venv\Scripts\python run.py        # backend em http://127.0.0.1:8001
+cd web
+npm install                         # primeira vez
+npm run dev                         # React em http://localhost:5173 (as chamadas /api vão pro backend)
+npm test                            # testes do frontend (Vitest)
+npm run typecheck                   # checagem de tipos
+```
+
 - `app/srs.py`: algoritmo de repetição espaçada
 - `app/main.py`: API (FastAPI)
 - `app/auth.py`: login por senha (cookie assinado + limite de tentativas)

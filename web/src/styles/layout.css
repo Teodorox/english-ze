@@ -1,0 +1,88 @@
+/* ---------- Topo ---------- */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 24px;
+  padding: 12px 24px;
+  background: rgba(11, 11, 15, .88);
+  backdrop-filter: blur(8px);
+  border-bottom: 3px solid var(--gold);
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+
+.logo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.9rem;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.logo span {
+  color: var(--gold);
+  font-family: var(--font-marker);
+  text-transform: none;
+  display: inline-block;
+  transform: rotate(-6deg);
+  margin-left: 4px;
+}
+
+.live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: 6px;
+  background: var(--red);
+  color: #fff;
+  font-weight: 700;
+  font-size: .75rem;
+  letter-spacing: .08em;
+}
+.live-pill .dot { width: 8px; height: 8px; border-radius: 50%; background: #fff; animation: pulse 1.4s infinite; }
+@keyframes pulse { 50% { opacity: .25; } }
+
+.logout { padding: 4px 10px; font-size: .8rem; border-width: 1px; }
+
+/* ---------- Abas ---------- */
+
+.tabs { display: flex; flex-wrap: wrap; gap: 2px; }
+.tabs a {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 12px;
+  border-bottom: 3px solid transparent;
+  color: var(--muted);
+  font-size: .9rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color .15s, border-color .15s;
+}
+.tabs .icon { font-size: 1rem; line-height: 1; filter: grayscale(.6); transition: filter .15s; }
+.tabs a:hover { color: var(--text); border-bottom-color: var(--border); }
+.tabs a.active { color: var(--text); border-bottom-color: var(--gold); }
+.tabs a.active .icon,
+.tabs a:hover .icon { filter: none; }
+
+/* ---------- Página ---------- */
+
+.page { max-width: 780px; margin: 0 auto; padding: 28px 16px 80px; animation: drop-in .25s ease-out; }
+@keyframes drop-in { from { opacity: 0; transform: translateY(6px); } }
+
+@media (max-width: 560px) {
+  .topbar { padding: 10px 16px; }
+  .tabs { width: 100%; justify-content: space-between; }
+  .tabs a { padding: 8px 6px; }
+  .tabs .label { display: none; } /* no celular, só os ícones */
+  .tabs .icon { font-size: 1.3rem; }
+}
