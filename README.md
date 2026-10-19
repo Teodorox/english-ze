@@ -25,6 +25,24 @@ Defina a senha (seção acima) e, com o celular no mesmo Wi-Fi, rode `.venv\Scri
 
 O `--lan` serve em HTTPS com um certificado autoassinado (gerado em `data/certs/`), que é o que libera o microfone no celular. Por isso o navegador avisa que a conexão "não é particular": toque em **Avançado → Continuar**. Sem senha definida, o `--lan` se recusa a iniciar.
 
+### Compartilhar com outra pessoa (perfil + túnel)
+
+Cada perfil é uma cópia separada do app, com banco, senha e progresso próprios, em `data/profiles/NOME/` (ignorado pelo git).
+
+1. Crie `data/profiles/NOME/.env` com pelo menos:
+   ```
+   ENGLISH_ZE_PASSWORD=senha-dessa-pessoa
+   # opcional: como a IA deve tratar essa pessoa na correção
+   ENGLISH_ZE_LEARNER=Professora de inglês, escreve em inglês fluente...
+   ```
+2. Rode (precisa do `cloudflared`: `winget install Cloudflare.cloudflared`):
+   ```powershell
+   .venv\Scripts\python run.py --profile NOME --tunnel --port 8100
+   ```
+3. Mande o link `https://....trycloudflare.com` que aparece no terminal e a senha.
+
+O link funciona de qualquer lugar e tem HTTPS válido (sem aviso, microfone liberado), mas só enquanto o terminal estiver aberto, e **muda a cada vez** que você reinicia. A correção por IA usa a sua chave da API: defina um limite de gasto no console da Anthropic.
+
 ### IA (opcional)
 
 Copie `.env.example` para `.env` e coloque sua `ANTHROPIC_API_KEY`. O Diário passa a corrigir seus textos automaticamente, e cada erro vira um card na categoria **meus-erros**. O modelo padrão é o `claude-haiku-5-5`, que custa centavos por mês; dá pra trocar com `ENGLISH_ZE_MODEL`. Sem chave, tudo funciona normalmente e o Diário usa o botão 📋 de copiar prompt.

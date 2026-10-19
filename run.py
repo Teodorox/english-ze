@@ -3,12 +3,19 @@
     python run.py              # só neste computador, porta 8001 (ou a próxima livre)
     python run.py --port 9000  # escolhe a porta
     python run.py --lan        # libera pro celular no mesmo Wi-Fi, com HTTPS (microfone funciona)
+    python run.py --tunnel     # publica na internet com um link https (Cloudflare Tunnel)
+    python run.py --profile professora --tunnel --port 8100
+                               # cópia separada (dados em data/profiles/professora/) publicada
 """
 
 import argparse
+import atexit
 import ipaddress
 import os
+import re
+import shutil
 import socket
+import subprocess
 import threading
 import webbrowser
 from datetime import datetime, timedelta, timezone
@@ -21,6 +28,7 @@ from app.config import load_env_file
 LOCALHOST = "127.0.0.1"
 DEFAULT_PORT = 8001
 CERT_DIR = Path(__file__).resolve().parent / "data" / "certs"
+PROFILES_DIR = Path(__file__).resolve().parent / "data" / "profiles"
 CERT_VERSION = 2  # mude ao alterar o formato do certificado, pra gerar um novo
 CERT_DAYS = 365   # o iOS recusa certificados com mais de 825 dias
 
@@ -106,16 +114,69 @@ def self_signed_cert(ip: str) -> tuple[Path, Path]:
     return cert_file, key_file
 
 
+def cloudflared_path() -> str:
+    found = shutil.which("cloudflared")
+    if found:
+        return found
+    # o winget instala aqui, mas o PATH só atualiza em terminais novos
+    for candidate in (
+        Path(os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")) / "cloudflared" / "cloudflared.exe",
+        Path(os.environ.get("ProgramFiles", r"C:\Program Files")) / "cloudflared" / "cloudflared.exe",
+    ):
+        if candidate.exists():
+            return str(candidate)
+    raise SystemExit("cloudflared não encontrado. Instale com: winget install Cloudflare.cloudflared")
+
+
+def start_tunnel(port: int) -> subprocess.Popen:
+    """Abre um Cloudflare quick tunnel (link https público, sem conta) e mostra o endereço."""
+    proc = subprocess.Popen(
+        [cloudflared_path(), "tunnel", "--no-autoupdate", "--url", f"http://{LOCALHOST}:{port}"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+
+    def watch() -> None:
+        for line in proc.stderr:
+            match = re.search(r"https://[a-z0-9-]+\.trycloudflare\.com", line)
+            if match:
+                print(f"\n>>> Link público: {match.group(0)}\n")
+
+    threading.Thread(target=watch, daemon=True).start()
+    atexit.register(proc.terminate)
+    return proc
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=DEFAULT_PORT)
     parser.add_argument("--lan", action="store_true", help="libera pro celular no mesmo Wi-Fi (HTTPS)")
+    parser.add_argument("--tunnel", action="store_true", help="publica na internet com um link https (Cloudflare)")
+    parser.add_argument("--profile", help="roda uma cópia separada, com dados em data/profiles/NOME/")
     args = parser.parse_args()
 
+    if args.lan and args.tunnel:
+        raise SystemExit("Use --lan ou --tunnel, não os dois.")
+
+    if args.profile:
+        if not re.fullmatch(r"[a-z0-9_-]+", args.profile):
+            raise SystemExit("Nome de perfil: só letras minúsculas, números, - e _.")
+        profile_dir = PROFILES_DIR / args.profile
+        if not (profile_dir / ".env").exists():
+            raise SystemExit(
+                f"Crie {profile_dir / '.env'} com pelo menos ENGLISH_ZE_PASSWORD=... (veja o README)."
+            )
+        os.environ["ENGLISH_DB"] = str(profile_dir / "english.db")
+        load_env_file(profile_dir / ".env")  # vem antes: os valores do perfil têm prioridade
+        print(f"Perfil: {args.profile}")
+
     load_env_file()
-    if args.lan and not os.environ.get("ENGLISH_ZE_PASSWORD"):
+    if (args.lan or args.tunnel) and not os.environ.get("ENGLISH_ZE_PASSWORD"):
         raise SystemExit(
-            "Pra liberar na rede, defina uma senha: adicione ENGLISH_ZE_PASSWORD=... no arquivo .env"
+            "Pra liberar fora deste computador, defina uma senha: ENGLISH_ZE_PASSWORD=... no .env"
         )
 
     port = find_free_port(args.port)
@@ -124,6 +185,13 @@ if __name__ == "__main__":
 
     options: dict = {"host": LOCALHOST, "port": port}
     url = f"http://{LOCALHOST}:{port}"
+
+    if args.tunnel:
+        # O Cloudflare cuida do HTTPS; os headers de proxy informam o IP real de quem
+        # acessa (pro limite de tentativas de login) e que a conexão original é https.
+        options.update(proxy_headers=True, forwarded_allow_ips=LOCALHOST)
+        start_tunnel(port)
+        print("Abrindo o túnel... o link público aparece abaixo em alguns segundos.")
 
     if args.lan:
         ip = lan_ip()
@@ -134,5 +202,6 @@ if __name__ == "__main__":
         print("O navegador vai avisar que a conexão não é privada: toque em 'Avançado' > 'Continuar'.")
 
     print(f"English Ze rodando em {url}")
-    threading.Timer(1.5, lambda: webbrowser.open(url)).start()
+    if not args.tunnel:  # no túnel, o app é pra outra pessoa: não abre o navegador aqui
+        threading.Timer(1.5, lambda: webbrowser.open(url)).start()
     uvicorn.run("app.main:app", **options)

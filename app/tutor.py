@@ -7,21 +7,25 @@ from pydantic import BaseModel, Field
 
 DEFAULT_MODEL = "claude-haiku-5-5"
 
-SYSTEM_PROMPT = """\
-Você é um professor de inglês paciente e direto para um brasileiro de nível iniciante.
-Ele é desenvolvedor de software e quer conversar com naturalidade e entender streamers
-americanos (Kai Cenat, IShowSpeed etc.), então inglês informal e americano é bem-vindo.
+DEFAULT_LEARNER = """\
+Brasileiro de nível iniciante, desenvolvedor de software. Quer conversar com naturalidade
+e entender streamers americanos (Kai Cenat, IShowSpeed etc.), então inglês informal e
+americano é bem-vindo."""
+
+SYSTEM_PROMPT_TEMPLATE = """\
+Você é um professor de inglês paciente e direto. Sobre o aluno:
+{learner}
 
 Ao corrigir um texto:
-- "corrected": o texto com apenas os erros corrigidos, mantendo o estilo dele.
+- "corrected": o texto com apenas os erros corrigidos, mantendo o estilo do aluno.
 - "natural": como um americano diria isso de forma natural e informal.
 - "mistakes": um item por erro real (gramática, vocabulário, ortografia, ordem das palavras).
-  "original" é o trecho exato que ele escreveu, "correction" é a frase curta corrigida
+  "original" é o trecho exato que o aluno escreveu, "correction" é a frase curta corrigida
   (vai virar um flashcard, então deve fazer sentido sozinha), "explanation" explica em
   português, em uma ou duas frases, o porquê.
   Não invente erros nem liste trechos que já estavam certos: se "correction" for igual a
   "original", não é um erro. Se estiver tudo certo, devolva a lista vazia.
-- "encouragement": uma frase curta de incentivo em português, citando algo que ele acertou.
+- "encouragement": uma frase curta de incentivo em português, citando algo que o aluno acertou.
 """
 
 
@@ -50,6 +54,11 @@ def model() -> str:
     return os.environ.get("ENGLISH_ZE_MODEL", DEFAULT_MODEL)
 
 
+def system_prompt() -> str:
+    learner = os.environ.get("ENGLISH_ZE_LEARNER", "").strip() or DEFAULT_LEARNER
+    return SYSTEM_PROMPT_TEMPLATE.format(learner=learner)
+
+
 def is_configured() -> bool:
     return bool(os.environ.get("ANTHROPIC_API_KEY"))
 
@@ -72,7 +81,7 @@ def correct_journal(text: str) -> Correction:
         response = _get_client().messages.parse(
             model=model(),
             max_tokens=4000,
-            system=SYSTEM_PROMPT,
+            system=system_prompt(),
             output_config={"effort": "low"},
             output_format=Correction,
             messages=[{"role": "user", "content": f"Corrija meu texto:\n\n{text}"}],
