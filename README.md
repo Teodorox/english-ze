@@ -25,7 +25,7 @@ Defina `ENGLISH_ZE_PASSWORD` no `.env` e o app passa a pedir senha (o navegador 
 
 ### No celular
 
-Defina a senha (seção acima) e, com o celular no mesmo Wi-Fi, rode `.venv\Scripts\python run.py --lan` e abra no celular o endereço `https://...` que aparece no terminal. Na primeira vez, o Windows pergunta se libera o Python no firewall: permita só em **redes privadas**.
+Defina a senha (seção acima) e, com o celular no mesmo Wi-Fi, dê dois cliques em **English Ze (celular).bat** (ou rode `.venv\Scripts\python run.py --lan`) e abra no celular o endereço `https://...` que aparece no terminal. Na primeira vez, o Windows pergunta se libera o Python no firewall: permita só em **redes privadas**.
 
 O `--lan` serve em HTTPS com um certificado autoassinado (gerado em `data/certs/`), que é o que libera o microfone no celular. Por isso o navegador avisa que a conexão "não é particular": toque em **Mostrar detalhes → visitar este site**. Sem senha definida, o `--lan` se recusa a iniciar.
 
