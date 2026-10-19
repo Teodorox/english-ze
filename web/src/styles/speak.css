@@ -44,3 +44,7 @@ button.record-button {
 .word-chip { padding: 4px 10px; border-radius: 999px; font-size: 15px; font-weight: 600; }
 .word-chip.ok { background: var(--green-fill); color: var(--green-text); }
 .word-chip.miss { background: var(--red-fill); color: var(--red-text); text-decoration: line-through; }
+
+/* Gravando pra checar: botão vermelho pulsando, como o Gravador do iPhone */
+button.primary.recording-check { background: #ff3b30; }
+button.primary.recording-check svg { animation: pulse 1.2s infinite; }

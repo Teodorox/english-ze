@@ -1,0 +1,2 @@
+# Opcional: transcrição de voz no servidor (checar pronúncia no iPhone). ~150 MB de modelo na primeira vez.
+faster-whisper>=1.2

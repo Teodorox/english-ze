@@ -19,12 +19,14 @@ interface RequestOptions {
 }
 
 export async function api<T>(path: string, { method = "GET", body, signal }: RequestOptions = {}): Promise<T> {
+  // Áudio (Blob) vai como está; o resto vai como JSON.
+  const isBlob = typeof Blob !== "undefined" && body instanceof Blob;
   const hasBody = body !== undefined;
   const res = await fetch(path, {
     method,
     signal,
-    headers: hasBody ? { "Content-Type": "application/json" } : undefined,
-    body: hasBody ? JSON.stringify(body) : undefined,
+    headers: hasBody ? { "Content-Type": isBlob ? body.type || "application/octet-stream" : "application/json" } : undefined,
+    body: isBlob ? body : hasBody ? JSON.stringify(body) : undefined,
   });
 
   if (res.status === 401 && path !== "/api/login") {

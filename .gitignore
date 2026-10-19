@@ -9,3 +9,4 @@ data/secret.key
 data/profiles/
 web/node_modules/
 web/dist/
+data/models/

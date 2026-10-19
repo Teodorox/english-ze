@@ -1,7 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { listCards } from "../api/cards";
+import { ApiError } from "../api/client";
+import { getTranscribeStatus, transcribeAudio } from "../api/transcribe";
 import type { Card } from "../api/types";
-import { MicIcon, ShuffleIcon } from "../components/icons";
+import { MicIcon, ShuffleIcon, StopIcon } from "../components/icons";
 import { SpeakButton } from "../components/SpeakButton";
 import { LargeTitle } from "../components/LargeTitle";
 import { LivePill } from "../components/LivePill";
@@ -21,34 +23,88 @@ export function Speak({ tab }: { tab: Tab }) {
   const [phrase, setPhrase] = useState("");
   const [cards, setCards] = useState<Card[] | null>(null);
   const [listening, setListening] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState<CheckResult | null>(null);
   const [checkError, setCheckError] = useState("");
-  const recorder = useRecorder();
+  const [serverTranscribe, setServerTranscribe] = useState(false);
+  const recorder = useRecorder(); // "Grave e compare"
+  const checker = useRecorder(); // "Cheque a pronúncia" (quando o servidor transcreve)
+  const awaitingCheck = useRef(false);
   const canRecognize = recognitionSupported();
+  const canCheck = serverTranscribe || canRecognize;
   const iosHomeScreen = isIOS() && isStandalone();
 
-  const shuffle = useCallback(async () => {
-    try {
-      const list = cards ?? (await listCards());
-      setCards(list);
-      if (!list.length) return;
-      const others = list.length > 1 ? list.filter((c) => c.front !== phrase) : list;
-      setPhrase(others[Math.floor(Math.random() * others.length)].front);
-      setResult(null);
-      setCheckError("");
-    } catch {
-      // sem cards: o usuário digita a própria frase
-    }
-  }, [cards, phrase]);
+  // Com o Whisper no servidor, a checagem funciona em qualquer navegador (inclusive no iPhone).
+  useEffect(() => {
+    getTranscribeStatus()
+      .then((s) => setServerTranscribe(s.available))
+      .catch(() => setServerTranscribe(false));
+  }, []);
+
+  // Terminou a gravação da checagem: manda pro servidor.
+  useEffect(() => {
+    if (!awaitingCheck.current || !checker.blob) return;
+    awaitingCheck.current = false;
+    const target = phrase.trim();
+    setAnalyzing(true);
+    transcribeAudio(checker.blob)
+      .then(({ text }) => {
+        if (text) setResult({ heard: text, ...scorePronunciation(target, text) });
+        else setCheckError("Não ouvi nada. Fale a frase logo depois de tocar no botão.");
+      })
+      .catch((err) => setCheckError(err instanceof ApiError ? err.message : "Sem conexão com o servidor."))
+      .finally(() => setAnalyzing(false));
+  }, [checker.blob, phrase]);
+
+  useEffect(() => {
+    if (checker.error) setCheckError(checker.error);
+  }, [checker.error]);
+
+  // onlyIfEmpty: o sorteio automático da abertura não sobrescreve o que a pessoa já digitou
+  // (a lista de cards chega um instante depois de a tela abrir).
+  const shuffle = useCallback(
+    async (onlyIfEmpty = false) => {
+      try {
+        const list = cards ?? (await listCards());
+        setCards(list);
+        if (!list.length) return;
+        const others = list.length > 1 ? list.filter((c) => c.front !== phrase) : list;
+        const picked = others[Math.floor(Math.random() * others.length)].front;
+        if (onlyIfEmpty) {
+          setPhrase((current) => current || picked);
+          return;
+        }
+        setPhrase(picked);
+        setResult(null);
+        setCheckError("");
+      } catch {
+        // sem cards: o usuário digita a própria frase
+      }
+    },
+    [cards, phrase],
+  );
 
   // Ao abrir a tela, já sorteia uma frase (só na primeira vez, por isso a lista vazia).
   useEffect(() => {
-    if (!phrase) shuffle();
+    if (!phrase) shuffle(true);
   }, []);
 
   async function checkPronunciation() {
     const target = phrase.trim();
-    if (!target || listening) return;
+    if (!target || listening || analyzing) return;
+
+    if (serverTranscribe) {
+      if (checker.recording) {
+        checker.stop(); // o efeito acima envia a gravação
+        return;
+      }
+      setCheckError("");
+      setResult(null);
+      awaitingCheck.current = true;
+      await checker.start();
+      return;
+    }
+
     setListening(true);
     setCheckError("");
     setResult(null);
@@ -85,7 +141,7 @@ export function Speak({ tab }: { tab: Tab }) {
         <div className="button-row">
           <SpeakButton text={phrase} label="Ouvir" className="tinted small" />
           <SpeakButton text={phrase} label="Devagar" rate={0.7} slow className="small" />
-          <button type="button" className="small" onClick={shuffle}>
+          <button type="button" className="small" onClick={() => shuffle()}>
             <ShuffleIcon width={15} height={15} />
             Sortear
           </button>
@@ -124,17 +180,26 @@ export function Speak({ tab }: { tab: Tab }) {
       <div className="glass card speak-check">
         <button
           type="button"
-          className="primary"
+          className={checker.recording ? "primary recording-check" : "primary"}
           onClick={checkPronunciation}
-          disabled={!canRecognize || listening || !phrase.trim()}
+          disabled={!canCheck || listening || analyzing || !phrase.trim()}
         >
-          <MicIcon width={18} height={18} />
-          {listening ? "Ouvindo... fale agora" : "Checar pronúncia"}
+          {checker.recording ? <StopIcon width={18} height={18} /> : <MicIcon width={18} height={18} />}
+          {checker.recording
+            ? "Parar e checar"
+            : analyzing
+              ? "Analisando..."
+              : listening
+                ? "Ouvindo... fale agora"
+                : "Checar pronúncia"}
         </button>
-        {!canRecognize && (
+        {serverTranscribe && !result && !checkError && (
+          <p className="footnote">Toque, fale a frase e toque de novo pra analisar.</p>
+        )}
+        {!canCheck && (
           <p className="footnote">Seu navegador não tem reconhecimento de voz. Use o Chrome, o Edge ou o Safari.</p>
         )}
-        {canRecognize && iosHomeScreen && (
+        {!serverTranscribe && canRecognize && iosHomeScreen && (
           <p className="footnote">
             Aberto pelo ícone da Tela de Início, o iPhone pode bloquear a checagem de pronúncia. Se der erro, abra o app
             pelo Safari.

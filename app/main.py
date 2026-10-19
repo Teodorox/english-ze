@@ -4,10 +4,11 @@ from contextlib import asynccontextmanager
 from datetime import date, timedelta
 
 from fastapi import FastAPI, HTTPException, Query, Request, Response
+from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, field_validator
 
-from . import auth, db, srs, tutor, web
+from . import auth, db, srs, transcribe, tutor, web
 from .config import load_env_file
 from .progress import compute_streak
 
@@ -296,6 +297,25 @@ def stats():
         "due_tomorrow": totals["due_tomorrow"] or 0,
         "history": history,
     }
+
+
+# ---------- Transcrição (checar pronúncia) ----------
+
+@app.get("/api/transcribe/status")
+def transcribe_status():
+    return {"available": transcribe.available(), "model": transcribe.model_name()}
+
+
+@app.post("/api/transcribe")
+async def transcribe_audio(request: Request):
+    """Recebe a gravação (corpo cru, ex.: audio/webm ou audio/mp4) e devolve o texto entendido."""
+    audio = await request.body()
+    try:
+        # O Whisper é pesado: roda numa thread pra não travar o servidor.
+        text = await run_in_threadpool(transcribe.transcribe, audio)
+    except transcribe.TranscribeError as e:
+        raise HTTPException(e.status, str(e)) from None
+    return {"text": text}
 
 
 # ---------- App React (precisa ser a última rota) ----------

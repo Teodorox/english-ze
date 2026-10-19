@@ -47,6 +47,16 @@ Cada perfil é uma cópia separada do app, com banco, senha e progresso próprio
 
 O link funciona de qualquer lugar e tem HTTPS válido (sem aviso, microfone liberado), mas só enquanto a janela estiver aberta, e **muda a cada vez** que você reinicia. A correção por IA usa a sua chave da API: defina um limite de gasto no console da Anthropic.
 
+### Checar pronúncia no iPhone (opcional)
+
+O Safari do iPhone pode recusar o reconhecimento de voz do navegador. Com o Whisper instalado, o app grava a sua fala e transcreve no servidor, o que funciona em qualquer navegador e é mais preciso:
+
+```powershell
+.venv\Scripts\python -m pip install -r requirements-voice.txt
+```
+
+Na primeira checagem ele baixa o modelo `base.en` (~150 MB) para `data/models/`; depois cada frase leva menos de 1 segundo. Sem o Whisper, o app usa o reconhecimento de voz do navegador.
+
 ### IA (opcional)
 
 Copie `.env.example` para `.env` e coloque sua `ANTHROPIC_API_KEY`. O Diário passa a corrigir seus textos automaticamente, e cada erro vira um card na categoria **meus-erros**. O modelo padrão é o `claude-haiku-5-5`, que custa centavos por mês; dá pra trocar com `ENGLISH_ZE_MODEL`. Sem chave, tudo funciona e o Diário oferece o botão de copiar o prompt.

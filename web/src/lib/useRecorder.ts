@@ -11,6 +11,7 @@ function micError(err: unknown): string {
 export function useRecorder() {
   const [recording, setRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [blob, setBlob] = useState<Blob | null>(null);
   const [error, setError] = useState("");
   const recorderRef = useRef<MediaRecorder | null>(null);
 
@@ -41,7 +42,9 @@ export function useRecorder() {
       };
       recorder.onstop = () => {
         stream.getTracks().forEach((track) => track.stop());
-        setAudioUrl(URL.createObjectURL(new Blob(chunks, { type: recorder.mimeType })));
+        const recorded = new Blob(chunks, { type: recorder.mimeType });
+        setBlob(recorded);
+        setAudioUrl(URL.createObjectURL(recorded));
         setRecording(false);
       };
       recorder.start();
@@ -56,5 +59,5 @@ export function useRecorder() {
     if (recorderRef.current?.state === "recording") recorderRef.current.stop();
   }, []);
 
-  return { recording, audioUrl, error, start, stop };
+  return { recording, audioUrl, blob, error, start, stop };
 }
