@@ -10,6 +10,7 @@ import "./styles/speak.css";
 import "./styles/mine.css";
 import "./styles/vault.css";
 import "./styles/journal.css";
+import "./styles/stats.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

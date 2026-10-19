@@ -9,6 +9,7 @@ import { Journal } from "./pages/Journal";
 import { Login } from "./pages/Login";
 import { Mine } from "./pages/Mine";
 import { Speak } from "./pages/Speak";
+import { StatsPage } from "./pages/StatsPage";
 import { Study } from "./pages/Study";
 import { Vault } from "./pages/Vault";
 import { TABS, type Tab } from "./tabs";
@@ -20,6 +21,7 @@ const PAGES: Record<string, ComponentType<{ tab: Tab }>> = {
   "/minerar": Mine,
   "/vault": Vault,
   "/diario": Journal,
+  "/stats": StatsPage,
 };
 
 type AuthState =
