@@ -6,12 +6,14 @@ import { Backdrop } from "./components/Backdrop";
 import { Layout } from "./components/Layout";
 import { ComingSoon } from "./pages/ComingSoon";
 import { Login } from "./pages/Login";
+import { Speak } from "./pages/Speak";
 import { Study } from "./pages/Study";
 import { TABS, type Tab } from "./tabs";
 
 // Telas já migradas; as outras mostram "Em migração".
 const PAGES: Record<string, ComponentType<{ tab: Tab }>> = {
   "/estudar": Study,
+  "/falar": Speak,
 };
 
 type AuthState =

@@ -97,6 +97,7 @@ input, select, textarea {
   border: none;
   border-radius: var(--radius-control);
   background: var(--fill);
+  color: var(--label); /* não herda o cinza do rótulo */
   font-size: 17px;
 }
 input::placeholder, textarea::placeholder { color: var(--secondary); }

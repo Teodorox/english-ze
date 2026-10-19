@@ -1,0 +1,46 @@
+/* Cabeçalho de seção agrupada, como no app Ajustes. */
+.section-header { margin: 22px 16px 8px; font-size: 13px; font-weight: 400; color: var(--secondary); }
+
+.button-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.speak-phrase { display: flex; flex-direction: column; gap: 12px; }
+.speak-phrase textarea { font-size: 22px; font-weight: 600; line-height: 1.3; resize: none; }
+
+/* ---------- Botão de gravar (estilo app Gravador) ---------- */
+
+.record-row { display: flex; align-items: center; gap: 16px; }
+.record-row strong { font-weight: 600; }
+
+button.record-button {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border-radius: 50%;
+  border: 4px solid var(--fill);
+  background: transparent;
+}
+.record-shape {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ff3b30;
+  transition: width 0.2s ease, height 0.2s ease, border-radius 0.2s ease;
+}
+.record-button.recording .record-shape { width: 24px; height: 24px; border-radius: 6px; animation: pulse 1.4s infinite; }
+
+.recording-player { width: 100%; margin-top: 14px; }
+.speak-record .banner-error, .speak-check .banner-error { margin: 14px 0 0; }
+
+/* ---------- Resultado da pronúncia ---------- */
+
+.speak-check { display: flex; flex-direction: column; gap: 4px; }
+.speak-check > button { width: 100%; }
+.speak-result { margin-top: 16px; display: flex; flex-direction: column; gap: 14px; }
+.speak-score { display: flex; align-items: center; gap: 16px; }
+.speak-verdict { font-size: 20px; font-weight: 700; }
+
+.word-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.word-chip { padding: 4px 10px; border-radius: 999px; font-size: 15px; font-weight: 600; }
+.word-chip.ok { background: var(--green-fill); color: var(--green-text); }
+.word-chip.miss { background: var(--red-fill); color: var(--red-text); text-decoration: line-through; }

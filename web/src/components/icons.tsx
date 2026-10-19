@@ -92,6 +92,16 @@ export const HeadphonesIcon = (p: IconProps) => (
   </Icon>
 );
 
+export const ShuffleIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M16 3h5v5" />
+    <path d="M4 20 21 3" />
+    <path d="M21 16v5h-5" />
+    <path d="m15 15 6 6" />
+    <path d="M4 4l5 5" />
+  </Icon>
+);
+
 export const LogoutIcon = (p: IconProps) => (
   <Icon {...p}>
     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
