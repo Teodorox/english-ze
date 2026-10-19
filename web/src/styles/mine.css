@@ -1,0 +1,53 @@
+.intro { margin: -8px 0 4px; }
+
+/* ---------- Lista de formulário agrupada (estilo Ajustes / Contatos) ---------- */
+
+.form-list { border-radius: var(--radius-card); overflow: hidden; }
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: 16px;
+  padding: 10px 16px 10px 0;
+  border-bottom: 1px solid var(--separator);
+  font-size: 13px;
+  color: var(--secondary);
+}
+.form-row:last-child { border-bottom: none; }
+.form-row input {
+  padding: 2px 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: 17px;
+}
+.form-row input:focus-visible { outline: none; }
+.form-row:focus-within > span { color: var(--tint-text); }
+
+.category-picks { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+button.chip {
+  min-height: 32px;
+  padding: 4px 12px;
+  background: var(--fill);
+  color: var(--label);
+  font-size: 14px;
+  font-weight: 500;
+}
+button.chip.selected { background: var(--tint); color: #ffffff; }
+
+.hear-button { margin-top: 10px; }
+button.full { width: 100%; margin-top: 16px; }
+
+/* ---------- Avisos ---------- */
+
+.banner-success {
+  margin: 16px 0 0;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: var(--green-fill);
+  color: var(--green-text);
+  font-size: 15px;
+}
+form .banner-error, .bulk-import .banner-error { margin: 16px 0 0; }
+
+.bulk-import textarea { font-size: 15px; }
+.bulk-import code { padding: 1px 6px; border-radius: 6px; background: var(--fill); }

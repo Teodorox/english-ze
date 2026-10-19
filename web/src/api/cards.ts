@@ -1,5 +1,5 @@
 import { api } from "./client";
-import type { Card } from "./types";
+import type { Card, NewCard } from "./types";
 
 export function listCards(filters: { q?: string; category?: string } = {}) {
   const params = new URLSearchParams();
@@ -8,3 +8,7 @@ export function listCards(filters: { q?: string; category?: string } = {}) {
   const query = params.toString();
   return api<Card[]>(`/api/cards${query ? `?${query}` : ""}`);
 }
+
+export const listCategories = () => api<string[]>("/api/categories");
+
+export const createCard = (card: NewCard) => api<Card>("/api/cards", { method: "POST", body: card });

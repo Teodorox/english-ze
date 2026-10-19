@@ -6,6 +6,7 @@ import { Backdrop } from "./components/Backdrop";
 import { Layout } from "./components/Layout";
 import { ComingSoon } from "./pages/ComingSoon";
 import { Login } from "./pages/Login";
+import { Mine } from "./pages/Mine";
 import { Speak } from "./pages/Speak";
 import { Study } from "./pages/Study";
 import { TABS, type Tab } from "./tabs";
@@ -14,6 +15,7 @@ import { TABS, type Tab } from "./tabs";
 const PAGES: Record<string, ComponentType<{ tab: Tab }>> = {
   "/estudar": Study,
   "/falar": Speak,
+  "/minerar": Mine,
 };
 
 type AuthState =

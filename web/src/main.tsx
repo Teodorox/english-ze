@@ -7,6 +7,7 @@ import "./styles/layout.css";
 import "./styles/login.css";
 import "./styles/study.css";
 import "./styles/speak.css";
+import "./styles/mine.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
