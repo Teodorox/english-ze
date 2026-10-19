@@ -70,6 +70,28 @@ export const ChartIcon = (p: IconProps) => (
   </Icon>
 );
 
+export const PlayIcon = (p: IconProps) => (
+  <Icon fill="currentColor" stroke="none" {...p}>
+    <path d="M8 5v14l11-7z" />
+  </Icon>
+);
+
+export const SlowIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <circle cx="12" cy="13" r="8" />
+    <path d="M12 9v4l2 2" />
+    <path d="M9 2h6" />
+  </Icon>
+);
+
+export const HeadphonesIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+    <path d="M21 19a2 2 0 0 1-2 2h-1v-6h3z" />
+    <path d="M3 19a2 2 0 0 0 2 2h1v-6H3z" />
+  </Icon>
+);
+
 export const LogoutIcon = (p: IconProps) => (
   <Icon {...p}>
     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />

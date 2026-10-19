@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ComponentType } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { getAuthStatus, logout } from "./api/auth";
 import { ApiError, AUTH_REQUIRED_EVENT } from "./api/client";
@@ -6,7 +6,13 @@ import { Backdrop } from "./components/Backdrop";
 import { Layout } from "./components/Layout";
 import { ComingSoon } from "./pages/ComingSoon";
 import { Login } from "./pages/Login";
-import { TABS } from "./tabs";
+import { Study } from "./pages/Study";
+import { TABS, type Tab } from "./tabs";
+
+// Telas já migradas; as outras mostram "Em migração".
+const PAGES: Record<string, ComponentType<{ tab: Tab }>> = {
+  "/estudar": Study,
+};
 
 type AuthState =
   | { status: "checking" }
@@ -75,9 +81,10 @@ function Screen({ auth, onLogin, onLogout }: ScreenProps) {
           <Routes>
             <Route element={<Layout showLogout={auth.loginEnabled} onLogout={onLogout} />}>
               <Route index element={<Navigate to={TABS[0].path} replace />} />
-              {TABS.map((tab) => (
-                <Route key={tab.path} path={tab.path} element={<ComingSoon tab={tab} />} />
-              ))}
+              {TABS.map((tab) => {
+                const Page = PAGES[tab.path] ?? ComingSoon;
+                return <Route key={tab.path} path={tab.path} element={<Page tab={tab} />} />;
+              })}
               <Route path="*" element={<Navigate to={TABS[0].path} replace />} />
             </Route>
           </Routes>

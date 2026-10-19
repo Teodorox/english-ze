@@ -1,4 +1,5 @@
 import { LargeTitle } from "../components/LargeTitle";
+import { LivePill } from "../components/LivePill";
 import type { Tab } from "../tabs";
 
 /** Tela provisória enquanto a aba não foi migrada para React (etapa 2.2). */
@@ -6,15 +7,7 @@ export function ComingSoon({ tab }: { tab: Tab }) {
   const { Icon } = tab;
   return (
     <section>
-      <LargeTitle
-        tab={tab}
-        accessory={
-          <span className="pill live-pill" style={{ marginBottom: 6 }}>
-            <span className="dot" />
-            LIVE
-          </span>
-        }
-      />
+      <LargeTitle tab={tab} accessory={<LivePill />} />
       <div className="glass card">
         <p style={{ display: "flex", alignItems: "center", gap: 8, margin: "0 0 6px", fontWeight: 600 }}>
           <Icon style={{ color: "var(--tint-text)" }} />
