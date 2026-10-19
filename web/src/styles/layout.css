@@ -69,3 +69,16 @@ dialog.sheet::backdrop { background: rgba(0, 0, 0, 0.35); }
 .sheet-hint { margin: 0 4px 20px; }
 
 button.destructive-text { width: 100%; background: var(--fill); color: #ff3b30; }
+
+/* Faixa de vidro atrás do relógio/bateria do iPhone: o conteúdo rola por baixo, desfocado.
+   Em telas sem essa área (computador), a altura é zero e nada aparece. */
+.status-bar-blur {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 15;
+  height: env(safe-area-inset-top);
+  background: var(--material-thick);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+  pointer-events: none;
+}

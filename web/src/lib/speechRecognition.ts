@@ -42,8 +42,7 @@ export function isStandalone(): boolean {
 }
 
 const IOS_BLOCKED =
-  "O iPhone bloqueou o reconhecimento de voz. Confira: Ditado ligado (Ajustes › Geral › Teclado › Ativar Ditado), " +
-  "microfone liberado pro site (Ajustes › Apps › Safari › Microfone) e o app aberto pelo Safari, não pelo ícone da Tela de Início.";
+  "O Safari deste iPhone não liberou o reconhecimento de voz. A gravação continua funcionando: grave e compare com o áudio original.";
 
 const ERRORS: Record<string, string> = {
   "no-speech": "Não ouvi nada. Fale logo depois de tocar no botão.",

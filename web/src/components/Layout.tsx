@@ -14,6 +14,7 @@ export function Layout({ showLogout, onLogout }: LayoutProps) {
 
   return (
     <>
+      <div className="status-bar-blur" aria-hidden="true" />
       <main className="page">
         <div className="toolbar-top">
           <button className="icon glass" aria-label="Ajustes" title="Ajustes" onClick={() => setSettingsOpen(true)}>
