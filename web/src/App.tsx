@@ -4,7 +4,6 @@ import { getAuthStatus, logout } from "./api/auth";
 import { ApiError, AUTH_REQUIRED_EVENT } from "./api/client";
 import { Backdrop } from "./components/Backdrop";
 import { Layout } from "./components/Layout";
-import { ComingSoon } from "./pages/ComingSoon";
 import { Journal } from "./pages/Journal";
 import { Login } from "./pages/Login";
 import { Mine } from "./pages/Mine";
@@ -14,7 +13,7 @@ import { Study } from "./pages/Study";
 import { Vault } from "./pages/Vault";
 import { TABS, type Tab } from "./tabs";
 
-// Telas já migradas; as outras mostram "Em migração".
+// Uma tela por aba.
 const PAGES: Record<string, ComponentType<{ tab: Tab }>> = {
   "/estudar": Study,
   "/falar": Speak,
@@ -92,8 +91,8 @@ function Screen({ auth, onLogin, onLogout }: ScreenProps) {
             <Route element={<Layout showLogout={auth.loginEnabled} onLogout={onLogout} />}>
               <Route index element={<Navigate to={TABS[0].path} replace />} />
               {TABS.map((tab) => {
-                const Page = PAGES[tab.path] ?? ComingSoon;
-                return <Route key={tab.path} path={tab.path} element={<Page tab={tab} />} />;
+                const Page = PAGES[tab.path];
+                return Page && <Route key={tab.path} path={tab.path} element={<Page tab={tab} />} />;
               })}
               <Route path="*" element={<Navigate to={TABS[0].path} replace />} />
             </Route>

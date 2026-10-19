@@ -2,20 +2,17 @@ import json
 import sqlite3
 from contextlib import asynccontextmanager
 from datetime import date, timedelta
-from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query, Request, Response
-from fastapi.responses import JSONResponse, RedirectResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, field_validator
 
-from . import auth, db, srs, tutor
+from . import auth, db, srs, tutor, web
 from .config import load_env_file
 from .progress import compute_streak
 
-STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
 MISTAKES_CATEGORY = "meus-erros"
-PUBLIC_PATHS = {"/login.html", "/style.css", "/api/login"}
+PUBLIC_API_PATHS = {"/api/login"}
 
 load_env_file()
 login_limiter = auth.LoginLimiter()
@@ -32,13 +29,13 @@ app = FastAPI(title="English Ze", lifespan=lifespan)
 
 @app.middleware("http")
 async def require_login(request: Request, call_next):
+    """Protege os dados (a API). As telas do app são públicas: sem login, o React mostra o login."""
     path = request.url.path
-    token = request.cookies.get(auth.COOKIE_NAME, "")
-    if not auth.enabled() or path in PUBLIC_PATHS or auth.valid_token(token):
+    if not path.startswith("/api/") or path in PUBLIC_API_PATHS or not auth.enabled():
         return await call_next(request)
-    if path.startswith("/api/"):
-        return JSONResponse({"detail": "Faça login"}, status_code=401)
-    return RedirectResponse("/login.html")
+    if auth.valid_token(request.cookies.get(auth.COOKIE_NAME, "")):
+        return await call_next(request)
+    return JSONResponse({"detail": "Faça login"}, status_code=401)
 
 
 class CardIn(BaseModel):
@@ -301,4 +298,8 @@ def stats():
     }
 
 
-app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="static")
+# ---------- App React (precisa ser a última rota) ----------
+
+@app.get("/{path:path}", include_in_schema=False)
+def frontend(path: str):
+    return web.serve(path)

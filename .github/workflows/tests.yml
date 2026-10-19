@@ -13,7 +13,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  pytest:
+  backend:
+    name: Backend (Python)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -33,3 +34,31 @@ jobs:
       # Os testes usam uma chave falsa (tests/conftest.py): nunca chamam a API de verdade.
       - name: Rodar testes
         run: pytest -q
+
+  frontend:
+    name: Frontend (React)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Checar tipos
+        run: npm run typecheck
+
+      - name: Rodar testes
+        run: npm test
+
+      - name: Gerar o app
+        run: npm run build

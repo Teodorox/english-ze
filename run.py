@@ -27,10 +27,35 @@ from app.config import load_env_file
 
 LOCALHOST = "127.0.0.1"
 DEFAULT_PORT = 8001
-CERT_DIR = Path(__file__).resolve().parent / "data" / "certs"
-PROFILES_DIR = Path(__file__).resolve().parent / "data" / "profiles"
+ROOT = Path(__file__).resolve().parent
+CERT_DIR = ROOT / "data" / "certs"
+PROFILES_DIR = ROOT / "data" / "profiles"
+WEB_DIR = ROOT / "web"
 CERT_VERSION = 2  # mude ao alterar o formato do certificado, pra gerar um novo
 CERT_DAYS = 365   # o iOS recusa certificados com mais de 825 dias
+
+
+def frontend_is_stale() -> bool:
+    """True se o app React nunca foi gerado ou se o código mudou depois da última geração."""
+    built = WEB_DIR / "dist" / "index.html"
+    if not built.exists():
+        return True
+    built_at = built.stat().st_mtime
+    sources = [WEB_DIR / "index.html", WEB_DIR / "package.json", *(WEB_DIR / "src").rglob("*"), *(WEB_DIR / "public").rglob("*")]
+    return any(p.is_file() and p.stat().st_mtime > built_at for p in sources)
+
+
+def ensure_frontend_built() -> None:
+    """Gera o app React (npm run build) quando precisa. Requer o Node.js instalado."""
+    if not frontend_is_stale():
+        return
+    npm = shutil.which("npm")
+    if not npm:
+        raise SystemExit("O app precisa ser gerado, mas o Node.js não foi encontrado. Instale em https://nodejs.org")
+    print("Gerando o app (só na primeira vez ou quando o código muda)...")
+    if not (WEB_DIR / "node_modules").exists():
+        subprocess.run([npm, "ci"], cwd=WEB_DIR, check=True)
+    subprocess.run([npm, "run", "build"], cwd=WEB_DIR, check=True)
 
 
 def is_free(port: int) -> bool:
@@ -193,6 +218,8 @@ if __name__ == "__main__":
         raise SystemExit(
             "Pra liberar fora deste computador, defina uma senha: ENGLISH_ZE_PASSWORD=... no .env"
         )
+
+    ensure_frontend_built()
 
     port = find_free_port(args.port)
     if port != args.port:

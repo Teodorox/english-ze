@@ -19,13 +19,13 @@ def client(tmp_path, monkeypatch):
         yield c
 
 
-def test_blocks_without_login(client):
-    assert client.get("/api/stats").status_code == 401
-    res = client.get("/", follow_redirects=False)
-    assert res.status_code in (302, 307)
-    assert res.headers["location"] == "/login.html"
-    assert client.get("/login.html").status_code == 200
-    assert client.get("/style.css").status_code == 200
+def test_blocks_data_without_login(client):
+    # Os dados ficam protegidos...
+    for path in ("/api/stats", "/api/cards", "/api/journal", "/api/auth/status"):
+        assert client.get(path).status_code == 401, path
+    # ...mas as telas do app abrem (sem login, o React mostra a tela de login).
+    assert client.get("/").status_code == 200
+    assert client.get("/vault").status_code == 200
 
 
 def test_login_and_logout(client):
