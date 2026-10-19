@@ -5,6 +5,7 @@ import { ApiError, AUTH_REQUIRED_EVENT } from "./api/client";
 import { Backdrop } from "./components/Backdrop";
 import { Layout } from "./components/Layout";
 import { ComingSoon } from "./pages/ComingSoon";
+import { Journal } from "./pages/Journal";
 import { Login } from "./pages/Login";
 import { Mine } from "./pages/Mine";
 import { Speak } from "./pages/Speak";
@@ -18,6 +19,7 @@ const PAGES: Record<string, ComponentType<{ tab: Tab }>> = {
   "/falar": Speak,
   "/minerar": Mine,
   "/vault": Vault,
+  "/diario": Journal,
 };
 
 type AuthState =

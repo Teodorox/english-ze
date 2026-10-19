@@ -119,6 +119,20 @@ export const TrashIcon = (p: IconProps) => (
   </Icon>
 );
 
+export const SparklesIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z" />
+    <path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z" />
+  </Icon>
+);
+
+export const CopyIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <rect x="8" y="8" width="13" height="13" rx="2" />
+    <path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" />
+  </Icon>
+);
+
 export const LogoutIcon = (p: IconProps) => (
   <Icon {...p}>
     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />

@@ -1,0 +1,39 @@
+.compose { display: flex; flex-direction: column; gap: 12px; }
+.compose textarea { font-size: 17px; line-height: 1.4; resize: vertical; }
+.compose .button-row button { flex: 1 1 160px; }
+
+/* Avisos curtos dentro dos cartões */
+.status { margin: 0; font-size: 15px; }
+.status.info { color: var(--secondary); }
+.status.success { color: var(--green-text); }
+.status.error { color: var(--red-text); }
+
+/* ---------- Entradas ---------- */
+
+.journal-entry { display: flex; flex-direction: column; gap: 10px; }
+.journal-entry-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.journal-entry-actions { display: flex; gap: 2px; margin: -8px -8px -8px 0; }
+.journal-entry-actions button.icon { width: 40px; min-height: 40px; background: transparent; }
+.journal-text { margin: 0; white-space: pre-wrap; }
+
+/* ---------- Correção ---------- */
+
+.correction {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--separator);
+}
+.correction section { display: flex; flex-direction: column; gap: 4px; }
+.correction h4 { margin: 0; font-size: 13px; font-weight: 600; color: var(--secondary); }
+.correction p { margin: 0; }
+.correction-natural { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.correction-natural button.icon { flex: none; width: 36px; min-height: 36px; }
+
+.mistakes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.mistakes li { display: flex; flex-direction: column; gap: 2px; }
+.mistakes s { color: var(--red-text); }
+.mistakes strong { color: var(--green-text); font-weight: 600; }
+
+.encouragement { font-weight: 600; color: var(--tint-text); }
