@@ -1,146 +1,124 @@
-/* Estética: live de streamer + hip-hop/streetwear de Nova York.
-   Fundo de "estúdio" escuro, tipografia de pôster (Anton), adesivos em marker
-   e sombras chapadas no estilo streetwear. */
-
-:root {
-  --bg: #0b0b0f;
-  --surface: #15151c;
-  --surface-2: #1e1d28;
-  --text: #f4f1ea;
-  --muted: #a09cab;
-  --border: #2e2d3a;
-  --ink: #000000;
-
-  --gold: #ffc93c;
-  --purple: #9b5cff;
-  --red: #ff3b4e;
-  --orange: #ff8a1f;
-  --green: #22e07a;
-  --blue: #3fa9ff;
-
-  --accent: var(--gold);
-  --accent-text: #111111;
-  --again: var(--red);
-  --hard: var(--orange);
-  --good: var(--green);
-  --easy: var(--gold);
-
-  --radius: 14px;
-  --shadow: 5px 5px 0 var(--ink);
-  --font-display: "Anton", Impact, "Arial Narrow", sans-serif;
-  --font-marker: "Permanent Marker", "Comic Sans MS", cursive;
-  --font-body: "Space Grotesk", system-ui, "Segoe UI", sans-serif;
-}
-
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
-  font-family: var(--font-body);
-  color: var(--text);
-  line-height: 1.5;
-  background-color: var(--bg);
-  /* luzes de estúdio roxa e dourada + granulado leve */
-  background-image:
-    radial-gradient(1200px 600px at 110% -10%, rgba(155, 92, 255, .22), transparent 60%),
-    radial-gradient(900px 500px at -10% 110%, rgba(255, 201, 60, .12), transparent 60%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
-  background-attachment: fixed;
   min-height: 100vh;
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.4;
+  color: var(--label);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
 
-::selection { background: var(--gold); color: #111; }
+::selection { background: var(--tint-fill); }
 
-/* ---------- Títulos ---------- */
+/* ---------- Fundo: luzes desfocadas atrás do vidro ---------- */
 
-.section-head { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 14px; margin-bottom: 12px; }
-h2, h3 { font-family: var(--font-display); font-weight: 400; text-transform: uppercase; letter-spacing: .02em; }
-h2 { margin: 0; font-size: 2.6rem; line-height: 1; text-shadow: 3px 3px 0 var(--purple); }
-h3 { font-size: 1.3rem; margin: 28px 0 10px; }
-.section-head .pt { color: var(--muted); font-weight: 500; font-size: 1.1rem; align-self: flex-end; margin-bottom: 4px; }
+.backdrop { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.backdrop .orb { position: absolute; border-radius: 50%; opacity: var(--orb-opacity); filter: blur(90px); }
+.backdrop .orb-1 { width: 420px; height: 420px; top: -120px; left: -140px; background: var(--orb-1); }
+.backdrop .orb-2 { width: 380px; height: 380px; top: 35%; right: -160px; background: var(--orb-2); }
+.backdrop .orb-3 { width: 360px; height: 360px; bottom: -140px; left: 10%; background: var(--orb-3); }
 
-.tag {
-  font-family: var(--font-marker);
-  font-size: 1rem;
-  padding: 2px 10px;
-  background: var(--gold);
-  color: #111;
-  transform: rotate(-3deg);
-  box-shadow: 3px 3px 0 var(--ink);
+/* ---------- Vidro (materials do iOS) ---------- */
+
+.glass {
+  background: var(--material);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--shadow);
 }
+
+.card {
+  border-radius: var(--radius-card);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+/* Sem suporte a desfoque, ou com "Reduzir transparência" ligado: superfície sólida. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: var(--material-solid); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .glass { background: var(--material-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .backdrop { display: none; }
+}
+
+/* ---------- Tipografia (escala do iOS) ---------- */
+
+.large-title { margin: 0; font-size: 34px; font-weight: 700; line-height: 1.1; letter-spacing: -0.01em; }
+.title-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+.subtitle { margin: 0 0 18px; font-size: 15px; color: var(--secondary); }
+.muted { color: var(--secondary); }
+.footnote { font-size: 13px; color: var(--secondary); }
 
 /* ---------- Controles ---------- */
 
 button, input, select, textarea { font: inherit; color: inherit; }
+a { color: var(--tint-text); }
 
 button {
-  padding: 9px 16px;
-  border-radius: 10px;
-  border: 2px solid var(--border);
-  background: var(--surface-2);
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 999px;
+  background: var(--fill);
+  color: var(--label);
+  font-size: 17px;
+  font-weight: 600;
   cursor: pointer;
-  transition: transform .08s, box-shadow .08s, border-color .15s;
+  transition: transform 0.12s ease, opacity 0.12s ease;
 }
-button:hover { border-color: var(--gold); }
-button:active { transform: translate(2px, 2px); }
-button.primary {
-  background: var(--gold);
-  color: #111;
-  border-color: var(--ink);
-  box-shadow: 4px 4px 0 var(--ink);
-  text-transform: uppercase;
-  letter-spacing: .03em;
+button:active { transform: scale(0.97); }
+button:disabled { opacity: 0.4; cursor: default; transform: none; }
+button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid var(--tint-glow); outline-offset: 2px; }
+
+button.primary { background: var(--tint); color: #ffffff; }
+button.tinted { background: var(--tint-fill); color: var(--tint-text); }
+
+button.icon {
+  width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  color: var(--tint-text);
 }
-button.primary:active { box-shadow: 1px 1px 0 var(--ink); }
-button:disabled { opacity: .5; cursor: default; transform: none; }
 
 input, select, textarea {
   width: 100%;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 2px solid var(--border);
-  background: var(--bg);
+  padding: 12px 14px;
+  border: none;
+  border-radius: var(--radius-control);
+  background: var(--fill);
+  font-size: 17px;
 }
-input:focus, select:focus, textarea:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(155, 92, 255, .25); }
+input::placeholder, textarea::placeholder { color: var(--secondary); }
 textarea { resize: vertical; }
 
-.card {
-  background: var(--surface);
-  border: 2px solid var(--ink);
-  border-radius: var(--radius);
-  padding: 22px;
-  margin-bottom: 18px;
-  box-shadow: var(--shadow), inset 0 0 0 1px var(--border);
+label.field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--secondary); }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
 }
+.pill.tint { background: var(--tint-fill); color: var(--tint-text); }
+.pill.gray { background: var(--fill); color: var(--secondary); }
 
-details summary { cursor: pointer; font-weight: 700; }
-
-.row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
-.row label { flex: 1 1 200px; }
-
-.form label { display: block; margin-bottom: 12px; font-size: .85rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
-.form label input { margin-top: 4px; color: var(--text); text-transform: none; letter-spacing: 0; font-weight: 400; }
-
-.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 16px; }
-.toolbar input[type="search"] { flex: 1 1 200px; width: auto; }
-.toolbar select { width: auto; }
-label.inline { display: flex; align-items: center; gap: 6px; font-size: .9rem; color: var(--muted); }
-label.inline input { width: 68px; }
-
-.segmented { display: inline-flex; border: 2px solid var(--ink); border-radius: 10px; overflow: hidden; box-shadow: 3px 3px 0 var(--ink); }
-.segmented button { border: none; border-radius: 0; background: var(--surface-2); }
-.segmented button:active { transform: none; }
-.segmented button.active { background: var(--purple); color: #fff; }
-
-.muted { color: var(--muted); }
-.hint { color: var(--muted); font-size: .85rem; text-align: center; }
-kbd { border: 1px solid var(--border); border-bottom-width: 3px; border-radius: 5px; padding: 0 6px; font-size: .8rem; background: var(--surface-2); }
-code { background: var(--surface-2); padding: 1px 6px; border-radius: 4px; }
-
-@media (max-width: 560px) {
-  h2 { font-size: 2rem; }
-}
+.live-pill { background: var(--pink); color: #ffffff; }
+.live-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: #ffffff; animation: pulse 1.4s infinite; }
+@keyframes pulse { 50% { opacity: 0.3; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }

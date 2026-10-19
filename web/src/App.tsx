@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { getAuthStatus, logout } from "./api/auth";
 import { ApiError, AUTH_REQUIRED_EVENT } from "./api/client";
+import { Backdrop } from "./components/Backdrop";
 import { Layout } from "./components/Layout";
 import { ComingSoon } from "./pages/ComingSoon";
 import { Login } from "./pages/Login";
@@ -37,17 +38,32 @@ export default function App() {
     setAuth({ status: "login" });
   }
 
+  return (
+    <>
+      <Backdrop />
+      <Screen auth={auth} onLogin={checkAuth} onLogout={handleLogout} />
+    </>
+  );
+}
+
+interface ScreenProps {
+  auth: AuthState;
+  onLogin: () => void;
+  onLogout: () => void;
+}
+
+function Screen({ auth, onLogin, onLogout }: ScreenProps) {
   switch (auth.status) {
     case "checking":
       return null;
     case "login":
-      return <Login onSuccess={checkAuth} />;
+      return <Login onSuccess={onLogin} />;
     case "offline":
       return (
         <main className="login-wrap">
-          <div className="card">
-            <p>⚠️ Não consegui falar com o servidor.</p>
-            <button className="primary" onClick={checkAuth}>
+          <div className="glass card" style={{ width: "100%" }}>
+            <p style={{ marginTop: 0 }}>Não consegui falar com o servidor.</p>
+            <button className="primary" onClick={onLogin}>
               Tentar de novo
             </button>
           </div>
@@ -57,7 +73,7 @@ export default function App() {
       return (
         <BrowserRouter>
           <Routes>
-            <Route element={<Layout showLogout={auth.loginEnabled} onLogout={handleLogout} />}>
+            <Route element={<Layout showLogout={auth.loginEnabled} onLogout={onLogout} />}>
               <Route index element={<Navigate to={TABS[0].path} replace />} />
               {TABS.map((tab) => (
                 <Route key={tab.path} path={tab.path} element={<ComingSoon tab={tab} />} />

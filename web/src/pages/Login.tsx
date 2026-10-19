@@ -1,7 +1,8 @@
 import { useState, type FormEvent } from "react";
 import { login } from "../api/auth";
 import { ApiError } from "../api/client";
-import { Brand } from "../components/Brand";
+
+const SLANG = ["no cap", "W", "let him cook", "bet"];
 
 export function Login({ onSuccess }: { onSuccess: () => void }) {
   const [password, setPassword] = useState("");
@@ -25,18 +26,29 @@ export function Login({ onSuccess }: { onSuccess: () => void }) {
 
   return (
     <main className="login-wrap">
-      <div className="login-brand">
-        <Brand />
+      <div className="app-icon" aria-hidden="true">
+        Ze
       </div>
-      <form className="card form" onSubmit={handleSubmit}>
-        <span className="tag">pull up, bro</span>
-        <label>
+      <h1 className="large-title">English Ze</h1>
+      <p className="subtitle" style={{ marginBottom: 0 }}>
+        Inglês de verdade, do jeito que a internet fala.
+      </p>
+      <div className="login-slang" aria-hidden="true">
+        {SLANG.map((word) => (
+          <span key={word} className="pill tint">
+            {word}
+          </span>
+        ))}
+      </div>
+      <form className="login-card glass card" onSubmit={handleSubmit}>
+        <label className="field">
           Senha
           <input
             type="password"
             required
             autoFocus
             autoComplete="current-password"
+            placeholder="Digite sua senha"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -44,8 +56,8 @@ export function Login({ onSuccess }: { onSuccess: () => void }) {
         <button type="submit" className="primary" disabled={sending}>
           {sending ? "Entrando..." : "Entrar"}
         </button>
-        <p className="login-status muted" role="alert">
-          {error && `⚠️ ${error}`}
+        <p className="login-error" role="alert">
+          {error}
         </p>
       </form>
     </main>

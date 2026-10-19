@@ -1,0 +1,82 @@
+/* Identidade "Party v3": padrão iOS (Liquid Glass) com o roxo e o rosa da Party.
+   Segue o tema do aparelho (claro/escuro). Cores do sistema seguem a paleta da Apple. */
+
+:root {
+  color-scheme: light dark;
+
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
+
+  --bg: #f2f2f7;
+  --orb-1: #b9a3ff;
+  --orb-2: #ff9fbf;
+  --orb-3: #a6b4ff;
+  --orb-opacity: 0.75;
+
+  --material: rgba(255, 255, 255, 0.62);
+  --material-thick: rgba(249, 249, 249, 0.8);
+  --material-solid: #ffffff; /* usado quando o vidro está desligado */
+  --glass-edge: rgba(255, 255, 255, 0.75);
+  --shadow: 0 8px 30px rgba(60, 40, 140, 0.12);
+
+  --fill: rgba(118, 118, 128, 0.12);
+  --segment: #ffffff;
+  --separator: rgba(60, 60, 67, 0.18);
+
+  --label: #000000;
+  --secondary: #6c6c70;
+
+  --tint: #6a3df0;
+  --tint-text: #5a2fe0;
+  --tint-fill: rgba(106, 61, 240, 0.12);
+  --tint-glow: rgba(106, 61, 240, 0.35);
+
+  --pink: #ff2d55;
+  --pink-text: #d30f45;
+  --red-fill: rgba(255, 59, 48, 0.14);
+  --red-text: #d70015;
+  --orange-fill: rgba(255, 149, 0, 0.16);
+  --orange-text: #c93400;
+  --green-fill: rgba(52, 199, 89, 0.16);
+  --green-text: #248a3d;
+
+  --radius-card: 26px;
+  --radius-control: 12px;
+  --blur: blur(30px) saturate(180%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --orb-1: #7c4dff;
+    --orb-2: #ff375f;
+    --orb-3: #5e5ce6;
+    --orb-opacity: 0.7;
+
+    --material: rgba(28, 28, 30, 0.62);
+    --material-thick: rgba(28, 28, 30, 0.78);
+    --material-solid: #1c1c1e;
+    --glass-edge: rgba(255, 255, 255, 0.12);
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+
+    --fill: rgba(118, 118, 128, 0.24);
+    --segment: #636366;
+    --separator: rgba(84, 84, 88, 0.6);
+
+    --label: #ffffff;
+    --secondary: rgba(235, 235, 245, 0.6);
+
+    --tint: #8b63ff;
+    --tint-text: #b9a0ff;
+    --tint-fill: rgba(139, 99, 255, 0.24);
+    --tint-glow: rgba(139, 99, 255, 0.5);
+
+    --pink: #ff375f;
+    --pink-text: #ff6482;
+    --red-fill: rgba(255, 69, 58, 0.22);
+    --red-text: #ff6961;
+    --orange-fill: rgba(255, 159, 10, 0.22);
+    --orange-text: #ffb340;
+    --green-fill: rgba(48, 209, 88, 0.22);
+    --green-text: #4ae176;
+  }
+}

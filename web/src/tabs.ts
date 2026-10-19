@@ -1,16 +1,19 @@
+import type { ComponentType, SVGProps } from "react";
+import { ArchiveIcon, BubbleIcon, ChartIcon, LockIcon, MicIcon, ScissorsIcon } from "./components/icons";
+
 export interface Tab {
   path: string;
-  icon: string;
-  label: string; // gíria em inglês, mostrada na aba
-  pt: string; // nome em português, no tooltip e no título da seção
-  tag: string; // adesivo ao lado do título
+  Icon: ComponentType<SVGProps<SVGSVGElement>>;
+  title: string; // gíria em inglês: título grande da tela
+  short: string; // nome curto na barra de abas
+  pt: string; // nome em português: subtítulo e nome acessível
 }
 
 export const TABS: Tab[] = [
-  { path: "/estudar", icon: "🔒", label: "Lock In", pt: "Estudar", tag: "bro is locked in" },
-  { path: "/falar", icon: "🎤", label: "Mic Check", pt: "Falar", tag: "run it back" },
-  { path: "/minerar", icon: "✂️", label: "Clip It", pt: "Minerar", tag: "chat, is this real?" },
-  { path: "/vault", icon: "🗂️", label: "The Vault", pt: "Cards", tag: "all the bars" },
-  { path: "/diario", icon: "💬", label: "Daily Yap", pt: "Diário", tag: "what are you yapping about?" },
-  { path: "/stats", icon: "📊", label: "Stats", pt: "Progresso", tag: "aura check" },
+  { path: "/estudar", Icon: LockIcon, title: "Lock In", short: "Lock In", pt: "Estudar" },
+  { path: "/falar", Icon: MicIcon, title: "Mic Check", short: "Mic", pt: "Falar" },
+  { path: "/minerar", Icon: ScissorsIcon, title: "Clip It", short: "Clip", pt: "Minerar frases" },
+  { path: "/vault", Icon: ArchiveIcon, title: "The Vault", short: "Vault", pt: "Seus cards" },
+  { path: "/diario", Icon: BubbleIcon, title: "Daily Yap", short: "Yap", pt: "Diário" },
+  { path: "/stats", Icon: ChartIcon, title: "Stats", short: "Stats", pt: "Progresso" },
 ];
