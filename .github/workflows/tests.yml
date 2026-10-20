@@ -17,6 +17,23 @@ jobs:
     name: Backend (Python)
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # Um PostgreSQL temporário só pros testes (some quando o job termina)
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: english_ze
+          POSTGRES_PASSWORD: english_ze
+          POSTGRES_DB: english_ze_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U english_ze"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql://english_ze:english_ze@localhost:5432/english_ze_test
     steps:
       - uses: actions/checkout@v4
 

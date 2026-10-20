@@ -10,7 +10,6 @@ PASSWORD = "senha-forte-123"
 
 @pytest.fixture
 def client(tmp_path, monkeypatch):
-    monkeypatch.setenv("ENGLISH_DB", str(tmp_path / "test.db"))
     monkeypatch.setenv("ENGLISH_ZE_PASSWORD", PASSWORD)
     from app import main
 
@@ -46,7 +45,6 @@ def test_rate_limit_after_failures(client):
 
 
 def test_token_rules(tmp_path, monkeypatch):
-    monkeypatch.setenv("ENGLISH_DB", str(tmp_path / "test.db"))
     monkeypatch.setenv("ENGLISH_ZE_PASSWORD", PASSWORD)
     token = auth.make_token()
     assert auth.valid_token(token)

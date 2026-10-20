@@ -5,7 +5,7 @@
     python run.py --lan        # libera pro celular no mesmo Wi-Fi, com HTTPS (microfone funciona)
     python run.py --tunnel     # publica na internet com um link https (Cloudflare Tunnel)
     python run.py --profile professora --tunnel --port 8100
-                               # cópia separada (dados em data/profiles/professora/) publicada
+                               # cópia separada (banco english_ze_professora) publicada
 """
 
 import argparse
@@ -23,6 +23,7 @@ from pathlib import Path
 
 import uvicorn
 
+from app import db
 from app.config import load_env_file
 
 LOCALHOST = "127.0.0.1"
@@ -209,11 +210,21 @@ if __name__ == "__main__":
             raise SystemExit(
                 f"Crie {profile_dir / '.env'} com pelo menos ENGLISH_ZE_PASSWORD=... (veja o README)."
             )
-        os.environ["ENGLISH_DB"] = str(profile_dir / "english.db")
+        os.environ["ENGLISH_ZE_DATA_DIR"] = str(profile_dir)
         load_env_file(profile_dir / ".env")  # vem antes: os valores do perfil têm prioridade
+        profile_has_database = "DATABASE_URL" in os.environ
         print(f"Perfil: {args.profile}")
 
     load_env_file()
+    if args.profile and not profile_has_database and os.environ.get("DATABASE_URL"):
+        # Mesmo servidor, banco próprio do perfil (criado sozinho na primeira vez)
+        os.environ["DATABASE_URL"] = db.with_database(
+            os.environ["DATABASE_URL"], db.profile_database(args.profile)
+        )
+    try:
+        db.init_db()
+    except db.DatabaseError as e:
+        raise SystemExit(str(e)) from None
     if (args.lan or args.tunnel) and not os.environ.get("ENGLISH_ZE_PASSWORD"):
         raise SystemExit(
             "Pra liberar fora deste computador, defina uma senha: ENGLISH_ZE_PASSWORD=... no .env"

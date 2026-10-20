@@ -1,11 +1,10 @@
-import json
-import sqlite3
 from contextlib import asynccontextmanager
-from datetime import date, timedelta
+from datetime import timedelta
 
 from fastapi import FastAPI, HTTPException, Query, Request, Response
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import JSONResponse
+from psycopg.types.json import Jsonb
 from pydantic import BaseModel, Field, field_validator
 
 from . import auth, db, srs, transcribe, tutor, web
@@ -23,6 +22,7 @@ login_limiter = auth.LoginLimiter()
 async def lifespan(_: FastAPI):
     db.init_db()
     yield
+    db.close_pool()
 
 
 app = FastAPI(title="English Ze", lifespan=lifespan)
@@ -99,52 +99,48 @@ def auth_status():
     return {"enabled": auth.enabled()}
 
 
-def _card(row: sqlite3.Row) -> dict:
-    return dict(row)
-
-
 # ---------- Estudo ----------
 
 @app.get("/api/session")
 def session(new_limit: int = Query(10, ge=0, le=100)):
-    today = date.today().isoformat()
+    today = db.today()
     with db.connect() as conn:
         due = conn.execute(
-            "SELECT * FROM cards WHERE introduced_on IS NOT NULL AND due <= ? ORDER BY due, id",
+            "SELECT * FROM cards WHERE introduced_on IS NOT NULL AND due <= %s ORDER BY due, id",
             (today,),
         ).fetchall()
         introduced_today = conn.execute(
-            "SELECT COUNT(*) FROM cards WHERE introduced_on = ?", (today,)
-        ).fetchone()[0]
+            "SELECT COUNT(*) AS n FROM cards WHERE introduced_on = %s", (today,)
+        ).fetchone()["n"]
         remaining = max(0, new_limit - introduced_today)
         # Prioridade dos novos: seus erros do diário, depois o que você minerou, depois o deck inicial.
         new = conn.execute(
             "SELECT * FROM cards WHERE introduced_on IS NULL"
-            " ORDER BY CASE WHEN category = ? THEN 0 WHEN source != ? THEN 1 ELSE 2 END, id"
-            " LIMIT ?",
+            " ORDER BY CASE WHEN category = %s THEN 0 WHEN source != %s THEN 1 ELSE 2 END, id"
+            " LIMIT %s",
             (MISTAKES_CATEGORY, db.SEED_SOURCE, remaining),
         ).fetchall()
-    return {"due": [_card(r) for r in due], "new": [_card(r) for r in new]}
+    return {"due": due, "new": new}
 
 
 @app.post("/api/cards/{card_id}/review")
 def review(card_id: int, body: ReviewIn):
-    today = date.today()
+    today = db.today()
     with db.connect() as conn:
-        row = conn.execute("SELECT * FROM cards WHERE id = ?", (card_id,)).fetchone()
+        # FOR UPDATE: duas avaliações do mesmo card ao mesmo tempo (dois aparelhos) não se atropelam.
+        row = conn.execute("SELECT * FROM cards WHERE id = %s FOR UPDATE", (card_id,)).fetchone()
         if row is None:
             raise HTTPException(404, "Card não encontrado")
         state = srs.CardState(row["ease"], row["interval_days"], row["reps"], row["lapses"])
         new_state, due = srs.schedule(state, body.grade, today)
         conn.execute(
-            "UPDATE cards SET ease = ?, interval_days = ?, reps = ?, lapses = ?, due = ?,"
-            " introduced_on = COALESCE(introduced_on, ?) WHERE id = ?",
-            (new_state.ease, new_state.interval_days, new_state.reps, new_state.lapses,
-             due.isoformat(), today.isoformat(), card_id),
+            "UPDATE cards SET ease = %s, interval_days = %s, reps = %s, lapses = %s, due = %s,"
+            " introduced_on = COALESCE(introduced_on, %s) WHERE id = %s",
+            (new_state.ease, new_state.interval_days, new_state.reps, new_state.lapses, due, today, card_id),
         )
         conn.execute(
-            "INSERT INTO reviews (card_id, grade, reviewed_on, reviewed_at) VALUES (?, ?, ?, ?)",
-            (card_id, body.grade, today.isoformat(), db.now_iso()),
+            "INSERT INTO reviews (card_id, grade, reviewed_on) VALUES (%s, %s, %s)",
+            (card_id, body.grade, today),
         )
     return {"due": due.isoformat(), "interval_days": new_state.interval_days}
 
@@ -153,17 +149,17 @@ def review(card_id: int, body: ReviewIn):
 
 @app.get("/api/cards")
 def list_cards(q: str = "", category: str = ""):
-    sql = "SELECT * FROM cards WHERE 1 = 1"
+    sql = "SELECT * FROM cards WHERE TRUE"
     params: list[str] = []
     if q:
-        sql += " AND (front LIKE ? OR back LIKE ? OR note LIKE ?)"
+        sql += " AND (front ILIKE %s OR back ILIKE %s OR note ILIKE %s)"
         params += [f"%{q}%"] * 3
     if category:
-        sql += " AND category = ?"
+        sql += " AND category = %s"
         params.append(category)
     sql += " ORDER BY id DESC"
     with db.connect() as conn:
-        return [_card(r) for r in conn.execute(sql, params).fetchall()]
+        return conn.execute(sql, params).fetchall()
 
 
 @app.get("/api/categories")
@@ -176,55 +172,44 @@ def categories():
 @app.post("/api/cards", status_code=201)
 def create_card(card: CardIn):
     with db.connect() as conn:
-        try:
-            cur = conn.execute(
-                "INSERT INTO cards (front, back, note, category, source, created_at)"
-                " VALUES (?, ?, ?, ?, ?, ?)",
-                (card.front, card.back, card.note, card.category or "geral", card.source, db.now_iso()),
-            )
-        except sqlite3.IntegrityError:
-            raise HTTPException(409, "Esse card já existe") from None
-        row = conn.execute("SELECT * FROM cards WHERE id = ?", (cur.lastrowid,)).fetchone()
-    return _card(row)
+        row = conn.execute(
+            "INSERT INTO cards (front, back, note, category, source) VALUES (%s, %s, %s, %s, %s)"
+            " ON CONFLICT (front) DO NOTHING RETURNING *",
+            (card.front, card.back, card.note, card.category or "geral", card.source),
+        ).fetchone()
+    if row is None:
+        raise HTTPException(409, "Esse card já existe")
+    return row
 
 
 @app.delete("/api/cards/{card_id}", status_code=204)
 def delete_card(card_id: int):
     with db.connect() as conn:
-        cur = conn.execute("DELETE FROM cards WHERE id = ?", (card_id,))
+        cur = conn.execute("DELETE FROM cards WHERE id = %s", (card_id,))
     if cur.rowcount == 0:
         raise HTTPException(404, "Card não encontrado")
 
 
 # ---------- Diário ----------
 
-def _journal(row: sqlite3.Row) -> dict:
-    entry = dict(row)
-    entry["correction"] = json.loads(entry["correction"]) if entry["correction"] else None
-    return entry
-
-
 @app.get("/api/journal")
 def list_journal():
     with db.connect() as conn:
-        rows = conn.execute("SELECT * FROM journal ORDER BY id DESC LIMIT 50").fetchall()
-    return [_journal(r) for r in rows]
+        return conn.execute("SELECT * FROM journal ORDER BY id DESC LIMIT 50").fetchall()
 
 
 @app.post("/api/journal", status_code=201)
 def create_journal(entry: JournalIn):
     with db.connect() as conn:
-        cur = conn.execute(
-            "INSERT INTO journal (text, created_at) VALUES (?, ?)", (entry.text.strip(), db.now_iso())
-        )
-        row = conn.execute("SELECT * FROM journal WHERE id = ?", (cur.lastrowid,)).fetchone()
-    return _journal(row)
+        return conn.execute(
+            "INSERT INTO journal (text) VALUES (%s) RETURNING *", (entry.text.strip(),)
+        ).fetchone()
 
 
 @app.post("/api/journal/{entry_id}/correct")
 def correct_journal(entry_id: int):
     with db.connect() as conn:
-        row = conn.execute("SELECT * FROM journal WHERE id = ?", (entry_id,)).fetchone()
+        row = conn.execute("SELECT * FROM journal WHERE id = %s", (entry_id,)).fetchone()
     if row is None:
         raise HTTPException(404, "Entrada não encontrada")
 
@@ -237,14 +222,14 @@ def correct_journal(entry_id: int):
     cards_created = 0
     with db.connect() as conn:
         conn.execute(
-            "UPDATE journal SET correction = ? WHERE id = ?", (correction.model_dump_json(), entry_id)
+            "UPDATE journal SET correction = %s WHERE id = %s", (Jsonb(correction.model_dump()), entry_id)
         )
         for mistake in correction.mistakes:
             cur = conn.execute(
-                "INSERT OR IGNORE INTO cards (front, back, note, category, source, created_at)"
-                " VALUES (?, ?, ?, ?, ?, ?)",
+                "INSERT INTO cards (front, back, note, category, source) VALUES (%s, %s, %s, %s, %s)"
+                " ON CONFLICT (front) DO NOTHING",
                 (mistake.correction, mistake.explanation, f'Você escreveu: "{mistake.original}"',
-                 MISTAKES_CATEGORY, "diário", db.now_iso()),
+                 MISTAKES_CATEGORY, "diário"),
             )
             cards_created += cur.rowcount
     return {"correction": correction.model_dump(), "cards_created": cards_created}
@@ -259,42 +244,35 @@ def tutor_status():
 
 @app.get("/api/stats")
 def stats():
-    today = date.today()
+    today = db.today()
     with db.connect() as conn:
-        days = {
-            date.fromisoformat(r[0])
-            for r in conn.execute("SELECT DISTINCT reviewed_on FROM reviews").fetchall()
+        days = {r["reviewed_on"] for r in conn.execute("SELECT DISTINCT reviewed_on FROM reviews")}
+        per_day = {
+            r["reviewed_on"]: r["n"]
+            for r in conn.execute(
+                "SELECT reviewed_on, COUNT(*) AS n FROM reviews WHERE reviewed_on >= %s GROUP BY reviewed_on",
+                (today - timedelta(days=13),),
+            )
         }
-        start = (today - timedelta(days=13)).isoformat()
-        per_day = dict(
-            conn.execute(
-                "SELECT reviewed_on, COUNT(*) FROM reviews WHERE reviewed_on >= ? GROUP BY reviewed_on",
-                (start,),
-            ).fetchall()
-        )
         totals = conn.execute(
-            "SELECT COUNT(*) AS total,"
-            " SUM(introduced_on IS NOT NULL) AS learned,"
-            " SUM(interval_days >= 21) AS mature,"
-            " SUM(introduced_on IS NOT NULL AND due <= ?) AS due_today,"
-            " SUM(introduced_on IS NOT NULL AND due = ?) AS due_tomorrow"
+            "SELECT COUNT(*) AS total_cards,"
+            " COUNT(*) FILTER (WHERE introduced_on IS NOT NULL) AS learned,"
+            " COUNT(*) FILTER (WHERE interval_days >= 21) AS mature,"
+            " COUNT(*) FILTER (WHERE introduced_on IS NOT NULL AND due <= %s) AS due_today,"
+            " COUNT(*) FILTER (WHERE introduced_on IS NOT NULL AND due = %s) AS due_tomorrow"
             " FROM cards",
-            (today.isoformat(), (today + timedelta(days=1)).isoformat()),
+            (today, today + timedelta(days=1)),
         ).fetchone()
 
     history = []
     for i in range(13, -1, -1):
-        day = (today - timedelta(days=i)).isoformat()
-        history.append({"day": day, "reviews": per_day.get(day, 0)})
+        day = today - timedelta(days=i)
+        history.append({"day": day.isoformat(), "reviews": per_day.get(day, 0)})
 
     return {
         "streak": compute_streak(days, today),
-        "reviews_today": per_day.get(today.isoformat(), 0),
-        "total_cards": totals["total"] or 0,
-        "learned": totals["learned"] or 0,
-        "mature": totals["mature"] or 0,
-        "due_today": totals["due_today"] or 0,
-        "due_tomorrow": totals["due_tomorrow"] or 0,
+        "reviews_today": per_day.get(today, 0),
+        **totals,
         "history": history,
     }
 

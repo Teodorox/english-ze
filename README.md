@@ -4,16 +4,28 @@ Plataforma pra estudar inglês em sessões curtas, focada em **entender streamer
 
 ## Como rodar
 
-Precisa do **Python 3.13** e do **Node.js** (usado pra gerar o app na primeira vez).
+Precisa do **Python 3.13**, do **Node.js** (usado pra gerar o app na primeira vez) e do **PostgreSQL 17**.
 
 ```powershell
 # primeira vez
+winget install PostgreSQL.PostgreSQL.17   # o banco de dados (roda como serviço do Windows)
 py -3.13 -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
 
 # todo dia: dois cliques em "English Ze.bat", ou
 .venv\Scripts\python run.py
 ```
+
+Na primeira vez, crie o usuário e os bancos do app (com a senha de superusuário escolhida na instalação) e coloque `DATABASE_URL` e `TEST_DATABASE_URL` no `.env` (modelo no `.env.example`):
+
+```powershell
+& "C:\Program Files\PostgreSQL\17\bin\psql.exe" -h localhost -U postgres -c "CREATE ROLE english_ze LOGIN CREATEDB PASSWORD 'escolha-uma-senha'"
+& "C:\Program Files\PostgreSQL\17\bin\psql.exe" -h localhost -U postgres -c "CREATE DATABASE english_ze OWNER english_ze" -c "CREATE DATABASE english_ze_test OWNER english_ze"
+```
+
+As tabelas e o deck inicial são criados sozinhos quando o app sobe. Mudanças na estrutura do banco ficam em `app/migrations/` (arquivos numerados, aplicados em ordem uma vez só).
+
+Vindo da versão com SQLite? `.venv\Scripts\python importar_sqlite.py` copia o `data/english.db` (cards, progresso, revisões, sequência e diário) pro PostgreSQL e confere as contagens; o arquivo antigo não é alterado. Pra um perfil: `--profile NOME`.
 
 O navegador abre em http://127.0.0.1:8001 (se estiver ocupada, ele usa a próxima porta livre; ou escolha com `--port 9000`). Na primeira vez, e sempre que o código do app mudar, o `run.py` gera o app React sozinho (`npm ci` + `npm run build` em `web/`).
 
@@ -31,7 +43,7 @@ O `--lan` serve em HTTPS com um certificado autoassinado (gerado em `data/certs/
 
 ### Compartilhar com outra pessoa (perfil + túnel)
 
-Cada perfil é uma cópia separada do app, com banco, senha e progresso próprios, em `data/profiles/NOME/` (ignorado pelo git).
+Cada perfil é uma cópia separada do app, com senha e progresso próprios: os dados ficam no banco `english_ze_NOME` (criado sozinho na primeira vez) e a configuração em `data/profiles/NOME/` (ignorado pelo git).
 
 1. Crie `data/profiles/NOME/.env` com pelo menos:
    ```
@@ -83,7 +95,7 @@ O deck inicial (`data/seed_cards.json`) tem cerca de 70 frases em 4 categorias: 
 ## Desenvolvimento
 
 ```powershell
-# backend
+# backend (os testes usam o banco do TEST_DATABASE_URL, que é apagado a cada teste)
 .venv\Scripts\python -m pip install -r requirements-dev.txt
 .venv\Scripts\python -m pytest
 
@@ -96,14 +108,16 @@ npm test                            # testes (Vitest)
 npm run typecheck                   # checagem de tipos
 ```
 
-A cada push, o GitHub Actions roda os testes do backend e do frontend (tipos, testes e build).
+A cada push, o GitHub Actions roda os testes do backend (com um PostgreSQL temporário) e do frontend (tipos, testes e build).
 
 - `app/main.py`: API (FastAPI) e entrega do app React
 - `app/web.py`: serve `web/dist` (arquivos com cache; endereços de tela devolvem o app)
 - `app/srs.py`: algoritmo de repetição espaçada
 - `app/auth.py`: login por senha (cookie assinado + limite de tentativas)
 - `app/tutor.py`: correção com o Claude (prompt e formato da resposta)
-- `app/db.py`: SQLite (`data/english.db`, criado no primeiro uso)
+- `app/db.py`: conexão com o PostgreSQL (pool), migrações e o "hoje" no fuso do usuário
+- `app/migrations/`: estrutura do banco, um arquivo SQL numerado por mudança
+- `importar_sqlite.py`: copia os dados da versão antiga (SQLite) pro PostgreSQL
 - `web/src/pages/`: uma tela por aba
 - `web/src/components/`: peças reutilizáveis (flashcard, anéis, controles no estilo iOS)
 - `web/src/lib/`: lógica pura com testes (fila de estudo, pronúncia, datas, estatísticas)

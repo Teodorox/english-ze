@@ -28,7 +28,7 @@ def enabled() -> bool:
 
 
 def _secret_file() -> Path:
-    return db.db_path().parent / "secret.key"
+    return db.data_dir() / "secret.key"
 
 
 def _secret() -> bytes:
