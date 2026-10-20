@@ -119,7 +119,7 @@ export function Speak({ tab }: { tab: Tab }) {
   }
 
   return (
-    <section>
+    <section className="speak-page">
       <LargeTitle tab={tab} accessory={<LivePill />} />
 
       <div className="glass card speak-phrase">
@@ -148,88 +148,95 @@ export function Speak({ tab }: { tab: Tab }) {
         </div>
       </div>
 
-      <h2 className="section-header">1 · Grave e compare</h2>
-      <div className="glass card speak-record">
-        <div className="record-row">
-          <button
-            type="button"
-            className={`record-button${recorder.recording ? " recording" : ""}`}
-            aria-label={recorder.recording ? "Parar gravação" : "Gravar"}
-            onClick={recorder.recording ? recorder.stop : recorder.start}
-          >
-            <span className="record-shape" />
-          </button>
-          <div>
-            <strong>{recorder.recording ? "Gravando... toque pra parar" : "Toque pra gravar"}</strong>
-            <p className="footnote" style={{ margin: "2px 0 0" }}>
-              Ouça a frase, repita imitando o ritmo e a entonação, e compare com o original.
-            </p>
-          </div>
-        </div>
-        {recorder.audioUrl && !recorder.recording && (
-          <audio key={recorder.audioUrl} className="recording-player" src={recorder.audioUrl} controls autoPlay />
-        )}
-        {recorder.error && (
-          <p className="banner-error" role="alert">
-            {recorder.error}
-          </p>
-        )}
-      </div>
-
-      <h2 className="section-header">2 · Cheque a pronúncia</h2>
-      <div className="glass card speak-check">
-        <button
-          type="button"
-          className={checker.recording ? "primary recording-check" : "primary"}
-          onClick={checkPronunciation}
-          disabled={!canCheck || listening || analyzing || !phrase.trim()}
-        >
-          {checker.recording ? <StopIcon width={18} height={18} /> : <MicIcon width={18} height={18} />}
-          {checker.recording
-            ? "Parar e checar"
-            : analyzing
-              ? "Analisando..."
-              : listening
-                ? "Ouvindo... fale agora"
-                : "Checar pronúncia"}
-        </button>
-        {serverTranscribe && !result && !checkError && (
-          <p className="footnote">Toque, fale a frase e toque de novo pra analisar.</p>
-        )}
-        {!canCheck && (
-          <p className="footnote">Seu navegador não tem reconhecimento de voz. Use o Chrome, o Edge ou o Safari.</p>
-        )}
-        {!serverTranscribe && canRecognize && iosHomeScreen && (
-          <p className="footnote">
-            Aberto pelo ícone da Tela de Início, o iPhone pode bloquear a checagem de pronúncia. Se der erro, abra o app
-            pelo Safari.
-          </p>
-        )}
-        {checkError && (
-          <p className="banner-error" role="alert">
-            {checkError}
-          </p>
-        )}
-        {result && (
-          <div className="speak-result" aria-live="polite">
-            <div className="speak-score">
-              <ScoreRing score={result.score} />
+      {/* No computador, os dois passos ficam lado a lado. */}
+      <div className="speak-steps">
+        <div className="speak-step">
+          <h2 className="section-header">1 · Grave e compare</h2>
+          <div className="glass card speak-record">
+            <div className="record-row">
+              <button
+                type="button"
+                className={`record-button${recorder.recording ? " recording" : ""}`}
+                aria-label={recorder.recording ? "Parar gravação" : "Gravar"}
+                onClick={recorder.recording ? recorder.stop : recorder.start}
+              >
+                <span className="record-shape" />
+              </button>
               <div>
-                <strong className="speak-verdict">{verdict(result.score)}</strong>
+                <strong>{recorder.recording ? "Gravando... toque pra parar" : "Toque pra gravar"}</strong>
                 <p className="footnote" style={{ margin: "2px 0 0" }}>
-                  Entendi: “{result.heard}”
+                  Ouça a frase, repita imitando o ritmo e a entonação, e compare com o original.
                 </p>
               </div>
             </div>
-            <div className="word-chips" lang="en">
-              {result.words.map((w, i) => (
-                <span key={`${w.word}-${i}`} className={`word-chip ${w.ok ? "ok" : "miss"}`}>
-                  {w.word}
-                </span>
-              ))}
-            </div>
+            {recorder.audioUrl && !recorder.recording && (
+              <audio key={recorder.audioUrl} className="recording-player" src={recorder.audioUrl} controls autoPlay />
+            )}
+            {recorder.error && (
+              <p className="banner-error" role="alert">
+                {recorder.error}
+              </p>
+            )}
           </div>
-        )}
+        </div>
+
+        <div className="speak-step">
+          <h2 className="section-header">2 · Cheque a pronúncia</h2>
+          <div className="glass card speak-check">
+            <button
+              type="button"
+              className={checker.recording ? "primary recording-check" : "primary"}
+              onClick={checkPronunciation}
+              disabled={!canCheck || listening || analyzing || !phrase.trim()}
+            >
+              {checker.recording ? <StopIcon width={18} height={18} /> : <MicIcon width={18} height={18} />}
+              {checker.recording
+                ? "Parar e checar"
+                : analyzing
+                  ? "Analisando..."
+                  : listening
+                    ? "Ouvindo... fale agora"
+                    : "Checar pronúncia"}
+            </button>
+            {serverTranscribe && !result && !checkError && (
+              <p className="footnote">Toque, fale a frase e toque de novo pra analisar.</p>
+            )}
+            {!canCheck && (
+              <p className="footnote">Seu navegador não tem reconhecimento de voz. Use o Chrome, o Edge ou o Safari.</p>
+            )}
+            {!serverTranscribe && canRecognize && iosHomeScreen && (
+              <p className="footnote">
+                Aberto pelo ícone da Tela de Início, o iPhone pode bloquear a checagem de pronúncia. Se der erro, abra o app
+                pelo Safari.
+              </p>
+            )}
+            {checkError && (
+              <p className="banner-error" role="alert">
+                {checkError}
+              </p>
+            )}
+            {result && (
+              <div className="speak-result" aria-live="polite">
+                <div className="speak-score">
+                  <ScoreRing score={result.score} />
+                  <div>
+                    <strong className="speak-verdict">{verdict(result.score)}</strong>
+                    <p className="footnote" style={{ margin: "2px 0 0" }}>
+                      Entendi: “{result.heard}”
+                    </p>
+                  </div>
+                </div>
+                <div className="word-chips" lang="en">
+                  {result.words.map((w, i) => (
+                    <span key={`${w.word}-${i}`} className={`word-chip ${w.ok ? "ok" : "miss"}`}>
+                      {w.word}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </section>
   );

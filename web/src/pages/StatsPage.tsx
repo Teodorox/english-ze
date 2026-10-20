@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ApiError } from "../api/client";
 import { getStats } from "../api/stats";
+import { PROGRESS_EVENT } from "../api/study";
 import type { Stats } from "../api/types";
 import { ActivityRings } from "../components/ActivityRings";
 import { LargeTitle } from "../components/LargeTitle";
@@ -24,6 +25,7 @@ export function StatsPage({ tab }: { tab: Tab }) {
   function changeGoal(value: number) {
     setGoal(value);
     savePref("dailyGoal", value);
+    window.dispatchEvent(new Event(PROGRESS_EVENT));
   }
 
   if (error) {
@@ -50,47 +52,52 @@ export function StatsPage({ tab }: { tab: Tab }) {
   ];
 
   return (
-    <section>
+    <section className="stats-page">
       <LargeTitle tab={tab} accessory={<span className="pill aura-pill">aura check</span>} />
 
-      <div className="glass card rings-card">
-        <ActivityRings
-          label={`Meta do dia: ${stats.reviews_today} de ${goal} revisões. Semana: ${week} de 7 dias.`}
-          rings={[
-            { fraction: fraction(stats.reviews_today, goal), color: "var(--tint)" },
-            { fraction: fraction(week, 7), color: "var(--pink)" },
-          ]}
-        />
-        <dl className="rings-legend">
-          <div>
-            <dt>Meta do dia</dt>
-            <dd className="tint">
-              {stats.reviews_today} de {goal}
-            </dd>
-          </div>
-          <div>
-            <dt>Semana</dt>
-            <dd className="pink">{week} de 7 dias</dd>
-          </div>
-          <div>
-            <dt>Sequência</dt>
-            <dd>
-              {stats.streak} {stats.streak === 1 ? "dia" : "dias"} 🔥
-            </dd>
-          </div>
-        </dl>
+      {/* No computador: anéis e números lado a lado; gráfico e ajustes embaixo, na largura toda. */}
+      <div className="stats-summary">
+        <div className="glass card rings-card">
+          <ActivityRings
+            label={`Meta do dia: ${stats.reviews_today} de ${goal} revisões. Semana: ${week} de 7 dias.`}
+            rings={[
+              { fraction: fraction(stats.reviews_today, goal), color: "var(--tint)" },
+              { fraction: fraction(week, 7), color: "var(--pink)" },
+            ]}
+          />
+          <dl className="rings-legend">
+            <div>
+              <dt>Meta do dia</dt>
+              <dd className="tint">
+                {stats.reviews_today} de {goal}
+              </dd>
+            </div>
+            <div>
+              <dt>Semana</dt>
+              <dd className="pink">{week} de 7 dias</dd>
+            </div>
+            <div>
+              <dt>Sequência</dt>
+              <dd>
+                {stats.streak} {stats.streak === 1 ? "dia" : "dias"} 🔥
+              </dd>
+            </div>
+          </dl>
+        </div>
+        <p className="streak-message">{streakMessage(stats.streak)}</p>
       </div>
-      <p className="streak-message">{streakMessage(stats.streak)}</p>
 
-      <h2 className="section-header">Números</h2>
-      <ul className="glass stats-list">
-        {rows.map((row) => (
-          <li key={row.label}>
-            <span>{row.label}</span>
-            <span className="stats-value">{row.value}</span>
-          </li>
-        ))}
-      </ul>
+      <div className="stats-numbers">
+        <h2 className="section-header">Números</h2>
+        <ul className="glass stats-list">
+          {rows.map((row) => (
+            <li key={row.label}>
+              <span>{row.label}</span>
+              <span className="stats-value">{row.value}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       <h2 className="section-header">Revisões nos últimos 14 dias</h2>
       <div className="glass card chart-card">

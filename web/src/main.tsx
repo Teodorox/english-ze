@@ -12,6 +12,7 @@ import "./styles/mine.css";
 import "./styles/vault.css";
 import "./styles/journal.css";
 import "./styles/stats.css";
+import "./styles/desktop.css"; // por último: só vale em telas largas
 
 initTheme();
 

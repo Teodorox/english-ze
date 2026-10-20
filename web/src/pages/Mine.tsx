@@ -73,14 +73,14 @@ export function Mine({ tab }: { tab: Tab }) {
   }
 
   return (
-    <section>
+    <section className="mine-page">
       <LargeTitle tab={tab} accessory={<LivePill />} />
       <p className="footnote intro">
         Ouviu ou leu uma frase em inglês que não entendeu? Numa série, música, vídeo, jogo ou conversa: anote aqui e ela
         vira card. Seus cards entram na fila antes do deck inicial.
       </p>
 
-      <form onSubmit={handleSave}>
+      <form className="mine-form" onSubmit={handleSave}>
         <h2 className="section-header">Nova frase</h2>
         <div className="glass form-list">
           <label className="form-row">
@@ -150,28 +150,31 @@ export function Mine({ tab }: { tab: Tab }) {
         </button>
       </form>
 
-      <h2 className="section-header">Importar várias de uma vez</h2>
-      <div className="glass card bulk-import">
-        <p className="footnote" style={{ marginTop: 0 }}>
-          Uma por linha, no formato <code>frase | significado | nota</code>. Usam a categoria e a fonte acima.
-        </p>
-        <textarea
-          rows={5}
-          lang="en"
-          spellCheck={false}
-          aria-label="Frases para importar"
-          placeholder={"Break a leg | Boa sorte | expressão comum\nI'm on my way | Tô a caminho"}
-          value={bulkText}
-          onChange={(e) => setBulkText(e.target.value)}
-        />
-        {bulkNotice && (
-          <p className={bulkNotice.kind === "success" ? "banner-success" : "banner-error"} role="status">
-            {bulkNotice.text}
+      {/* No computador, a importação em lote fica na coluna da direita. */}
+      <div className="mine-bulk">
+        <h2 className="section-header">Importar várias de uma vez</h2>
+        <div className="glass card bulk-import">
+          <p className="footnote" style={{ marginTop: 0 }}>
+            Uma por linha, no formato <code>frase | significado | nota</code>. Usam a categoria e a fonte acima.
           </p>
-        )}
-        <button type="button" className="tinted full" onClick={handleImport} disabled={importing || !bulkText.trim()}>
-          {importing ? "Importando..." : "Importar"}
-        </button>
+          <textarea
+            rows={5}
+            lang="en"
+            spellCheck={false}
+            aria-label="Frases para importar"
+            placeholder={"Break a leg | Boa sorte | expressão comum\nI'm on my way | Tô a caminho"}
+            value={bulkText}
+            onChange={(e) => setBulkText(e.target.value)}
+          />
+          {bulkNotice && (
+            <p className={bulkNotice.kind === "success" ? "banner-success" : "banner-error"} role="status">
+              {bulkNotice.text}
+            </p>
+          )}
+          <button type="button" className="tinted full" onClick={handleImport} disabled={importing || !bulkText.trim()}>
+            {importing ? "Importando..." : "Importar"}
+          </button>
+        </div>
       </div>
     </section>
   );

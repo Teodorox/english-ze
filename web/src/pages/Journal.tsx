@@ -87,93 +87,104 @@ export function Journal({ tab }: { tab: Tab }) {
   }
 
   return (
-    <section>
+    <section className="journal-page">
       <LargeTitle tab={tab} accessory={<LivePill />} />
-      <p className="footnote intro">
-        Escreva 2 ou 3 frases sobre o seu dia, sem medo de errar.{" "}
-        {tutorEnabled
-          ? 'A IA corrige e cada erro vira um card em "meus-erros".'
-          : "Depois copie o prompt e cole numa IA gratuita pra receber correção."}
-      </p>
-
-      <div className="glass card compose">
-        <textarea
-          rows={4}
-          lang="en"
-          spellCheck={false}
-          aria-label="Escreva em inglês"
-          placeholder="Today I worked a lot and..."
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
-        <div className="button-row">
-          <button type="button" className="primary" onClick={handleSave} disabled={saving || !text.trim()}>
-            {tutorEnabled && <SparklesIcon width={18} height={18} />}
-            {saving ? "Salvando..." : tutorEnabled ? "Salvar e corrigir" : "Salvar"}
-          </button>
-          <button
-            type="button"
-            className="tinted"
-            onClick={() => copyPrompt(text, setComposeStatus)}
-            disabled={!text.trim()}
-          >
-            <CopyIcon width={18} height={18} />
-            Copiar prompt
-          </button>
+      {/* No computador: escrever à esquerda (fixo), entradas e correções à direita. */}
+      <div className="journal-write">
+        <p className="footnote intro">
+          Escreva 2 ou 3 frases sobre o seu dia, sem medo de errar.{" "}
+          {tutorEnabled
+            ? 'A IA corrige e cada erro vira um card em "meus-erros".'
+            : "Depois copie o prompt e cole numa IA gratuita pra receber correção."}
+        </p>
+  
+        <div className="glass card compose">
+          <textarea
+            rows={4}
+            lang="en"
+            spellCheck={false}
+            aria-label="Escreva em inglês"
+            placeholder="Today I worked a lot and..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+          <div className="button-row">
+            <button type="button" className="primary" onClick={handleSave} disabled={saving || !text.trim()}>
+              {tutorEnabled && <SparklesIcon width={18} height={18} />}
+              {saving ? "Salvando..." : tutorEnabled ? "Salvar e corrigir" : "Salvar"}
+            </button>
+            <button
+              type="button"
+              className="tinted"
+              onClick={() => copyPrompt(text, setComposeStatus)}
+              disabled={!text.trim()}
+            >
+              <CopyIcon width={18} height={18} />
+              Copiar prompt
+            </button>
+          </div>
+          {composeStatus && (
+            <p className={`status ${composeStatus.kind}`} role="status">
+              {composeStatus.text}
+            </p>
+          )}
         </div>
-        {composeStatus && (
-          <p className={`status ${composeStatus.kind}`} role="status">
-            {composeStatus.text}
-          </p>
-        )}
       </div>
 
-      {entries && entries.length > 0 && <h2 className="section-header">Suas entradas</h2>}
-      {entries?.map((entry) => {
-        const status = entryStatus[entry.id];
-        return (
-          <article key={entry.id} className="glass card journal-entry">
-            <header className="journal-entry-head">
-              <time className="footnote" dateTime={entry.created_at}>
-                {formatDate(entry.created_at)}
-              </time>
-              <div className="journal-entry-actions">
-                {tutorEnabled && !entry.correction && (
+      <div className="journal-feed">
+        {entries && entries.length > 0 && <h2 className="section-header">Suas entradas</h2>}
+        {entries && entries.length === 0 && (
+          <div className="glass card desktop-only journal-empty">
+            <strong>Suas correções aparecem aqui</strong>
+            <p className="footnote">Escreva umas linhas ao lado e veja o que mudar, com a versão de um americano.</p>
+          </div>
+        )}
+        {entries?.map((entry) => {
+          const status = entryStatus[entry.id];
+          return (
+            <article key={entry.id} className="glass card journal-entry">
+              <header className="journal-entry-head">
+                <time className="footnote" dateTime={entry.created_at}>
+                  {formatDate(entry.created_at)}
+                </time>
+                <div className="journal-entry-actions">
+                  {tutorEnabled && !entry.correction && (
+                    <button
+                      type="button"
+                      className="icon"
+                      aria-label="Corrigir com IA"
+                      title="Corrigir com IA"
+                      disabled={correcting !== null}
+                      onClick={() => correct(entry.id)}
+                    >
+                      <SparklesIcon width={18} height={18} />
+                    </button>
+                  )}
                   <button
                     type="button"
                     className="icon"
-                    aria-label="Corrigir com IA"
-                    title="Corrigir com IA"
-                    disabled={correcting !== null}
-                    onClick={() => correct(entry.id)}
+                    aria-label="Copiar prompt de correção"
+                    title="Copiar prompt de correção"
+                    onClick={() => copyPrompt(entry.text, (s) => setStatus(entry.id, s))}
                   >
-                    <SparklesIcon width={18} height={18} />
+                    <CopyIcon width={18} height={18} />
                   </button>
-                )}
-                <button
-                  type="button"
-                  className="icon"
-                  aria-label="Copiar prompt de correção"
-                  title="Copiar prompt de correção"
-                  onClick={() => copyPrompt(entry.text, (s) => setStatus(entry.id, s))}
-                >
-                  <CopyIcon width={18} height={18} />
-                </button>
-              </div>
-            </header>
-            {entry.correction && <h4 className="journal-label">Você escreveu</h4>}
-            <p className={`journal-text${entry.correction ? " original" : ""}`} lang="en">
-              {entry.text}
-            </p>
-            {status && (
-              <p className={`status ${status.kind}`} role="status">
-                {status.text}
+                </div>
+              </header>
+              {entry.correction && <h4 className="journal-label">Você escreveu</h4>}
+              <p className={`journal-text${entry.correction ? " original" : ""}`} lang="en">
+                {entry.text}
               </p>
-            )}
-            {entry.correction && <CorrectionView correction={entry.correction} />}
-          </article>
-        );
-      })}
+              {status && (
+                <p className={`status ${status.kind}`} role="status">
+                  {status.text}
+                </p>
+              )}
+              {entry.correction && <CorrectionView correction={entry.correction} />}
+            </article>
+          );
+        })}
+      </div>
     </section>
   );
 }

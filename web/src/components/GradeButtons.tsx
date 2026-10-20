@@ -1,4 +1,5 @@
-import type { Grade } from "../api/types";
+import type { Card, Grade } from "../api/types";
+import { intervalLabel, nextIntervalDays } from "../lib/srsPreview";
 
 const GRADES: { grade: Grade; label: string; sub: string; className: string }[] = [
   { grade: 0, label: "L", sub: "errei", className: "grade-l" },
@@ -7,7 +8,8 @@ const GRADES: { grade: Grade; label: string; sub: string; className: string }[] 
   { grade: 3, label: "GOAT", sub: "fácil", className: "grade-goat" },
 ];
 
-export function GradeButtons({ onGrade }: { onGrade: (grade: Grade) => void }) {
+/** No computador, cada botão mostra também quando o card volta e a tecla do atalho. */
+export function GradeButtons({ card, onGrade }: { card: Card; onGrade: (grade: Grade) => void }) {
   return (
     <div className="grades" role="group" aria-label="Como foi?">
       {GRADES.map(({ grade, label, sub, className }) => (
@@ -20,6 +22,9 @@ export function GradeButtons({ onGrade }: { onGrade: (grade: Grade) => void }) {
         >
           {label}
           <small>{sub}</small>
+          <small className="grade-when">
+            {intervalLabel(nextIntervalDays(card, grade))} · <kbd>{grade + 1}</kbd>
+          </small>
         </button>
       ))}
     </div>

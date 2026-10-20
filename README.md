@@ -1,6 +1,6 @@
 # English Ze
 
-Plataforma pra estudar inglês em sessões curtas, focada em **entender streamers americanos** e **conversar**. Visual no padrão iOS (vidro fosco, títulos grandes, abas com ícones), com tema claro e escuro automáticos.
+Plataforma pra estudar inglês em sessões curtas, focada em **entender streamers americanos** e **conversar**. Visual no padrão iOS (vidro fosco, títulos grandes, abas com ícones), com tema claro e escuro automáticos. No computador (telas a partir de 1024px), o app ganha barra lateral, telas em colunas e atalhos de teclado; no celular e no tablet, continua com a barra de abas embaixo.
 
 ## Como rodar
 

@@ -64,7 +64,7 @@ export function Study({ tab }: { tab: Tab }) {
     [current, revealed, chat],
   );
 
-  // Atalhos: Espaço/Enter mostra a resposta, 1–4 avaliam, R repete o áudio.
+  // Atalhos: Espaço/Enter mostra a resposta, 1–4 avaliam, R repete o áudio, S toca devagar.
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       const target = e.target instanceof HTMLElement ? e.target : null;
@@ -78,6 +78,8 @@ export function Study({ tab }: { tab: Tab }) {
         handleGrade((Number(e.key) - 1) as Grade);
       } else if (e.key.toLowerCase() === "r" && current) {
         speak(current.front);
+      } else if (e.key.toLowerCase() === "s" && current) {
+        speak(current.front, 0.7);
       }
     }
     window.addEventListener("keydown", onKeyDown);
@@ -98,8 +100,9 @@ export function Study({ tab }: { tab: Tab }) {
   const total = remaining + (state?.done ?? 0);
   const progress = total ? Math.round(((state?.done ?? 0) / total) * 100) : 0;
 
+  // No celular as duas colunas (.study-main e .study-aside) somem e tudo fica numa coluna só.
   return (
-    <section>
+    <section className="study-page">
       <LargeTitle tab={tab} accessory={<LivePill />} />
 
       <SegmentedControl
@@ -143,26 +146,83 @@ export function Study({ tab }: { tab: Tab }) {
         </p>
       )}
 
-      {state &&
-        (current ? (
-          <>
-            <Flashcard card={current} mode={mode} revealed={revealed} onReveal={handleReveal} />
-            {revealed && <GradeButtons onGrade={handleGrade} />}
-          </>
-        ) : (
-          <div className="glass card study-done">
-            <div className="study-done-emoji" aria-hidden="true">
-              {state.done ? "🏆" : "😎"}
+      <div className="study-main">
+        {state &&
+          (current ? (
+            <>
+              <Flashcard card={current} mode={mode} revealed={revealed} onReveal={handleReveal} />
+              {revealed && <GradeButtons card={current} onGrade={handleGrade} />}
+            </>
+          ) : (
+            <div className="glass card study-done">
+              <div className="study-done-emoji" aria-hidden="true">
+                {state.done ? "🏆" : "😎"}
+              </div>
+              <h2>{state.done ? "That's a W" : "We're all caught up"}</h2>
+              <p>{state.done ? `${state.done} revisões hoje. Bro is locked in.` : "Nada pra revisar agora."}</p>
+              <p className="footnote">Que tal minerar umas frases da próxima live ou fazer um shadowing rápido?</p>
             </div>
-            <h2>{state.done ? "That's a W" : "We're all caught up"}</h2>
-            <p>{state.done ? `${state.done} revisões hoje. Bro is locked in.` : "Nada pra revisar agora."}</p>
-            <p className="footnote">Que tal minerar umas frases da próxima live ou fazer um shadowing rápido?</p>
-          </div>
-        ))}
-
-      <div className="glass card study-settings">
-        <Stepper label="Novos por dia" value={newLimit} min={0} max={100} step={5} onChange={changeNewLimit} />
+          ))}
       </div>
+
+      <aside className="study-aside">
+        {state && (
+          <div className="glass card desktop-only session-summary">
+            <h2 className="card-heading">Sessão de hoje</h2>
+            <dl>
+              <div>
+                <dt>revisões</dt>
+                <dd>{remaining - newCount}</dd>
+              </div>
+              <div>
+                <dt>novos</dt>
+                <dd className="tint">{newCount}</dd>
+              </div>
+              <div>
+                <dt>feitos</dt>
+                <dd className="green">{state.done}</dd>
+              </div>
+            </dl>
+          </div>
+        )}
+
+        <div className="glass card study-settings">
+          <Stepper label="Novos por dia" value={newLimit} min={0} max={100} step={5} onChange={changeNewLimit} />
+        </div>
+
+        <div className="glass card desktop-only shortcuts">
+          <h2 className="card-heading">Atalhos do teclado</h2>
+          <dl>
+            <div>
+              <dt>Mostrar resposta</dt>
+              <dd>
+                <kbd>Espaço</kbd>
+              </dd>
+            </div>
+            <div>
+              <dt>Avaliar</dt>
+              <dd>
+                <kbd>1</kbd>
+                <kbd>2</kbd>
+                <kbd>3</kbd>
+                <kbd>4</kbd>
+              </dd>
+            </div>
+            <div>
+              <dt>Repetir o áudio</dt>
+              <dd>
+                <kbd>R</kbd>
+              </dd>
+            </div>
+            <div>
+              <dt>Ouvir devagar</dt>
+              <dd>
+                <kbd>S</kbd>
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </aside>
 
       <p className="hint">
         Atalhos: <kbd>Espaço</kbd> mostra a resposta · <kbd>1</kbd>–<kbd>4</kbd> avaliam · <kbd>R</kbd> repete o áudio

@@ -8,9 +8,9 @@ const STROKE = 14;
 const GAP = 3;
 
 /** Anéis concêntricos no estilo do app Fitness. O primeiro é o de fora. */
-export function ActivityRings({ rings, label }: { rings: Ring[]; label: string }) {
+export function ActivityRings({ rings, label, size = SIZE }: { rings: Ring[]; label: string; size?: number }) {
   return (
-    <svg className="activity-rings" viewBox={`0 0 ${SIZE} ${SIZE}`} width={SIZE} height={SIZE} role="img" aria-label={label}>
+    <svg className="activity-rings" viewBox={`0 0 ${SIZE} ${SIZE}`} width={size} height={size} role="img" aria-label={label}>
       {rings.map((ring, i) => {
         const radius = SIZE / 2 - STROKE / 2 - i * (STROKE + GAP);
         const circumference = 2 * Math.PI * radius;
