@@ -134,8 +134,9 @@ def test_update_profile(client):
 
 def test_delete_account_removes_everything(client, anon, database):
     card = client.get("/api/session?new_limit=1").json()["new"][0]
-    client.post(f"/api/cards/{card['id']}/review", json={"grade": 2})
+    client.post(f"/api/cards/{card['id']}/review", json={"grade": 2, "mode": "listen"})
     client.post("/api/journal", json={"text": "Hello"})
+    client.post("/api/speech-checks", json={"words_total": 2, "words_ok": 1, "card_id": card["id"]})
 
     assert client.request("DELETE", "/api/me", json={"password": "errada"}).status_code == 403
     assert client.request("DELETE", "/api/me", json={"password": PASSWORD}).status_code == 200
@@ -145,6 +146,7 @@ def test_delete_account_removes_everything(client, anon, database):
         left = conn.execute(
             "SELECT (SELECT COUNT(*) FROM users) + (SELECT COUNT(*) FROM cards) + (SELECT COUNT(*) FROM reviews)"
             " + (SELECT COUNT(*) FROM journal) + (SELECT COUNT(*) FROM sessions)"
+            " + (SELECT COUNT(*) FROM speech_checks)"
         ).fetchone()[0]
     assert left == 0
     assert anon.post("/api/login", json={"email": "ana@example.com", "password": PASSWORD}).status_code == 401

@@ -59,12 +59,12 @@ export function Study({ tab }: { tab: Tab }) {
       setError("");
       setState((s) => s && afterGrade(s, grade));
       chat.pop(grade);
-      reviewCard(card.id, grade).catch((err) => {
+      reviewCard(card.id, grade, mode).catch((err) => {
         setError(`Não consegui salvar "${card.front}" (${errorMessage(err).replace(/\.$/, "")}). O card voltou pra fila.`);
         setState((s) => s && requeue(s, card));
       });
     },
-    [current, revealed, chat],
+    [current, revealed, chat, mode],
   );
 
   // Atalhos: Espaço/Enter mostra a resposta, 1–4 avaliam, R repete o áudio, S toca devagar.

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { listCards } from "../api/cards";
 import { ApiError } from "../api/client";
+import { saveSpeechCheck } from "../api/speech";
 import { getTranscribeStatus, transcribeAudio } from "../api/transcribe";
 import type { Card } from "../api/types";
 import { MicIcon, ShuffleIcon, StopIcon } from "../components/icons";
@@ -9,6 +10,7 @@ import { LargeTitle } from "../components/LargeTitle";
 import { LivePill } from "../components/LivePill";
 import { ScoreRing } from "../components/ScoreRing";
 import { scorePronunciation, verdict, type WordResult } from "../lib/pronunciation";
+import { toSpeechCheck } from "../lib/speechCheck";
 import { isIOS, isStandalone, listenOnce, recognitionSupported } from "../lib/speechRecognition";
 import { useRecorder } from "../lib/useRecorder";
 import type { Tab } from "../tabs";
@@ -26,6 +28,7 @@ export function Speak({ tab }: { tab: Tab }) {
   const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState<CheckResult | null>(null);
   const [checkError, setCheckError] = useState("");
+  const [saveFailed, setSaveFailed] = useState(false);
   const [serverTranscribe, setServerTranscribe] = useState(false);
   const recorder = useRecorder(); // "Grave e compare"
   const checker = useRecorder(); // "Cheque a pronúncia" (quando o servidor transcreve)
@@ -33,6 +36,17 @@ export function Speak({ tab }: { tab: Tab }) {
   const canRecognize = recognitionSupported();
   const canCheck = serverTranscribe || canRecognize;
   const iosHomeScreen = isIOS() && isStandalone();
+  const cardsRef = useRef(cards);
+  cardsRef.current = cards;
+
+  // Mostra o resultado e guarda a nota no progresso (só os números; o áudio e o texto ficam aqui).
+  const showResult = useCallback((target: string, heard: string) => {
+    const scored = scorePronunciation(target, heard);
+    setResult({ heard, ...scored });
+    setSaveFailed(false);
+    const check = toSpeechCheck(target, scored.words, cardsRef.current);
+    if (check) saveSpeechCheck(check).catch(() => setSaveFailed(true));
+  }, []);
 
   // Com o Whisper no servidor, a checagem funciona em qualquer navegador (inclusive no iPhone).
   useEffect(() => {
@@ -49,12 +63,12 @@ export function Speak({ tab }: { tab: Tab }) {
     setAnalyzing(true);
     transcribeAudio(checker.blob)
       .then(({ text }) => {
-        if (text) setResult({ heard: text, ...scorePronunciation(target, text) });
+        if (text) showResult(target, text);
         else setCheckError("Não ouvi nada. Fale a frase logo depois de tocar no botão.");
       })
       .catch((err) => setCheckError(err instanceof ApiError ? err.message : "Sem conexão com o servidor."))
       .finally(() => setAnalyzing(false));
-  }, [checker.blob, phrase]);
+  }, [checker.blob, phrase, showResult]);
 
   useEffect(() => {
     if (checker.error) setCheckError(checker.error);
@@ -109,8 +123,7 @@ export function Speak({ tab }: { tab: Tab }) {
     setCheckError("");
     setResult(null);
     try {
-      const heard = await listenOnce();
-      setResult({ heard, ...scorePronunciation(target, heard) });
+      showResult(target, await listenOnce());
     } catch (err) {
       setCheckError(err instanceof Error ? err.message : "Não deu pra ouvir. Tenta de novo.");
     } finally {
@@ -226,6 +239,9 @@ export function Speak({ tab }: { tab: Tab }) {
                     </p>
                   </div>
                 </div>
+                {saveFailed && (
+                  <p className="footnote">Não consegui guardar essa nota no seu progresso. A checagem vale do mesmo jeito.</p>
+                )}
                 <div className="word-chips" lang="en">
                   {result.words.map((w, i) => (
                     <span key={`${w.word}-${i}`} className={`word-chip ${w.ok ? "ok" : "miss"}`}>

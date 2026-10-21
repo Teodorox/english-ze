@@ -6,7 +6,7 @@ from typing import Annotated, Literal
 from fastapi import Depends, FastAPI, HTTPException, Path, Query, Request, Response
 from fastapi.concurrency import run_in_threadpool
 from psycopg.types.json import Jsonb
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from . import auth, db, security, srs, transcribe, tutor, web
 from .config import load_env_file
@@ -14,6 +14,7 @@ from .progress import compute_streak
 
 MISTAKES_CATEGORY = "meus-erros"
 MAX_ID = 2**31 - 1  # maior id que cabe no banco: acima disso é 404 direto, sem erro 500
+MAX_SPEECH_CHECKS_PER_DAY = 500  # bem acima de qualquer estudo de verdade; impede encher o banco
 
 load_env_file()
 log = logging.getLogger("english_ze.security")
@@ -55,8 +56,28 @@ class CardIn(BaseModel):
     _strip = field_validator("front", "back", "note", "category", "source")(_stripped)
 
 
+StudyMode = Literal["read", "listen"]
+
+
 class ReviewIn(BaseModel):
     grade: int = Field(ge=0, le=3)
+    mode: StudyMode | None = None  # sem modo = app antigo; a revisão vale do mesmo jeito
+
+
+class SpeechCheckIn(BaseModel):
+    """Resultado de um "Checar pronúncia": só os números, nunca o áudio nem o texto entendido."""
+
+    model_config = ConfigDict(strict=True)  # "3" (texto) não vira 3
+
+    words_total: int = Field(ge=1, le=500)
+    words_ok: int = Field(ge=0, le=500)
+    card_id: int | None = Field(default=None, ge=1, le=MAX_ID)
+
+    @model_validator(mode="after")
+    def _ok_within_total(self):
+        if self.words_ok > self.words_total:
+            raise ValueError("words_ok não pode passar de words_total")
+        return self
 
 
 class JournalIn(BaseModel):
@@ -341,10 +362,33 @@ def review(card_id: CardId, body: ReviewIn, user: CurrentUser):
             (new_state.ease, new_state.interval_days, new_state.reps, new_state.lapses, due, today, card_id),
         )
         conn.execute(
-            "INSERT INTO reviews (card_id, grade, reviewed_on) VALUES (%s, %s, %s)",
-            (card_id, body.grade, today),
+            "INSERT INTO reviews (card_id, grade, mode, reviewed_on) VALUES (%s, %s, %s, %s)",
+            (card_id, body.grade, body.mode, today),
         )
     return {"due": due.isoformat(), "interval_days": new_state.interval_days}
+
+
+@app.post("/api/speech-checks", status_code=201)
+def save_speech_check(body: SpeechCheckIn, user: CurrentUser):
+    today = user.today()
+    with db.connect() as conn:
+        # Trava a linha da pessoa: dois envios ao mesmo tempo não passam juntos do limite do dia.
+        conn.execute("SELECT 1 FROM users WHERE id = %s FOR UPDATE", (user.id,))
+        done = conn.execute(
+            "SELECT COUNT(*) AS n FROM speech_checks WHERE user_id = %s AND checked_on = %s", (user.id, today)
+        ).fetchone()["n"]
+        if done >= MAX_SPEECH_CHECKS_PER_DAY:
+            raise HTTPException(429, "Limite de checagens de hoje atingido. Volte amanhã!")
+        if body.card_id is not None and conn.execute(
+            "SELECT 1 FROM cards WHERE id = %s AND user_id = %s", (body.card_id, user.id)
+        ).fetchone() is None:
+            raise HTTPException(404, "Card não encontrado")
+        row = conn.execute(
+            "INSERT INTO speech_checks (user_id, card_id, words_total, words_ok, checked_on)"
+            " VALUES (%s, %s, %s, %s, %s) RETURNING id, score",
+            (user.id, body.card_id, body.words_total, body.words_ok, today),
+        ).fetchone()
+    return {"id": row["id"], "score": row["score"]}
 
 
 # ---------- Cards ----------
@@ -483,6 +527,9 @@ def stats(user: CurrentUser):
             " FROM cards WHERE user_id = %s",
             (today, today + timedelta(days=1), user.id),
         ).fetchone()
+        speech_today = conn.execute(
+            "SELECT COUNT(*) AS n FROM speech_checks WHERE user_id = %s AND checked_on = %s", (user.id, today)
+        ).fetchone()["n"]
 
     history = []
     for i in range(13, -1, -1):
@@ -492,6 +539,7 @@ def stats(user: CurrentUser):
     return {
         "streak": compute_streak(days, today),
         "reviews_today": per_day.get(today, 0),
+        "speech_checks_today": speech_today,
         **totals,
         "history": history,
     }

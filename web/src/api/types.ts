@@ -66,6 +66,7 @@ export interface CorrectResult {
 export interface Stats {
   streak: number;
   reviews_today: number;
+  speech_checks_today: number;
   total_cards: number;
   learned: number;
   mature: number;
