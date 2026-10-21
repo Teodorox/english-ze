@@ -1,7 +1,7 @@
 import logging
 from contextlib import asynccontextmanager
 from datetime import timedelta
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Path, Query, Request, Response
 from fastapi.concurrency import run_in_threadpool
@@ -78,10 +78,34 @@ class SignupIn(BaseModel):
     _strip = field_validator("name", "email", "invite")(_stripped)
 
 
+# Perfil de estudo (primeiro acesso). As mesmas listas estão no banco (migrações 004 e 005).
+Goal = Literal["streamers", "conversar", "trabalho", "musica", "viagem", "series", "provas"]
+Level = Literal["iniciante", "basico", "intermediario"]
+DailyMinutes = Literal[5, 10, 15, 20, 30]
+Goals = Annotated[list[Goal], Field(min_length=1, max_length=7)]
+
+
+def _unique(goals: list[str] | None) -> list[str] | None:
+    return None if goals is None else list(dict.fromkeys(goals))  # tira repetidos, mantém a ordem
+
+
 class ProfileIn(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=60)
     timezone: str | None = Field(default=None, max_length=64)
     learner: str | None = Field(default=None, max_length=1000)
+    goals: Goals | None = None
+    level: Level | None = None
+    daily_minutes: DailyMinutes | None = None
+
+    _goals = field_validator("goals")(_unique)
+
+
+class OnboardingIn(BaseModel):
+    goals: Goals
+    level: Level
+    daily_minutes: DailyMinutes
+
+    _goals = field_validator("goals")(_unique)
 
 
 class PasswordIn(BaseModel):
@@ -117,6 +141,9 @@ PROFILE_UPDATES = {
     "name": "UPDATE users SET name = %s WHERE id = %s",
     "timezone": "UPDATE users SET timezone = %s WHERE id = %s",
     "learner": "UPDATE users SET learner = %s WHERE id = %s",
+    "goals": "UPDATE users SET goals = %s WHERE id = %s",
+    "level": "UPDATE users SET level = %s WHERE id = %s",
+    "daily_minutes": "UPDATE users SET daily_minutes = %s WHERE id = %s",
 }
 
 
@@ -126,7 +153,17 @@ def escape_like(text: str) -> str:
 
 
 def _me(user: auth.User) -> dict:
-    return {"id": user.id, "email": user.email, "name": user.name, "timezone": user.timezone, "learner": user.learner}
+    return {
+        "id": user.id,
+        "email": user.email,
+        "name": user.name,
+        "timezone": user.timezone,
+        "learner": user.learner,
+        "goals": user.goals,
+        "level": user.level,
+        "daily_minutes": user.daily_minutes,
+        "onboarded": user.onboarded,
+    }
 
 
 @app.post("/api/login")
@@ -207,10 +244,19 @@ def update_me(body: ProfileIn, user: CurrentUser):
         for column, query in PROFILE_UPDATES.items():
             if column in changes:
                 conn.execute(query, (changes[column], user.id))
-        row = conn.execute(
-            "SELECT id, email, name, timezone, learner FROM users WHERE id = %s", (user.id,)
-        ).fetchone()
-    return _me(auth.User(**row))
+        return _me(auth.load_user(conn, user.id))
+
+
+@app.post("/api/me/onboarding")
+def complete_onboarding(body: OnboardingIn, user: CurrentUser):
+    """Respostas do primeiro acesso. Pode repetir: só a primeira data de conclusão fica."""
+    with db.connect() as conn:
+        conn.execute(
+            "UPDATE users SET goals = %s, level = %s, daily_minutes = %s,"
+            " onboarded_at = COALESCE(onboarded_at, now()) WHERE id = %s",
+            (body.goals, body.level, body.daily_minutes, user.id),
+        )
+        return _me(auth.load_user(conn, user.id))
 
 
 @app.post("/api/me/password")

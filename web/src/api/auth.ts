@@ -1,5 +1,5 @@
 import { api } from "./client";
-import type { Me } from "./types";
+import type { Me, StudyProfile } from "./types";
 
 export interface SignupData {
   name: string;
@@ -23,8 +23,13 @@ export const signup = (data: SignupData) =>
 
 export const logout = () => api<{ ok: true }>("/api/logout", { method: "POST" });
 
-export const updateMe = (changes: Partial<Pick<Me, "name" | "timezone" | "learner">>) =>
-  api<Me>("/api/me", { method: "PATCH", body: changes });
+export const updateMe = (
+  changes: Partial<Pick<Me, "name" | "timezone" | "learner" | "goals" | "daily_minutes">> & { level?: StudyProfile["level"] },
+) => api<Me>("/api/me", { method: "PATCH", body: changes });
+
+/** Respostas do primeiro acesso: objetivos, nível e tempo por dia. */
+export const completeOnboarding = (profile: StudyProfile) =>
+  api<Me>("/api/me/onboarding", { method: "POST", body: profile });
 
 export const changePassword = (current: string, next: string) =>
   api<{ ok: true }>("/api/me/password", { method: "POST", body: { current, new: next } });

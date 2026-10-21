@@ -122,7 +122,10 @@ button.group-button {
 }
 button.group-button:active { transform: none; background: var(--fill); }
 .chevron { color: var(--secondary); font-size: 22px; line-height: 1; }
-.settings-notice { margin-top: 0; color: var(--green-text); }
+.settings-group > button.group-button:first-child { border-top: none; }
+.group-detail { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.group-value { overflow: hidden; max-width: 190px; color: var(--secondary); font-size: 15px; font-weight: 400; text-overflow: ellipsis; white-space: nowrap; }
+.settings-notice { margin: -4px 0 14px; }
 
 button.link-button.settings-delete { display: flex; margin: 14px auto 0; color: var(--red-text); font-size: 15px; }
 

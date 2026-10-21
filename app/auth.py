@@ -54,6 +54,10 @@ class User:
     name: str
     timezone: str
     learner: str
+    goals: list[str]
+    level: str | None
+    daily_minutes: int
+    onboarded: bool
 
     def today(self) -> date:
         return db.today(self.timezone)
@@ -159,15 +163,27 @@ def create_session(conn: psycopg.Connection, user_id: int) -> str:
     return token
 
 
+# As colunas que viram um User. Consultas fixas, montadas só com texto do código (nada vem de fora).
+_USER_COLUMNS = (
+    "SELECT u.id, u.email, u.name, u.timezone, u.learner, u.goals, u.level, u.daily_minutes,"
+    " u.onboarded_at IS NOT NULL AS onboarded"
+)
+USER_BY_ID = _USER_COLUMNS + " FROM users u WHERE u.id = %s"
+USER_BY_TOKEN = (
+    _USER_COLUMNS + " FROM sessions s JOIN users u ON u.id = s.user_id"
+    " WHERE s.token_hash = %s AND s.expires_at > now()"
+)
+
+
+def load_user(conn: psycopg.Connection, user_id: int) -> User:
+    return User(**conn.execute(USER_BY_ID, (user_id,)).fetchone())
+
+
 def user_for_token(token: str) -> User | None:
     if not token:
         return None
     with db.connect() as conn:
-        row = conn.execute(
-            "SELECT u.id, u.email, u.name, u.timezone, u.learner FROM sessions s JOIN users u ON u.id = s.user_id"
-            " WHERE s.token_hash = %s AND s.expires_at > now()",
-            (_token_hash(token),),
-        ).fetchone()
+        row = conn.execute(USER_BY_TOKEN, (_token_hash(token),)).fetchone()
     return User(**row) if row else None
 
 

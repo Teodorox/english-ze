@@ -125,7 +125,8 @@ def test_update_profile(client):
     res = client.patch("/api/me", json={"name": " Ana Clara ", "timezone": "Europe/Lisbon", "learner": "Nível B2"})
     assert res.status_code == 200
     assert res.json() | {"id": 0} == {
-        "id": 0, "email": "ana@example.com", "name": "Ana Clara", "timezone": "Europe/Lisbon", "learner": "Nível B2"
+        "id": 0, "email": "ana@example.com", "name": "Ana Clara", "timezone": "Europe/Lisbon", "learner": "Nível B2",
+        "goals": [], "level": None, "daily_minutes": 10, "onboarded": False,
     }
     assert client.patch("/api/me", json={"timezone": "Marte/Base"}).status_code == 422
     assert client.patch("/api/me", json={"name": "   "}).status_code == 422

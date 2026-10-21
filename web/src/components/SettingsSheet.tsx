@@ -2,8 +2,10 @@ import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "rea
 import { changePassword, deleteAccount, logoutOtherDevices, updateMe } from "../api/auth";
 import { ApiError } from "../api/client";
 import type { Me } from "../api/types";
+import { goalsSummary, levelLabel, type DailyMinutes, type Goal, type Level } from "../lib/studyProfile";
 import { loadThemePref, setThemePref, type ThemePref } from "../lib/theme";
 import { SegmentedControl } from "./SegmentedControl";
+import { GoalPicker, LevelPicker, MinutesPicker } from "./StudyPickers";
 
 const PASSWORD_MIN = 8;
 
@@ -16,7 +18,7 @@ interface SettingsSheetProps {
 }
 
 /** Telas dentro da folha, como a navegação dos Ajustes do iPhone. */
-type View = "main" | "name" | "password" | "delete";
+type View = "main" | "name" | "password" | "delete" | "goals" | "level" | "minutes";
 
 const errorMessage = (err: unknown) => (err instanceof ApiError ? err.message : "Sem conexão com o servidor.");
 
@@ -68,6 +70,11 @@ export function SettingsSheet({ open, onClose, me, onMeChange, onLogout }: Setti
               OK
             </button>
           </div>
+          {notice && (
+            <p className="login-success settings-notice" role="status">
+              {notice}
+            </p>
+          )}
 
           <h3 className="section-header">Conta</h3>
           <div className="settings-group">
@@ -84,11 +91,19 @@ export function SettingsSheet({ open, onClose, me, onMeChange, onLogout }: Setti
             <GroupButton onClick={() => setView("password")}>Trocar senha</GroupButton>
             <OtherDevicesButton onDone={setNotice} />
           </div>
-          {notice && (
-            <p className="footnote sheet-hint settings-notice" role="status">
-              {notice}
-            </p>
-          )}
+
+          <h3 className="section-header">Meu estudo</h3>
+          <div className="settings-group">
+            <GroupButton onClick={() => setView("goals")} detail={goalsSummary(me.goals) || "Escolher"}>
+              Objetivos
+            </GroupButton>
+            <GroupButton onClick={() => setView("level")} detail={levelLabel(me.level)}>
+              Nível
+            </GroupButton>
+            <GroupButton onClick={() => setView("minutes")} detail={`${me.daily_minutes} min`}>
+              Tempo por dia
+            </GroupButton>
+          </div>
 
           <h3 className="section-header">Aparência</h3>
           <SegmentedControl
@@ -115,18 +130,78 @@ export function SettingsSheet({ open, onClose, me, onMeChange, onLogout }: Setti
       {view === "name" && <NameForm me={me} onBack={back} onSaved={onMeChange} />}
       {view === "password" && <PasswordForm onBack={back} />}
       {view === "delete" && <DeleteForm onBack={back} onDeleted={onLogout} />}
+      {(view === "goals" || view === "level" || view === "minutes") && (
+        <StudyForm field={view} me={me} onBack={back} onSaved={onMeChange} />
+      )}
     </dialog>
   );
 }
 
-function GroupButton({ onClick, children }: { onClick: () => void; children: ReactNode }) {
+function GroupButton({
+  onClick,
+  children,
+  detail,
+}: {
+  onClick: () => void;
+  children: ReactNode;
+  detail?: string;
+}) {
   return (
     <button type="button" className="group-button" onClick={onClick}>
       {children}
-      <span className="chevron" aria-hidden="true">
-        ›
+      <span className="group-detail">
+        {detail && <span className="group-value">{detail}</span>}
+        <span className="chevron" aria-hidden="true">
+          ›
+        </span>
       </span>
     </button>
+  );
+}
+
+const STUDY_TITLES = { goals: "Objetivos", level: "Nível", minutes: "Tempo por dia" } as const;
+
+/** Muda uma resposta do primeiro acesso (objetivos, nível ou tempo por dia). */
+function StudyForm({
+  field,
+  me,
+  onBack,
+  onSaved,
+}: {
+  field: keyof typeof STUDY_TITLES;
+  me: Me;
+  onBack: (msg?: string) => void;
+  onSaved: (me: Me) => void;
+}) {
+  const [goals, setGoals] = useState<Goal[]>(me.goals);
+  const [level, setLevel] = useState<Level | null>(me.level);
+  const [minutes, setMinutes] = useState<DailyMinutes>(me.daily_minutes);
+  const form = useFormState();
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    form.run(async () => {
+      const changes =
+        field === "goals" ? { goals } : field === "level" ? { level: level ?? undefined } : { daily_minutes: minutes };
+      onSaved(await updateMe(changes));
+      onBack(`${STUDY_TITLES[field]} atualizado.`);
+    });
+  }
+
+  const ready = field === "goals" ? goals.length > 0 : field === "level" ? level !== null : true;
+  return (
+    <form className="settings-form" onSubmit={handleSubmit}>
+      <SubHead title={STUDY_TITLES[field]} onBack={() => onBack()} />
+      {field === "goals" && <GoalPicker value={goals} onChange={setGoals} />}
+      {field === "level" && <LevelPicker value={level} onChange={setLevel} />}
+      {field === "minutes" && <MinutesPicker value={minutes} onChange={setMinutes} />}
+      <button type="submit" className="primary" disabled={form.sending || !ready}>
+        {form.sending ? "Salvando..." : "Salvar"}
+      </button>
+      <p className="login-error" role="alert">
+        {form.error}
+      </p>
+    </form>
   );
 }
 

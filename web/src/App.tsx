@@ -8,6 +8,7 @@ import { Layout } from "./components/Layout";
 import { Journal } from "./pages/Journal";
 import { Login } from "./pages/Login";
 import { Mine } from "./pages/Mine";
+import { Onboarding } from "./pages/Onboarding";
 import { Speak } from "./pages/Speak";
 import { StatsPage } from "./pages/StatsPage";
 import { Study } from "./pages/Study";
@@ -91,6 +92,7 @@ function Screen({ auth, onLogin, onLogout, onMeChange }: ScreenProps) {
         </main>
       );
     case "ready":
+      if (!auth.me.onboarded) return <Onboarding me={auth.me} onDone={onMeChange} />;
       return (
         <BrowserRouter>
           <Routes>

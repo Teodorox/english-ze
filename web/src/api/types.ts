@@ -1,5 +1,7 @@
 // Tipos que espelham as respostas da API Python (app/main.py).
 
+import type { DailyMinutes, Goal, Level } from "../lib/studyProfile";
+
 export type Grade = 0 | 1 | 2 | 3;
 
 export interface Card {
@@ -80,6 +82,18 @@ export interface Me {
   timezone: string;
   /** Como a IA deve tratar essa pessoa na correção ("" = descrição padrão). */
   learner: string;
+  /** Perfil de estudo, respondido no primeiro acesso. */
+  goals: Goal[];
+  level: Level | null;
+  daily_minutes: DailyMinutes;
+  /** false = ainda não passou pelo primeiro acesso. */
+  onboarded: boolean;
+}
+
+export interface StudyProfile {
+  goals: Goal[];
+  level: Level;
+  daily_minutes: DailyMinutes;
 }
 
 export interface TutorStatus {

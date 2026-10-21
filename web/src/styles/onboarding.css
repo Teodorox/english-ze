@@ -1,0 +1,39 @@
+/* Primeiro acesso e seletores do perfil de estudo (também usados nos Ajustes) */
+.onboarding { justify-content: flex-start; padding-top: calc(env(safe-area-inset-top) + 18px); text-align: left; align-items: stretch; }
+.onboarding .app-icon { align-self: center; margin-top: 12vh; }
+.onboarding .large-title { text-align: center; }
+.onboarding-lede { margin: 0; text-align: center; }
+.onboarding-title { margin: 8px 0 0; font-size: 28px; font-weight: 700; line-height: 1.15; text-align: center; }
+button.onboarding-next { width: 100%; margin-top: 8px; }
+
+.onboarding-top { display: flex; align-items: center; justify-content: space-between; min-height: 44px; }
+.onboarding-step { display: flex; gap: 6px; margin-right: 4px; }
+.onboarding-step i { width: 26px; height: 6px; border-radius: 3px; background: var(--fill); }
+.onboarding-step i.done { background: var(--tint); }
+
+/* Opções: cartões que acendem quando escolhidos */
+button.choice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  min-height: 56px;
+  padding: 12px 16px;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  background: var(--fill);
+  text-align: left;
+}
+button.choice strong { font-size: 17px; }
+button.choice span { color: var(--secondary); font-size: 14px; font-weight: 400; }
+button.choice:is([aria-pressed="true"], [aria-checked="true"]) { border-color: var(--tint); background: var(--tint-fill); }
+button.choice:is([aria-pressed="true"], [aria-checked="true"]) strong { color: var(--tint-text); }
+
+.choice-list { display: flex; flex-direction: column; gap: 10px; }
+.goal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+button.goal-choice { flex-direction: row; align-items: center; justify-content: flex-start; gap: 10px; font-size: 16px; }
+button.goal-choice[aria-pressed="true"] { color: var(--tint-text); }
+.choice-emoji { font-size: 22px; line-height: 1; }
+
+@media (max-width: 340px) { .goal-grid { grid-template-columns: 1fr; } }
