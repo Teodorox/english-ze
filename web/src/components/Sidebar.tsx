@@ -8,6 +8,7 @@ import { loadPref } from "../lib/storage";
 import { TABS } from "../tabs";
 import { ActivityRings } from "./ActivityRings";
 import { GearIcon } from "./icons";
+import { ZeIcon } from "./ZeIcon";
 
 /** Navegação do computador: barra lateral de vidro, como no Apple Music e nos Ajustes do Mac. */
 export function Sidebar({ onOpenSettings }: { onOpenSettings: () => void }) {
@@ -15,9 +16,9 @@ export function Sidebar({ onOpenSettings }: { onOpenSettings: () => void }) {
     <nav className="sidebar glass" aria-label="Abas">
       <div className="sidebar-brand">
         <span className="sidebar-logo" aria-hidden="true">
-          Ze
+          <ZeIcon calm />
         </span>
-        English Ze
+        English Zé
       </div>
       {TABS.map(({ path, Icon, title, pt }) => (
         <NavLink key={path} to={path} className="sidebar-link">

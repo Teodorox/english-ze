@@ -1,0 +1,43 @@
+/* Ícone animado: "Zé" e o Zé se revezando (ciclo de 8 s). Desenho em components/ZeIcon.tsx. */
+.ze-icon { display: block; width: 100%; height: 100%; overflow: visible; }
+.ze-icon .ze-word { font-family: var(--font); font-weight: 800; letter-spacing: -1.5px; }
+
+.ze-icon :is(.face-ze, .face-m) { transform-box: view-box; transform-origin: 60px 60px; }
+.ze-icon :is(.tuft, .blink) { transform-box: fill-box; }
+.ze-icon .face-ze { animation: ze-word 8s ease-in-out infinite; }
+.ze-icon .face-m { animation: ze-hop 8s ease-in-out infinite; }
+.ze-icon .look { animation: ze-look 8s ease-in-out infinite; }
+.ze-icon .blink { transform: scaleY(0); transform-origin: 50% 0%; animation: ze-blink 4.2s infinite; }
+.ze-icon .tuft { transform-origin: 50% 100%; animation: ze-crest 2.4s ease-in-out infinite; }
+
+/* Modo calmo: três ciclos e para no "Zé" (o fim de cada animação é o "Zé" sozinho) */
+.ze-icon.calm :is(.face-ze, .face-m, .look) { animation-iteration-count: 3; animation-fill-mode: both; }
+.ze-icon.calm :is(.blink, .tuft) { animation-iteration-count: 6; }
+
+@keyframes ze-word {
+  0%, 28.5% { transform: none; opacity: 1; }
+  34.5%, 92.5% { transform: translateY(30px) scale(0.3); opacity: 0; }
+  97.75% { transform: scale(1.08); opacity: 1; }
+  100% { transform: none; opacity: 1; }
+}
+@keyframes ze-hop {
+  0%, 31.5% { transform: translateY(96px); }
+  39% { transform: translateY(-6px); }
+  42.75%, 88% { transform: translateY(0); }
+  94%, 100% { transform: translateY(96px); }
+}
+/* olha pra esquerda, pra direita e pra cima enquanto está no ícone */
+@keyframes ze-look {
+  0%, 45% { transform: none; }
+  48.75%, 56.25% { transform: translateX(-6.4px); }
+  61.25%, 68.75% { transform: translateX(6.4px); }
+  73.75%, 80% { transform: translateY(-4.5px); }
+  85%, 100% { transform: none; }
+}
+@keyframes ze-blink { 0%, 92%, 100% { transform: scaleY(0); } 95% { transform: scaleY(1); } }
+@keyframes ze-crest { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-6deg); } 60% { transform: rotate(5deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ze-icon * { animation: none !important; }
+  .ze-icon .face-m { display: none; }
+}

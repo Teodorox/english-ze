@@ -11,19 +11,11 @@
   text-align: center;
 }
 
+/* A sombra segue o contorno arredondado do desenho (box-shadow faria um aro no quadrado) */
 .app-icon {
-  width: 96px;
-  height: 96px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 22px;
-  background: var(--tint);
-  box-shadow: 0 12px 30px var(--tint-glow);
-  color: #ffffff;
-  font-size: 40px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  width: 104px;
+  height: 104px;
+  filter: drop-shadow(0 10px 18px var(--tint-glow));
 }
 
 .login-slang { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }

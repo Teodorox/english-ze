@@ -77,7 +77,7 @@ def ask_new_password() -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Administração das contas do English Ze.")
+    parser = argparse.ArgumentParser(description="Administração das contas do English Zé.")
     sub = parser.add_subparsers(dest="command", required=True)
     invite = sub.add_parser("convite", help="cria um código de convite")
     invite.add_argument("--para", default="", help="pra quem é (só pra você lembrar)")

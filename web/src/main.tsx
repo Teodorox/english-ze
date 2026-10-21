@@ -5,6 +5,7 @@ import { initTheme } from "./lib/theme";
 import "./styles/tokens.css";
 import "./styles/base.css";
 import "./styles/layout.css";
+import "./styles/zeicon.css";
 import "./styles/login.css";
 import "./styles/study.css";
 import "./styles/speak.css";

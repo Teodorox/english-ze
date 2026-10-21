@@ -7,7 +7,8 @@
   padding: calc(env(safe-area-inset-top) + 12px) 18px calc(env(safe-area-inset-bottom) + 110px);
 }
 
-.toolbar-top { display: flex; justify-content: flex-end; gap: 10px; min-height: 44px; margin-bottom: 8px; }
+.toolbar-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 44px; margin-bottom: 8px; }
+.toolbar-logo { display: block; flex: none; width: 40px; height: 40px; }
 
 /* ---------- Barra de abas flutuante (Liquid Glass) ---------- */
 

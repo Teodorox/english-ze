@@ -33,7 +33,7 @@ async def lifespan(_: FastAPI):
 
 
 # Sem /docs nem /openapi.json: não publica o mapa da API pra quem não é do app.
-app = FastAPI(title="English Ze", lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
+app = FastAPI(title="English Zé", lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
 app.middleware("http")(security.protect)
 app.add_middleware(
     security.BodyLimitMiddleware,

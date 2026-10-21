@@ -1,7 +1,7 @@
 @echo off
 chcp 65001 > nul
 set PYTHONUTF8=1
-title English Ze
+title English Zé
 cd /d "%~dp0"
 
 if not exist ".venv\Scripts\python.exe" (
@@ -11,7 +11,7 @@ if not exist ".venv\Scripts\python.exe" (
 )
 
 echo ============================================================
-echo   English Ze - o navegador vai abrir sozinho.
+echo   English Zé - o navegador vai abrir sozinho.
 echo   Deixe esta janela aberta enquanto estiver estudando.
 echo ============================================================
 echo.

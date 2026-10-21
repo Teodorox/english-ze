@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { login, signup } from "../api/auth";
 import { ApiError } from "../api/client";
 import { SegmentedControl } from "../components/SegmentedControl";
+import { ZeIcon } from "../components/ZeIcon";
 
 const SLANG = ["no cap", "W", "let him cook", "bet"];
 const PASSWORD_MIN = 8;
@@ -59,9 +60,9 @@ export function Login({ onSuccess }: { onSuccess: () => void }) {
   return (
     <main className="login-wrap">
       <div className="app-icon" aria-hidden="true">
-        Ze
+        <ZeIcon />
       </div>
-      <h1 className="large-title">English Ze</h1>
+      <h1 className="large-title">English Zé</h1>
       <p className="subtitle" style={{ marginBottom: 0 }}>
         Inglês de verdade, do jeito que a internet fala.
       </p>

@@ -231,7 +231,7 @@ if __name__ == "__main__":
         print(f"No celular (mesmo Wi-Fi), abra: https://{ip}:{port}")
         print("O navegador vai avisar que a conexão não é privada: toque em 'Avançado' > 'Continuar'.")
 
-    print(f"English Ze rodando em {url}")
+    print(f"English Zé rodando em {url}")
     if not args.tunnel:  # no túnel, o app é pra outra pessoa: não abre o navegador aqui
         threading.Timer(1.5, lambda: webbrowser.open(url)).start()
     uvicorn.run("app.main:app", **options)

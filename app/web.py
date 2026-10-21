@@ -14,7 +14,7 @@ from .config import ROOT
 
 NOT_BUILT_PAGE = """<!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>English Ze</title></head>
+<title>English Zé</title></head>
 <body style="font-family: system-ui, sans-serif; max-width: 560px; margin: 60px auto; padding: 0 20px; line-height: 1.5">
 <h1>O app ainda não foi gerado</h1>
 <p>Abra pelo <strong>English Ze.bat</strong> (ele gera sozinho) ou rode:</p>

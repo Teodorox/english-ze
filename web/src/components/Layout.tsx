@@ -6,6 +6,7 @@ import { TABS } from "../tabs";
 import { GearIcon } from "./icons";
 import { MeContext } from "./MeContext";
 import { SettingsSheet } from "./SettingsSheet";
+import { ZeIcon } from "./ZeIcon";
 import { Sidebar } from "./Sidebar";
 
 interface LayoutProps {
@@ -27,6 +28,9 @@ export function Layout({ me, onMeChange, onLogout }: LayoutProps) {
         <main className="page">
           {!desktop && (
             <div className="toolbar-top">
+              <span className="toolbar-logo" aria-hidden="true">
+                <ZeIcon calm />
+              </span>
               <button className="icon glass" aria-label="Ajustes" title="Ajustes" onClick={() => setSettingsOpen(true)}>
                 <GearIcon />
               </button>

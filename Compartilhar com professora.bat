@@ -1,7 +1,7 @@
 @echo off
 chcp 65001 > nul
 set PYTHONUTF8=1
-title English Ze - acesso da professora
+title English Zé - acesso da professora
 cd /d "%~dp0"
 
 if not exist ".venv\Scripts\python.exe" (
@@ -11,7 +11,7 @@ if not exist ".venv\Scripts\python.exe" (
 )
 
 echo ============================================================
-echo   English Ze - acesso da professora
+echo   English Zé - acesso da professora
 echo   O link https://... aparece abaixo e ja fica copiado.
 echo   Ela entra com a conta dela (e-mail e senha).
 echo   Deixe esta janela ABERTA enquanto ela estiver usando.

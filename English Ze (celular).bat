@@ -1,7 +1,7 @@
 @echo off
 chcp 65001 > nul
 set PYTHONUTF8=1
-title English Ze - celular (Wi-Fi)
+title English Zé - celular (Wi-Fi)
 cd /d "%~dp0"
 
 if not exist ".venv\Scripts\python.exe" (
@@ -11,7 +11,7 @@ if not exist ".venv\Scripts\python.exe" (
 )
 
 echo ============================================================
-echo   English Ze - acesso pelo celular no mesmo Wi-Fi
+echo   English Zé - acesso pelo celular no mesmo Wi-Fi
 echo   Abra no celular o endereco https://... que aparece abaixo.
 echo   Deixe esta janela aberta enquanto estiver usando.
 echo ============================================================
