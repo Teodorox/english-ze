@@ -82,3 +82,61 @@ button.destructive-text { width: 100%; background: var(--fill); color: #ff3b30; 
   backdrop-filter: var(--blur);
   pointer-events: none;
 }
+
+/* ---------- Ajustes > Conta (lista agrupada, como nos Ajustes do iPhone) ---------- */
+
+.settings-group {
+  overflow: hidden;
+  margin-bottom: 8px;
+  border-radius: var(--radius-control);
+  background: var(--fill);
+}
+.account-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+.avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--tint);
+  color: #ffffff;
+  font-size: 19px;
+  font-weight: 700;
+}
+.account-text { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
+.account-text strong { font-size: 17px; }
+.account-text span { overflow: hidden; color: var(--secondary); font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
+
+button.group-button {
+  width: 100%;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-top: 1px solid var(--separator);
+  border-radius: 0;
+  background: none;
+  color: var(--tint-text);
+  font-weight: 500;
+  text-align: left;
+}
+button.group-button:active { transform: none; background: var(--fill); }
+.chevron { color: var(--secondary); font-size: 22px; line-height: 1; }
+.settings-notice { margin-top: 0; color: var(--green-text); }
+
+button.link-button.settings-delete { display: flex; margin: 14px auto 0; color: var(--red-text); font-size: 15px; }
+
+.sheet-subhead { margin-bottom: 14px; }
+.sheet-subhead h2 { flex: 1; text-align: center; }
+button.back-button { margin: 0; font-size: 17px; font-weight: 400; }
+.sheet-head-spacer { width: 72px; } /* equilibra o "‹ Ajustes" pra o título ficar no meio */
+
+.settings-form { display: flex; flex-direction: column; gap: 12px; }
+.settings-form button { width: 100%; }
+
+.delete-warning { padding: 14px; border-radius: var(--radius-control); background: var(--red-fill); color: var(--label); font-size: 15px; }
+.delete-warning strong { color: var(--red-text); }
+.delete-warning p { margin: 6px 0 0; }
+
+button.destructive-fill { background: #ff3b30; color: #ffffff; }
+.settings-form button.link-button { width: auto; }
+.sheet-subhead h2 { white-space: nowrap; }

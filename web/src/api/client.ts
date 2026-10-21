@@ -12,8 +12,10 @@ export class ApiError extends Error {
 /** Disparado quando a sessão expira, para o App voltar à tela de login. */
 export const AUTH_REQUIRED_EVENT = "ez:auth-required";
 
+const PUBLIC_PATHS = new Set(["/api/login", "/api/signup"]);
+
 interface RequestOptions {
-  method?: "GET" | "POST" | "DELETE";
+  method?: "GET" | "POST" | "PATCH" | "DELETE";
   body?: unknown;
   signal?: AbortSignal;
 }
@@ -29,7 +31,8 @@ export async function api<T>(path: string, { method = "GET", body, signal }: Req
     body: isBlob ? body : hasBody ? JSON.stringify(body) : undefined,
   });
 
-  if (res.status === 401 && path !== "/api/login") {
+  // Login e cadastro respondem 401/403 por senha errada: isso não é "sessão expirada".
+  if (res.status === 401 && !PUBLIC_PATHS.has(path)) {
     if (typeof window !== "undefined") window.dispatchEvent(new Event(AUTH_REQUIRED_EVENT));
     throw new ApiError("Faça login", 401);
   }

@@ -1,5 +1,5 @@
 // Tema do app: Automático (segue o aparelho), Claro ou Escuro.
-// O index.html aplica o tema antes do app carregar, pra não piscar a cor errada.
+// O public/theme-boot.js aplica o tema antes do app carregar, pra não piscar a cor errada.
 import { loadPref, savePref } from "./storage";
 
 export type ThemePref = "system" | "light" | "dark";

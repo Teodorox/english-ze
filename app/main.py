@@ -1,21 +1,28 @@
+import logging
 from contextlib import asynccontextmanager
 from datetime import timedelta
+from typing import Annotated
 
-from fastapi import FastAPI, HTTPException, Query, Request, Response
+from fastapi import Depends, FastAPI, HTTPException, Path, Query, Request, Response
 from fastapi.concurrency import run_in_threadpool
-from fastapi.responses import JSONResponse
 from psycopg.types.json import Jsonb
 from pydantic import BaseModel, Field, field_validator
 
-from . import auth, db, srs, transcribe, tutor, web
+from . import auth, db, security, srs, transcribe, tutor, web
 from .config import load_env_file
 from .progress import compute_streak
 
 MISTAKES_CATEGORY = "meus-erros"
-PUBLIC_API_PATHS = {"/api/login"}
+MAX_ID = 2**31 - 1  # maior id que cabe no banco: acima disso é 404 direto, sem erro 500
 
 load_env_file()
+log = logging.getLogger("english_ze.security")
 login_limiter = auth.LoginLimiter()
+
+# Toda rota de dados recebe quem está logado; sem login, responde 401 antes de rodar.
+CurrentUser = Annotated[auth.User, Depends(auth.current_user)]
+CardId = Annotated[int, Path(ge=1, le=MAX_ID)]
+EntryId = Annotated[int, Path(ge=1, le=MAX_ID)]
 
 
 @asynccontextmanager
@@ -25,18 +32,17 @@ async def lifespan(_: FastAPI):
     db.close_pool()
 
 
-app = FastAPI(title="English Ze", lifespan=lifespan)
+# Sem /docs nem /openapi.json: não publica o mapa da API pra quem não é do app.
+app = FastAPI(title="English Ze", lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
+app.middleware("http")(security.protect)
+app.add_middleware(
+    security.BodyLimitMiddleware,
+    per_path={"/api/transcribe": transcribe.MAX_AUDIO_BYTES + 1024},  # o áudio tem o limite dele
+)
 
 
-@app.middleware("http")
-async def require_login(request: Request, call_next):
-    """Protege os dados (a API). As telas do app são públicas: sem login, o React mostra o login."""
-    path = request.url.path
-    if not path.startswith("/api/") or path in PUBLIC_API_PATHS or not auth.enabled():
-        return await call_next(request)
-    if auth.valid_token(request.cookies.get(auth.COOKIE_NAME, "")):
-        return await call_next(request)
-    return JSONResponse({"detail": "Faça login"}, status_code=401)
+def _stripped(value: str) -> str:
+    return value.strip()
 
 
 class CardIn(BaseModel):
@@ -46,10 +52,7 @@ class CardIn(BaseModel):
     category: str = Field(default="geral", max_length=40)
     source: str = Field(default="", max_length=200)
 
-    @field_validator("front", "back", "note", "category", "source")
-    @classmethod
-    def strip(cls, value: str) -> str:
-        return value.strip()
+    _strip = field_validator("front", "back", "note", "category", "source")(_stripped)
 
 
 class ReviewIn(BaseModel):
@@ -61,74 +64,227 @@ class JournalIn(BaseModel):
 
 
 class LoginIn(BaseModel):
+    email: str = Field(max_length=254)
     password: str = Field(max_length=200)
 
 
-# ---------- Login ----------
+class SignupIn(BaseModel):
+    name: str = Field(min_length=1, max_length=60)
+    email: str = Field(max_length=254)
+    password: str = Field(min_length=auth.PASSWORD_MIN, max_length=200)
+    invite: str = Field(max_length=40)
+    timezone: str = Field(default=db.DEFAULT_TIMEZONE, max_length=64)  # o navegador manda o fuso do aparelho
 
-@app.post("/api/login")
-def login(body: LoginIn, request: Request, response: Response):
-    if not auth.enabled():
-        return {"ok": True}
-    client = request.client.host if request.client else "desconhecido"
-    if login_limiter.blocked(client):
-        raise HTTPException(429, "Muitas tentativas erradas. Espere alguns minutos.")
-    if not auth.check_password(body.password):
-        login_limiter.fail(client)
-        raise HTTPException(401, "Senha incorreta")
-    login_limiter.reset(client)
+    _strip = field_validator("name", "email", "invite")(_stripped)
+
+
+class ProfileIn(BaseModel):
+    name: str | None = Field(default=None, min_length=1, max_length=60)
+    timezone: str | None = Field(default=None, max_length=64)
+    learner: str | None = Field(default=None, max_length=1000)
+
+
+class PasswordIn(BaseModel):
+    current: str = Field(max_length=200)
+    new: str = Field(min_length=auth.PASSWORD_MIN, max_length=200)
+
+
+class ConfirmIn(BaseModel):
+    password: str = Field(max_length=200)
+
+
+# ---------- Conta ----------
+
+def _client_ip(request: Request) -> str:
+    return request.client.host if request.client else "desconhecido"
+
+
+def _start_session(request: Request, response: Response, user_id: int) -> None:
+    with db.connect() as conn:
+        token = auth.create_session(conn, user_id)
     response.set_cookie(
         auth.COOKIE_NAME,
-        auth.make_token(),
+        token,
         max_age=auth.SESSION_SECONDS,
         httponly=True,
         samesite="lax",
         secure=request.url.scheme == "https",
     )
+
+
+# Campos do perfil que a pessoa pode mudar, cada um com a sua consulta fixa.
+PROFILE_UPDATES = {
+    "name": "UPDATE users SET name = %s WHERE id = %s",
+    "timezone": "UPDATE users SET timezone = %s WHERE id = %s",
+    "learner": "UPDATE users SET learner = %s WHERE id = %s",
+}
+
+
+def escape_like(text: str) -> str:
+    """Busca literal: % e _ digitados viram texto, não curingas do LIKE."""
+    return text.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
+def _me(user: auth.User) -> dict:
+    return {"id": user.id, "email": user.email, "name": user.name, "timezone": user.timezone, "learner": user.learner}
+
+
+@app.post("/api/login")
+def login(body: LoginIn, request: Request, response: Response):
+    keys = (f"ip:{_client_ip(request)}", f"email:{auth.normalize_email(body.email)}")
+    if any(login_limiter.blocked(k) for k in keys):
+        raise HTTPException(429, "Muitas tentativas erradas. Espere alguns minutos.")
+    user_id = auth.authenticate(body.email, body.password)
+    if user_id is None:
+        for key in keys:
+            login_limiter.fail(key)
+        log.warning("Login recusado (ip %s)", _client_ip(request))
+        raise HTTPException(401, "E-mail ou senha incorretos")
+    for key in keys:
+        login_limiter.reset(key)
+    _start_session(request, response, user_id)
+    return {"ok": True}
+
+
+@app.post("/api/signup", status_code=201)
+def signup(body: SignupIn, request: Request):
+    """Cria a conta, mas não entra nela: a pessoa faz o login em seguida com o e-mail e a senha."""
+    ip_key = f"signup:{_client_ip(request)}"
+    if login_limiter.blocked(ip_key):
+        raise HTTPException(429, "Muitas tentativas erradas. Espere alguns minutos.")
+    if not auth.valid_email(body.email):
+        raise HTTPException(422, "Esse e-mail não parece válido")
+    if reason := auth.weak_password_reason(body.password, email=body.email, name=body.name):
+        raise HTTPException(422, reason)
+    if not auth.valid_timezone(body.timezone):
+        body.timezone = db.DEFAULT_TIMEZONE
+
+    with db.connect() as conn:
+        # FOR UPDATE: o mesmo convite usado em dois cadastros ao mesmo tempo só vale pra um.
+        invite = conn.execute(
+            "SELECT code FROM invites WHERE code = %s AND used_by IS NULL FOR UPDATE",
+            (auth.normalize_invite(body.invite),),
+        ).fetchone()
+        if invite is None:
+            login_limiter.fail(ip_key)  # dificulta adivinhar códigos
+            log.warning("Cadastro com convite inválido (ip %s)", _client_ip(request))
+            raise HTTPException(403, "Código de convite inválido ou já usado")
+        user_id = auth.create_user(
+            conn, email=body.email, name=body.name, password=body.password, timezone=body.timezone
+        )
+        if user_id is None:
+            login_limiter.fail(ip_key)  # dificulta descobrir quais e-mails têm conta
+            raise HTTPException(409, "Já existe uma conta com esse e-mail. Entre com ela.")
+        conn.execute("UPDATE invites SET used_by = %s, used_at = now() WHERE code = %s", (user_id, invite["code"]))
     return {"ok": True}
 
 
 @app.post("/api/logout")
-def logout(response: Response):
+def logout(request: Request, response: Response):
+    auth.end_session(auth.session_token(request))
     response.delete_cookie(auth.COOKIE_NAME)
     return {"ok": True}
 
 
-@app.get("/api/auth/status")
-def auth_status():
-    return {"enabled": auth.enabled()}
+@app.get("/api/me")
+def me(user: CurrentUser):
+    return _me(user)
+
+
+@app.patch("/api/me")
+def update_me(body: ProfileIn, user: CurrentUser):
+    changes = body.model_dump(exclude_none=True)
+    if "name" in changes:
+        changes["name"] = changes["name"].strip()
+        if not changes["name"]:
+            raise HTTPException(422, "O nome não pode ficar vazio")
+    if "timezone" in changes and not auth.valid_timezone(changes["timezone"]):
+        raise HTTPException(422, "Fuso horário desconhecido")
+    if "learner" in changes:
+        changes["learner"] = changes["learner"].strip()
+    with db.connect() as conn:
+        # Uma consulta fixa por campo: nada do que chega na requisição vira parte do SQL.
+        for column, query in PROFILE_UPDATES.items():
+            if column in changes:
+                conn.execute(query, (changes[column], user.id))
+        row = conn.execute(
+            "SELECT id, email, name, timezone, learner FROM users WHERE id = %s", (user.id,)
+        ).fetchone()
+    return _me(auth.User(**row))
+
+
+@app.post("/api/me/password")
+def change_password(body: PasswordIn, request: Request, user: CurrentUser):
+    key = f"password:{user.id}"
+    if login_limiter.blocked(key):
+        raise HTTPException(429, "Muitas tentativas erradas. Espere alguns minutos.")
+    if auth.authenticate(user.email, body.current) is None:
+        login_limiter.fail(key)
+        raise HTTPException(403, "A senha atual não confere")
+    if reason := auth.weak_password_reason(body.new, email=user.email, name=user.name):
+        raise HTTPException(422, reason)
+    with db.connect() as conn:
+        auth.set_password(conn, user.id, body.new)
+        # Quem soubesse a senha antiga perde o acesso: os outros aparelhos saem; este continua.
+        auth.end_other_sessions(conn, user.id, keep_token=auth.session_token(request))
+    return {"ok": True}
+
+
+@app.post("/api/me/logout-others")
+def logout_others(request: Request, user: CurrentUser):
+    with db.connect() as conn:
+        count = auth.end_other_sessions(conn, user.id, keep_token=auth.session_token(request))
+    return {"ended": count}
+
+
+@app.delete("/api/me")
+def delete_me(body: ConfirmIn, response: Response, user: CurrentUser):
+    """Apaga a conta e tudo dela de verdade (cards, revisões, diário, sessões). Não tem volta."""
+    key = f"password:{user.id}"
+    if login_limiter.blocked(key):
+        raise HTTPException(429, "Muitas tentativas erradas. Espere alguns minutos.")
+    if auth.authenticate(user.email, body.password) is None:
+        login_limiter.fail(key)
+        raise HTTPException(403, "Senha incorreta")
+    with db.connect() as conn:
+        conn.execute("DELETE FROM users WHERE id = %s", (user.id,))
+    log.warning("Conta %s apagada a pedido da pessoa", user.id)
+    response.delete_cookie(auth.COOKIE_NAME)
+    return {"ok": True}
 
 
 # ---------- Estudo ----------
 
 @app.get("/api/session")
-def session(new_limit: int = Query(10, ge=0, le=100)):
-    today = db.today()
+def session(user: CurrentUser, new_limit: int = Query(10, ge=0, le=100)):
+    today = user.today()
     with db.connect() as conn:
         due = conn.execute(
-            "SELECT * FROM cards WHERE introduced_on IS NOT NULL AND due <= %s ORDER BY due, id",
-            (today,),
+            "SELECT * FROM cards WHERE user_id = %s AND introduced_on IS NOT NULL AND due <= %s ORDER BY due, id",
+            (user.id, today),
         ).fetchall()
         introduced_today = conn.execute(
-            "SELECT COUNT(*) AS n FROM cards WHERE introduced_on = %s", (today,)
+            "SELECT COUNT(*) AS n FROM cards WHERE user_id = %s AND introduced_on = %s", (user.id, today)
         ).fetchone()["n"]
         remaining = max(0, new_limit - introduced_today)
         # Prioridade dos novos: seus erros do diário, depois o que você minerou, depois o deck inicial.
         new = conn.execute(
-            "SELECT * FROM cards WHERE introduced_on IS NULL"
+            "SELECT * FROM cards WHERE user_id = %s AND introduced_on IS NULL"
             " ORDER BY CASE WHEN category = %s THEN 0 WHEN source != %s THEN 1 ELSE 2 END, id"
             " LIMIT %s",
-            (MISTAKES_CATEGORY, db.SEED_SOURCE, remaining),
+            (user.id, MISTAKES_CATEGORY, db.SEED_SOURCE, remaining),
         ).fetchall()
     return {"due": due, "new": new}
 
 
 @app.post("/api/cards/{card_id}/review")
-def review(card_id: int, body: ReviewIn):
-    today = db.today()
+def review(card_id: CardId, body: ReviewIn, user: CurrentUser):
+    today = user.today()
     with db.connect() as conn:
         # FOR UPDATE: duas avaliações do mesmo card ao mesmo tempo (dois aparelhos) não se atropelam.
-        row = conn.execute("SELECT * FROM cards WHERE id = %s FOR UPDATE", (card_id,)).fetchone()
+        row = conn.execute(
+            "SELECT * FROM cards WHERE id = %s AND user_id = %s FOR UPDATE", (card_id, user.id)
+        ).fetchone()
         if row is None:
             raise HTTPException(404, "Card não encontrado")
         state = srs.CardState(row["ease"], row["interval_days"], row["reps"], row["lapses"])
@@ -148,12 +304,16 @@ def review(card_id: int, body: ReviewIn):
 # ---------- Cards ----------
 
 @app.get("/api/cards")
-def list_cards(q: str = "", category: str = ""):
-    sql = "SELECT * FROM cards WHERE TRUE"
-    params: list[str] = []
+def list_cards(
+    user: CurrentUser,
+    q: Annotated[str, Query(max_length=100)] = "",
+    category: Annotated[str, Query(max_length=40)] = "",
+):
+    sql = "SELECT * FROM cards WHERE user_id = %s"
+    params: list = [user.id]
     if q:
         sql += " AND (front ILIKE %s OR back ILIKE %s OR note ILIKE %s)"
-        params += [f"%{q}%"] * 3
+        params += [f"%{escape_like(q)}%"] * 3
     if category:
         sql += " AND category = %s"
         params.append(category)
@@ -163,19 +323,21 @@ def list_cards(q: str = "", category: str = ""):
 
 
 @app.get("/api/categories")
-def categories():
+def categories(user: CurrentUser):
     with db.connect() as conn:
-        rows = conn.execute("SELECT DISTINCT category FROM cards ORDER BY category").fetchall()
+        rows = conn.execute(
+            "SELECT DISTINCT category FROM cards WHERE user_id = %s ORDER BY category", (user.id,)
+        ).fetchall()
     return [r["category"] for r in rows]
 
 
 @app.post("/api/cards", status_code=201)
-def create_card(card: CardIn):
+def create_card(card: CardIn, user: CurrentUser):
     with db.connect() as conn:
         row = conn.execute(
-            "INSERT INTO cards (front, back, note, category, source) VALUES (%s, %s, %s, %s, %s)"
-            " ON CONFLICT (front) DO NOTHING RETURNING *",
-            (card.front, card.back, card.note, card.category or "geral", card.source),
+            "INSERT INTO cards (user_id, front, back, note, category, source) VALUES (%s, %s, %s, %s, %s, %s)"
+            " ON CONFLICT (user_id, front) DO NOTHING RETURNING *",
+            (user.id, card.front, card.back, card.note, card.category or "geral", card.source),
         ).fetchone()
     if row is None:
         raise HTTPException(409, "Esse card já existe")
@@ -183,9 +345,9 @@ def create_card(card: CardIn):
 
 
 @app.delete("/api/cards/{card_id}", status_code=204)
-def delete_card(card_id: int):
+def delete_card(card_id: CardId, user: CurrentUser):
     with db.connect() as conn:
-        cur = conn.execute("DELETE FROM cards WHERE id = %s", (card_id,))
+        cur = conn.execute("DELETE FROM cards WHERE id = %s AND user_id = %s", (card_id, user.id))
     if cur.rowcount == 0:
         raise HTTPException(404, "Card não encontrado")
 
@@ -193,42 +355,47 @@ def delete_card(card_id: int):
 # ---------- Diário ----------
 
 @app.get("/api/journal")
-def list_journal():
+def list_journal(user: CurrentUser):
     with db.connect() as conn:
-        return conn.execute("SELECT * FROM journal ORDER BY id DESC LIMIT 50").fetchall()
+        return conn.execute(
+            "SELECT * FROM journal WHERE user_id = %s ORDER BY id DESC LIMIT 50", (user.id,)
+        ).fetchall()
 
 
 @app.post("/api/journal", status_code=201)
-def create_journal(entry: JournalIn):
+def create_journal(entry: JournalIn, user: CurrentUser):
     with db.connect() as conn:
         return conn.execute(
-            "INSERT INTO journal (text) VALUES (%s) RETURNING *", (entry.text.strip(),)
+            "INSERT INTO journal (user_id, text) VALUES (%s, %s) RETURNING *", (user.id, entry.text.strip())
         ).fetchone()
 
 
 @app.post("/api/journal/{entry_id}/correct")
-def correct_journal(entry_id: int):
+def correct_journal(entry_id: EntryId, user: CurrentUser):
     with db.connect() as conn:
-        row = conn.execute("SELECT * FROM journal WHERE id = %s", (entry_id,)).fetchone()
+        row = conn.execute(
+            "SELECT * FROM journal WHERE id = %s AND user_id = %s", (entry_id, user.id)
+        ).fetchone()
     if row is None:
         raise HTTPException(404, "Entrada não encontrada")
 
     # A chamada à IA fica fora da conexão pra não segurar o banco enquanto espera.
     try:
-        correction = tutor.correct_journal(row["text"])
+        correction = tutor.correct_journal(row["text"], learner=user.learner)
     except tutor.TutorError as e:
         raise HTTPException(e.status, str(e)) from None
 
     cards_created = 0
     with db.connect() as conn:
         conn.execute(
-            "UPDATE journal SET correction = %s WHERE id = %s", (Jsonb(correction.model_dump()), entry_id)
+            "UPDATE journal SET correction = %s WHERE id = %s AND user_id = %s",
+            (Jsonb(correction.model_dump()), entry_id, user.id),
         )
         for mistake in correction.mistakes:
             cur = conn.execute(
-                "INSERT INTO cards (front, back, note, category, source) VALUES (%s, %s, %s, %s, %s)"
-                " ON CONFLICT (front) DO NOTHING",
-                (mistake.correction, mistake.explanation, f'Você escreveu: "{mistake.original}"',
+                "INSERT INTO cards (user_id, front, back, note, category, source) VALUES (%s, %s, %s, %s, %s, %s)"
+                " ON CONFLICT (user_id, front) DO NOTHING",
+                (user.id, mistake.correction, mistake.explanation, f'Você escreveu: "{mistake.original}"',
                  MISTAKES_CATEGORY, "diário"),
             )
             cards_created += cur.rowcount
@@ -236,22 +403,29 @@ def correct_journal(entry_id: int):
 
 
 @app.get("/api/tutor/status")
-def tutor_status():
+def tutor_status(_: CurrentUser):
     return {"enabled": tutor.is_configured(), "model": tutor.model()}
 
 
 # ---------- Progresso ----------
 
 @app.get("/api/stats")
-def stats():
-    today = db.today()
+def stats(user: CurrentUser):
+    today = user.today()
     with db.connect() as conn:
-        days = {r["reviewed_on"] for r in conn.execute("SELECT DISTINCT reviewed_on FROM reviews")}
+        days = {
+            r["reviewed_on"]
+            for r in conn.execute(
+                "SELECT DISTINCT r.reviewed_on FROM reviews r JOIN cards c ON c.id = r.card_id WHERE c.user_id = %s",
+                (user.id,),
+            )
+        }
         per_day = {
             r["reviewed_on"]: r["n"]
             for r in conn.execute(
-                "SELECT reviewed_on, COUNT(*) AS n FROM reviews WHERE reviewed_on >= %s GROUP BY reviewed_on",
-                (today - timedelta(days=13),),
+                "SELECT r.reviewed_on, COUNT(*) AS n FROM reviews r JOIN cards c ON c.id = r.card_id"
+                " WHERE c.user_id = %s AND r.reviewed_on >= %s GROUP BY r.reviewed_on",
+                (user.id, today - timedelta(days=13)),
             )
         }
         totals = conn.execute(
@@ -260,8 +434,8 @@ def stats():
             " COUNT(*) FILTER (WHERE interval_days >= 21) AS mature,"
             " COUNT(*) FILTER (WHERE introduced_on IS NOT NULL AND due <= %s) AS due_today,"
             " COUNT(*) FILTER (WHERE introduced_on IS NOT NULL AND due = %s) AS due_tomorrow"
-            " FROM cards",
-            (today, today + timedelta(days=1)),
+            " FROM cards WHERE user_id = %s",
+            (today, today + timedelta(days=1), user.id),
         ).fetchone()
 
     history = []
@@ -280,12 +454,12 @@ def stats():
 # ---------- Transcrição (checar pronúncia) ----------
 
 @app.get("/api/transcribe/status")
-def transcribe_status():
+def transcribe_status(_: CurrentUser):
     return {"available": transcribe.available(), "model": transcribe.model_name()}
 
 
 @app.post("/api/transcribe")
-async def transcribe_audio(request: Request):
+async def transcribe_audio(request: Request, _: CurrentUser):
     """Recebe a gravação (corpo cru, ex.: audio/webm ou audio/mp4) e devolve o texto entendido."""
     audio = await request.body()
     try:

@@ -72,8 +72,14 @@ export interface Stats {
   history: { day: string; reviews: number }[];
 }
 
-export interface AuthStatus {
-  enabled: boolean;
+/** Quem está logado (GET /api/me). */
+export interface Me {
+  id: number;
+  email: string;
+  name: string;
+  timezone: string;
+  /** Como a IA deve tratar essa pessoa na correção ("" = descrição padrão). */
+  learner: string;
 }
 
 export interface TutorStatus {

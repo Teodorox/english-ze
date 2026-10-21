@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState, type ComponentType } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
-import { getAuthStatus, logout } from "./api/auth";
+import { getMe, logout } from "./api/auth";
 import { ApiError, AUTH_REQUIRED_EVENT } from "./api/client";
+import type { Me } from "./api/types";
 import { Backdrop } from "./components/Backdrop";
 import { Layout } from "./components/Layout";
 import { Journal } from "./pages/Journal";
@@ -27,15 +28,14 @@ type AuthState =
   | { status: "checking" }
   | { status: "login" }
   | { status: "offline" }
-  | { status: "ready"; loginEnabled: boolean };
+  | { status: "ready"; me: Me };
 
 export default function App() {
   const [auth, setAuth] = useState<AuthState>({ status: "checking" });
 
   const checkAuth = useCallback(async () => {
     try {
-      const { enabled } = await getAuthStatus();
-      setAuth({ status: "ready", loginEnabled: enabled });
+      setAuth({ status: "ready", me: await getMe() });
     } catch (err) {
       setAuth(err instanceof ApiError && err.status === 401 ? { status: "login" } : { status: "offline" });
     }
@@ -56,7 +56,12 @@ export default function App() {
   return (
     <>
       <Backdrop />
-      <Screen auth={auth} onLogin={checkAuth} onLogout={handleLogout} />
+      <Screen
+        auth={auth}
+        onLogin={checkAuth}
+        onLogout={handleLogout}
+        onMeChange={(me) => setAuth({ status: "ready", me })}
+      />
     </>
   );
 }
@@ -65,9 +70,10 @@ interface ScreenProps {
   auth: AuthState;
   onLogin: () => void;
   onLogout: () => void;
+  onMeChange: (me: Me) => void;
 }
 
-function Screen({ auth, onLogin, onLogout }: ScreenProps) {
+function Screen({ auth, onLogin, onLogout, onMeChange }: ScreenProps) {
   switch (auth.status) {
     case "checking":
       return null;
@@ -88,7 +94,7 @@ function Screen({ auth, onLogin, onLogout }: ScreenProps) {
       return (
         <BrowserRouter>
           <Routes>
-            <Route element={<Layout showLogout={auth.loginEnabled} onLogout={onLogout} />}>
+            <Route element={<Layout me={auth.me} onMeChange={onMeChange} onLogout={onLogout} />}>
               <Route index element={<Navigate to={TABS[0].path} replace />} />
               {TABS.map((tab) => {
                 const Page = PAGES[tab.path];

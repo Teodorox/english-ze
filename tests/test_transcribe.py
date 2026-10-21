@@ -4,17 +4,8 @@ import struct
 import wave
 
 import pytest
-from fastapi.testclient import TestClient
 
 from app import transcribe
-
-
-@pytest.fixture
-def client(tmp_path, monkeypatch):
-    from app.main import app
-
-    with TestClient(app) as c:
-        yield c
 
 
 def fake_model(text):

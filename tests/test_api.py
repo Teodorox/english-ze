@@ -1,15 +1,3 @@
-import pytest
-from fastapi.testclient import TestClient
-
-
-@pytest.fixture
-def client(tmp_path, monkeypatch):
-    from app.main import app
-
-    with TestClient(app) as c:
-        yield c
-
-
 def test_seed_and_new_limit(client):
     data = client.get("/api/session?new_limit=5").json()
     assert data["due"] == []
@@ -65,7 +53,7 @@ def test_correct_journal_creates_mistake_cards(client, monkeypatch):
         mistakes=[tutor.Mistake(original="I go yesterday", correction="I went yesterday", explanation="Passado de go é went.")],
         encouragement="Boa!",
     )
-    monkeypatch.setattr(tutor, "correct_journal", lambda text: fake)
+    monkeypatch.setattr(tutor, "correct_journal", lambda text, learner: fake)
 
     entry = client.post("/api/journal", json={"text": "Yesterday I go to work."}).json()
     res = client.post(f"/api/journal/{entry['id']}/correct")
@@ -85,7 +73,7 @@ def test_correct_journal_without_key(client, monkeypatch):
     entry = client.post("/api/journal", json={"text": "Hello"}).json()
     res = client.post(f"/api/journal/{entry['id']}/correct")
     assert res.status_code == 503
-    assert "ANTHROPIC_API_KEY" in res.json()["detail"]
+    assert res.json()["detail"] == "A correção por IA não está disponível agora. Tente mais tarde."  # sem detalhe técnico
 
 
 def test_tutor_drops_non_mistakes(monkeypatch):
@@ -118,7 +106,7 @@ def test_personal_cards_come_before_seed_deck(client, monkeypatch):
         corrected="x", natural="x", encouragement="x",
         mistakes=[tutor.Mistake(original="I go", correction="I went", explanation="passado")],
     )
-    monkeypatch.setattr(tutor, "correct_journal", lambda text: fake)
+    monkeypatch.setattr(tutor, "correct_journal", lambda text, learner: fake)
     entry = client.post("/api/journal", json={"text": "Yesterday I go."}).json()
     client.post(f"/api/journal/{entry['id']}/correct")
 

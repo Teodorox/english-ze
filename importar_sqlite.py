@@ -1,7 +1,7 @@
 """Copia os dados do banco antigo (SQLite) pro PostgreSQL. O arquivo SQLite só é lido, nunca alterado.
 
     python importar_sqlite.py                       # data/english.db -> banco do DATABASE_URL
-    python importar_sqlite.py --profile professora  # data/profiles/professora/english.db -> english_ze_professora
+    python importar_sqlite.py --sqlite outro.db     # outro arquivo SQLite de origem
     python importar_sqlite.py --substituir          # apaga o que já estiver no PostgreSQL antes de copiar
 
 Mantém os números (ids) dos cards, o progresso da repetição espaçada, as revisões (e a sequência de
@@ -10,7 +10,6 @@ dias), o diário e as correções. No fim, confere se as contagens dos dois banc
 
 import argparse
 import json
-import os
 import sqlite3
 from datetime import date, datetime
 from pathlib import Path
@@ -128,22 +127,13 @@ def copy(conn: psycopg.Connection, rows: dict[str, list[dict]]) -> int:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Copia os dados do SQLite antigo pro PostgreSQL.")
-    parser.add_argument("--profile", help="perfil (data/profiles/NOME/english.db -> banco english_ze_NOME)")
     parser.add_argument("--sqlite", type=Path, help="outro arquivo SQLite de origem")
     parser.add_argument("--substituir", action="store_true", help="apaga os dados que já estiverem no PostgreSQL")
     args = parser.parse_args()
 
-    source = ROOT / "data" / "english.db"
-    if args.profile:
-        profile_dir = ROOT / "data" / "profiles" / args.profile
-        source = profile_dir / "english.db"
-        load_env_file(profile_dir / ".env")
-        profile_has_database = "DATABASE_URL" in os.environ
     load_env_file()
     url = db.database_url()
-    if args.profile and not profile_has_database:
-        url = db.with_database(url, db.profile_database(args.profile))
-    source = args.sqlite or source
+    source = args.sqlite or ROOT / "data" / "english.db"
     if not source.exists():
         raise SystemExit(f"Não achei o arquivo SQLite: {source}")
     target = conninfo_to_dict(url).get("dbname")
@@ -152,6 +142,12 @@ def main() -> None:
     db._create_database_if_missing(url)
     with psycopg.connect(url, row_factory=dict_row) as conn:
         db.migrate(conn)
+        # Com contas criadas, apagar e recopiar levaria os dados delas junto: nunca faz isso.
+        if conn.execute("SELECT EXISTS (SELECT 1 FROM users) AS v").fetchone()["v"]:
+            raise SystemExit(
+                f"O banco {target} já tem contas. A importação só roda antes de existir qualquer conta"
+                " (os dados importados ficam sem dono até 'python contas.py assumir-dados')."
+            )
         if not args.substituir and not only_fresh_seed(conn):
             raise SystemExit(
                 f"O banco {target} já tem dados de estudo. Pra apagar e copiar de novo, use --substituir."

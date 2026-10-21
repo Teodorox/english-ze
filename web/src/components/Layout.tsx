@@ -1,17 +1,20 @@
 import { useState } from "react";
+import type { Me } from "../api/types";
 import { NavLink, Outlet } from "react-router";
 import { DESKTOP_QUERY, useMediaQuery } from "../lib/useMediaQuery";
 import { TABS } from "../tabs";
 import { GearIcon } from "./icons";
+import { MeContext } from "./MeContext";
 import { SettingsSheet } from "./SettingsSheet";
 import { Sidebar } from "./Sidebar";
 
 interface LayoutProps {
-  showLogout: boolean;
+  me: Me;
+  onMeChange: (me: Me) => void;
   onLogout: () => void;
 }
 
-export function Layout({ showLogout, onLogout }: LayoutProps) {
+export function Layout({ me, onMeChange, onLogout }: LayoutProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   // Computador: barra lateral. Celular e tablet: engrenagem no topo e barra de abas flutuante.
   const desktop = useMediaQuery(DESKTOP_QUERY);
@@ -29,7 +32,9 @@ export function Layout({ showLogout, onLogout }: LayoutProps) {
               </button>
             </div>
           )}
-          <Outlet />
+          <MeContext.Provider value={me}>
+            <Outlet />
+          </MeContext.Provider>
         </main>
       </div>
       {!desktop && (
@@ -45,7 +50,8 @@ export function Layout({ showLogout, onLogout }: LayoutProps) {
       <SettingsSheet
         open={settingsOpen}
         onClose={() => setSettingsOpen(false)}
-        showLogout={showLogout}
+        me={me}
+        onMeChange={onMeChange}
         onLogout={() => {
           setSettingsOpen(false);
           onLogout();

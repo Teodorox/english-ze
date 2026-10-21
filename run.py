@@ -4,8 +4,8 @@
     python run.py --port 9000  # escolhe a porta
     python run.py --lan        # libera pro celular no mesmo Wi-Fi, com HTTPS (microfone funciona)
     python run.py --tunnel     # publica na internet com um link https (Cloudflare Tunnel)
-    python run.py --profile professora --tunnel --port 8100
-                               # cópia separada (banco english_ze_professora) publicada
+
+Cada pessoa entra com a própria conta (cadastro só com convite: veja contas.py).
 """
 
 import argparse
@@ -30,7 +30,6 @@ LOCALHOST = "127.0.0.1"
 DEFAULT_PORT = 8001
 ROOT = Path(__file__).resolve().parent
 CERT_DIR = ROOT / "data" / "certs"
-PROFILES_DIR = ROOT / "data" / "profiles"
 WEB_DIR = ROOT / "web"
 CERT_VERSION = 2  # mude ao alterar o formato do certificado, pra gerar um novo
 CERT_DAYS = 365   # o iOS recusa certificados com mais de 825 dias
@@ -196,39 +195,16 @@ if __name__ == "__main__":
     parser.add_argument("--port", type=int, default=DEFAULT_PORT)
     parser.add_argument("--lan", action="store_true", help="libera pro celular no mesmo Wi-Fi (HTTPS)")
     parser.add_argument("--tunnel", action="store_true", help="publica na internet com um link https (Cloudflare)")
-    parser.add_argument("--profile", help="roda uma cópia separada, com dados em data/profiles/NOME/")
     args = parser.parse_args()
 
     if args.lan and args.tunnel:
         raise SystemExit("Use --lan ou --tunnel, não os dois.")
 
-    if args.profile:
-        if not re.fullmatch(r"[a-z0-9_-]+", args.profile):
-            raise SystemExit("Nome de perfil: só letras minúsculas, números, - e _.")
-        profile_dir = PROFILES_DIR / args.profile
-        if not (profile_dir / ".env").exists():
-            raise SystemExit(
-                f"Crie {profile_dir / '.env'} com pelo menos ENGLISH_ZE_PASSWORD=... (veja o README)."
-            )
-        os.environ["ENGLISH_ZE_DATA_DIR"] = str(profile_dir)
-        load_env_file(profile_dir / ".env")  # vem antes: os valores do perfil têm prioridade
-        profile_has_database = "DATABASE_URL" in os.environ
-        print(f"Perfil: {args.profile}")
-
     load_env_file()
-    if args.profile and not profile_has_database and os.environ.get("DATABASE_URL"):
-        # Mesmo servidor, banco próprio do perfil (criado sozinho na primeira vez)
-        os.environ["DATABASE_URL"] = db.with_database(
-            os.environ["DATABASE_URL"], db.profile_database(args.profile)
-        )
     try:
         db.init_db()
     except db.DatabaseError as e:
         raise SystemExit(str(e)) from None
-    if (args.lan or args.tunnel) and not os.environ.get("ENGLISH_ZE_PASSWORD"):
-        raise SystemExit(
-            "Pra liberar fora deste computador, defina uma senha: ENGLISH_ZE_PASSWORD=... no .env"
-        )
 
     ensure_frontend_built()
 
@@ -236,7 +212,8 @@ if __name__ == "__main__":
     if port != args.port:
         print(f"Porta {args.port} ocupada, usando {port}.")
 
-    options: dict = {"host": LOCALHOST, "port": port}
+    # server_header=False: não anuncia qual servidor é (menos pista pra quem procura falhas conhecidas)
+    options: dict = {"host": LOCALHOST, "port": port, "server_header": False}
     url = f"http://{LOCALHOST}:{port}"
 
     if args.tunnel:

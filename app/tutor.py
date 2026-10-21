@@ -1,16 +1,20 @@
 """Professor de IA (Claude) para corrigir o diário."""
 
+import logging
 import os
 
 import anthropic
 from pydantic import BaseModel, Field
 
 DEFAULT_MODEL = "claude-haiku-5-5"
+UNAVAILABLE = "A correção por IA não está disponível agora. Tente mais tarde."
 
+log = logging.getLogger("english_ze.tutor")
+
+# Usado quando a pessoa ainda não descreveu o próprio nível e objetivo (Ajustes > Conta).
 DEFAULT_LEARNER = """\
-Brasileiro de nível iniciante, desenvolvedor de software. Quer conversar com naturalidade
-e entender streamers americanos (Kai Cenat, IShowSpeed etc.), então inglês informal e
-americano é bem-vindo."""
+Brasileiro aprendendo inglês. Quer conversar com naturalidade e entender o inglês americano
+do dia a dia, então inglês informal é bem-vindo."""
 
 SYSTEM_PROMPT_TEMPLATE = """\
 Você é um professor de inglês paciente e direto. Sobre o aluno:
@@ -54,9 +58,8 @@ def model() -> str:
     return os.environ.get("ENGLISH_ZE_MODEL", DEFAULT_MODEL)
 
 
-def system_prompt() -> str:
-    learner = os.environ.get("ENGLISH_ZE_LEARNER", "").strip() or DEFAULT_LEARNER
-    return SYSTEM_PROMPT_TEMPLATE.format(learner=learner)
+def system_prompt(learner: str = "") -> str:
+    return SYSTEM_PROMPT_TEMPLATE.format(learner=learner.strip() or DEFAULT_LEARNER)
 
 
 def is_configured() -> bool:
@@ -73,27 +76,33 @@ def _get_client() -> anthropic.Anthropic:
     return _client
 
 
-def correct_journal(text: str) -> Correction:
+def correct_journal(text: str, learner: str = "") -> Correction:
+    # Quem usa o app vê uma mensagem simples; o detalhe técnico fica só no registro do servidor.
     if not is_configured():
-        raise TutorError("Configure a ANTHROPIC_API_KEY no arquivo .env pra usar a IA.", 503)
+        log.error("ANTHROPIC_API_KEY não definida: a correção por IA está desligada")
+        raise TutorError(UNAVAILABLE, 503)
 
     try:
         response = _get_client().messages.parse(
             model=model(),
             max_tokens=4000,
-            system=system_prompt(),
+            system=system_prompt(learner),
             output_config={"effort": "low"},
             output_format=Correction,
             messages=[{"role": "user", "content": f"Corrija meu texto:\n\n{text}"}],
         )
     except anthropic.AuthenticationError:
-        raise TutorError("A chave da API foi recusada. Confira a ANTHROPIC_API_KEY.", 503) from None
+        log.error("A API da Anthropic recusou a ANTHROPIC_API_KEY")
+        raise TutorError(UNAVAILABLE, 503) from None
     except anthropic.RateLimitError:
-        raise TutorError("Muitas requisições ou créditos esgotados. Tente de novo em instantes.", 429) from None
+        log.warning("API da Anthropic: limite de requisições ou créditos esgotados")
+        raise TutorError("A IA está muito ocupada agora. Tente de novo em instantes.", 429) from None
     except anthropic.APIStatusError as e:
-        raise TutorError(f"Erro da API ({e.status_code}): {e.message}") from None
+        log.error("API da Anthropic respondeu %s: %s", e.status_code, e.message)
+        raise TutorError("A IA teve um problema ao corrigir. Tente de novo em instantes.") from None
     except anthropic.APIConnectionError:
-        raise TutorError("Sem conexão com a API. Confira sua internet.") from None
+        log.warning("Sem conexão com a API da Anthropic")
+        raise TutorError("Não consegui falar com a IA agora. Tente de novo em instantes.") from None
 
     if response.stop_reason == "refusal":
         raise TutorError("A IA não quis corrigir esse texto. Tente reescrever.", 422)

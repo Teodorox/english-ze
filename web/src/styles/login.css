@@ -37,4 +37,24 @@
   text-align: left;
 }
 .login-card button { width: 100%; }
+.login-card button.link-button { width: auto; }
+/* O Edge põe um olho próprio no campo de senha; o app já tem o "Mostrar" */
+input::-ms-reveal { display: none; }
 .login-error { min-height: 1.4em; margin: 0; font-size: 15px; color: var(--red-text); }
+.login-success { margin: 0; padding: 10px 14px; border-radius: 12px; font-size: 15px; font-weight: 600; color: var(--green-text); background: var(--fill); }
+
+.login-card .segmented { margin-bottom: 4px; }
+.login-hint { margin: -4px 4px 0; }
+.field-row { display: flex; align-items: center; justify-content: space-between; }
+
+/* Botão que parece link (ex.: "Mostrar" a senha): sem fundo, área de toque confortável */
+button.link-button {
+  min-height: 32px;
+  margin: -6px -8px;
+  padding: 4px 8px;
+  background: none;
+  color: var(--tint-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+div.field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--secondary); }

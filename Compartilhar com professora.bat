@@ -12,12 +12,14 @@ if not exist ".venv\Scripts\python.exe" (
 
 echo ============================================================
 echo   English Ze - acesso da professora
+echo   O link https://... aparece abaixo e ja fica copiado.
+echo   Ela entra com a conta dela (e-mail e senha).
 echo   Deixe esta janela ABERTA enquanto ela estiver usando.
 echo   Para encerrar, feche a janela.
 echo ============================================================
 echo.
 
-".venv\Scripts\python.exe" run.py --profile professora --tunnel --port 8100
+".venv\Scripts\python.exe" run.py --tunnel --port 8100
 
 echo.
 echo O servidor parou. Se apareceu algum erro acima, mande para o Claude.

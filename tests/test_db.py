@@ -7,8 +7,9 @@ import psycopg
 import pytest
 from psycopg.rows import dict_row
 
+import contas
 import importar_sqlite
-from app import db
+from app import auth, db
 
 # Estrutura do banco SQLite antigo (antes do PostgreSQL), pra testar a importação.
 OLD_SQLITE_SCHEMA = """
@@ -26,14 +27,21 @@ CREATE TABLE journal (id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT NOT NULL, 
 """
 
 
-def test_migrations_run_once_and_seed_once(database):
+def test_migrations_run_once_in_order(database):
     db.init_db()
     db.init_db()
     with psycopg.connect(database, row_factory=dict_row) as conn:
         assert db.migrate(conn) == []
-        versions = [r["version"] for r in conn.execute("SELECT version FROM schema_migrations")]
-        seeded = conn.execute("SELECT COUNT(*) AS n FROM cards").fetchone()["n"]
-    assert versions == [1]
+        versions = [r["version"] for r in conn.execute("SELECT version FROM schema_migrations ORDER BY version")]
+        assert conn.execute("SELECT COUNT(*) AS n FROM cards").fetchone()["n"] == 0  # deck só nas contas
+    assert versions == sorted(int(p.name[:3]) for p in db.MIGRATIONS_DIR.glob("*.sql"))
+
+
+def test_seed_deck_per_account(database):
+    db.init_db()
+    with psycopg.connect(database, row_factory=dict_row) as conn:
+        user_id = auth.create_user(conn, email="a@b.co", name="A", password="12345678", timezone="UTC")
+        seeded = conn.execute("SELECT COUNT(*) AS n FROM cards WHERE user_id = %s", (user_id,)).fetchone()["n"]
     assert seeded == len(json.loads(db.SEED_FILE.read_text(encoding="utf-8")))
 
 
@@ -80,7 +88,7 @@ def old_sqlite(tmp_path):
 
 
 def test_import_from_sqlite_keeps_everything(database, old_sqlite, monkeypatch, capsys):
-    db.init_db()  # o app já subiu uma vez (só o deck inicial): a importação pode substituir
+    db.init_db()  # o app já subiu uma vez (banco vazio, sem contas): a importação pode rodar
     monkeypatch.setattr("sys.argv", ["importar_sqlite.py", "--sqlite", str(old_sqlite)])
     importar_sqlite.main()
     assert "Tudo copiado e conferido." in capsys.readouterr().out
@@ -103,3 +111,38 @@ def test_import_refuses_to_overwrite_study_data(database, old_sqlite, monkeypatc
         importar_sqlite.main()
     monkeypatch.setattr("sys.argv", ["importar_sqlite.py", "--sqlite", str(old_sqlite), "--substituir"])
     importar_sqlite.main()
+
+
+def test_import_never_runs_once_accounts_exist(database, old_sqlite, monkeypatch):
+    db.init_db()
+    with psycopg.connect(database, row_factory=dict_row) as conn:
+        auth.create_user(conn, email="a@b.co", name="A", password="12345678", timezone="UTC")
+    monkeypatch.setattr("sys.argv", ["importar_sqlite.py", "--sqlite", str(old_sqlite), "--substituir"])
+    with pytest.raises(SystemExit, match="já tem contas"):
+        importar_sqlite.main()
+
+
+def test_adopt_old_data_into_a_fresh_account(database, old_sqlite, monkeypatch):
+    monkeypatch.setattr("sys.argv", ["importar_sqlite.py", "--sqlite", str(old_sqlite)])
+    importar_sqlite.main()
+    with psycopg.connect(database, row_factory=dict_row) as conn:
+        user_id = auth.create_user(conn, email="eu@b.co", name="Eu", password="12345678", timezone="UTC")
+        other = auth.create_user(conn, email="outra@b.co", name="Outra", password="12345678", timezone="UTC")
+        assert contas.adopt_orphans(conn, user_id) == {"cards": 2, "journal": 1}
+        fronts = {r["front"] for r in conn.execute("SELECT front FROM cards WHERE user_id = %s", (user_id,))}
+        assert fronts == {"No cap", "That's tuff"}  # o deck novo do cadastro saiu; ficaram os dados antigos
+        assert conn.execute("SELECT COUNT(*) AS n FROM cards WHERE user_id IS NULL").fetchone()["n"] == 0
+        # A outra conta não foi tocada e não pode assumir de novo
+        assert conn.execute("SELECT COUNT(*) AS n FROM cards WHERE user_id = %s", (other,)).fetchone()["n"] > 50
+        with pytest.raises(SystemExit, match="sem dono"):
+            contas.adopt_orphans(conn, other)
+
+
+def test_adopt_refuses_an_account_that_already_studied(database, old_sqlite, monkeypatch):
+    monkeypatch.setattr("sys.argv", ["importar_sqlite.py", "--sqlite", str(old_sqlite)])
+    importar_sqlite.main()
+    with psycopg.connect(database, row_factory=dict_row) as conn:
+        user_id = auth.create_user(conn, email="eu@b.co", name="Eu", password="12345678", timezone="UTC")
+        conn.execute("INSERT INTO journal (user_id, text) VALUES (%s, 'meu')", (user_id,))
+        with pytest.raises(SystemExit, match="estudo próprio"):
+            contas.adopt_orphans(conn, user_id)

@@ -1,13 +1,10 @@
 import pytest
-from fastapi.testclient import TestClient
 
 
 @pytest.fixture
-def client(tmp_path, monkeypatch):
-    from app.main import app
-
-    with TestClient(app) as c:
-        yield c
+def client(anon):
+    """As telas do app abrem sem login."""
+    return anon
 
 
 def test_screens_return_the_app(client):
@@ -38,8 +35,8 @@ def test_cannot_escape_the_app_folder(client, tmp_path):
         assert "não pode vazar" not in res.text, path
 
 
-def test_api_still_works(client):
-    assert client.get("/api/stats").status_code == 200
+def test_api_still_works(new_user):
+    assert new_user().get("/api/stats").status_code == 200
 
 
 def test_app_not_built_shows_instructions(client, monkeypatch, tmp_path):

@@ -8,8 +8,10 @@ import { GradeButtons } from "../components/GradeButtons";
 import { HeadphonesIcon } from "../components/icons";
 import { LargeTitle } from "../components/LargeTitle";
 import { LivePill } from "../components/LivePill";
+import { useMe } from "../components/MeContext";
 import { SegmentedControl } from "../components/SegmentedControl";
 import { Stepper } from "../components/Stepper";
+import { greeting } from "../lib/greeting";
 import { loadPref, savePref } from "../lib/storage";
 import { afterGrade, counts, requeue, reveal, startQueue, type QueueState } from "../lib/studyQueue";
 import { speak } from "../lib/tts";
@@ -23,6 +25,7 @@ export function Study({ tab }: { tab: Tab }) {
   const [state, setState] = useState<QueueState | null>(null);
   const [error, setError] = useState("");
   const chat = useChatFeed();
+  const me = useMe();
 
   const loadSession = useCallback(async (limit: number) => {
     setError("");
@@ -103,7 +106,7 @@ export function Study({ tab }: { tab: Tab }) {
   // No celular as duas colunas (.study-main e .study-aside) somem e tudo fica numa coluna só.
   return (
     <section className="study-page">
-      <LargeTitle tab={tab} accessory={<LivePill />} />
+      <LargeTitle tab={tab} accessory={<LivePill />} greeting={me ? greeting(me.name) : undefined} />
 
       <SegmentedControl
         label="Modo de estudo"

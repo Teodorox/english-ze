@@ -24,6 +24,9 @@ npm run build</pre>
 </body></html>"""
 
 
+NOT_BUILT_CSP = "default-src 'none'; style-src 'unsafe-inline'; frame-ancestors 'none'"
+
+
 def dist_dir() -> Path:
     return Path(os.environ.get("ENGLISH_ZE_WEB_DIST", ROOT / "web" / "dist")).resolve()
 
@@ -32,7 +35,8 @@ def serve(path: str):
     dist = dist_dir()
     index = dist / "index.html"
     if not index.is_file():
-        return HTMLResponse(NOT_BUILT_PAGE, status_code=503)
+        # Página simples com estilo embutido: ganha uma política própria, ainda mais fechada (sem scripts).
+        return HTMLResponse(NOT_BUILT_PAGE, status_code=503, headers={"Content-Security-Policy": NOT_BUILT_CSP})
 
     if path:
         candidate = (dist / path).resolve()

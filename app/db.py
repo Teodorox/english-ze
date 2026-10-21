@@ -34,26 +34,18 @@ def database_url() -> str:
 
 
 def with_database(url: str, name: str) -> str:
-    """O mesmo servidor e usuário, outro banco (ex.: o de um perfil)."""
+    """O mesmo servidor e usuário, outro banco (ex.: o "postgres", pra criar o do app)."""
     return make_conninfo(url, dbname=name)
 
 
-def profile_database(profile: str) -> str:
-    return f"english_ze_{profile.replace('-', '_')}"
-
-
-def data_dir() -> Path:
-    """Arquivos locais do app (chave das sessões, certificados). Cada perfil tem a sua pasta."""
-    return Path(os.environ.get("ENGLISH_ZE_DATA_DIR", ROOT / "data"))
-
-
 def timezone() -> ZoneInfo:
+    """Fuso padrão (contas novas e dados antigos sem fuso)."""
     return ZoneInfo(os.environ.get("ENGLISH_ZE_TIMEZONE", DEFAULT_TIMEZONE))
 
 
-def today() -> date:
+def today(timezone_name: str | None = None) -> date:
     """O 'hoje' das revisões no fuso do usuário, não no do servidor (na nuvem ele roda em UTC)."""
-    return datetime.now(timezone()).date()
+    return datetime.now(ZoneInfo(timezone_name) if timezone_name else timezone()).date()
 
 
 def _get_pool() -> ConnectionPool:
@@ -90,8 +82,6 @@ def init_db() -> None:
         _create_database_if_missing(url)
         with psycopg.connect(url, row_factory=dict_row) as conn:
             migrate(conn)
-            if conn.execute("SELECT NOT EXISTS (SELECT 1 FROM cards) AS empty").fetchone()["empty"] and SEED_FILE.exists():
-                _seed(conn)
     except psycopg.OperationalError as e:
         name = conninfo_to_dict(url).get("dbname", "?")
         raise DatabaseError(
@@ -101,7 +91,7 @@ def init_db() -> None:
 
 
 def _create_database_if_missing(url: str) -> None:
-    """Cria o banco (ex.: o de um perfil novo) se o usuário tiver permissão; senão, segue e o erro aparece ao conectar."""
+    """Cria o banco (ex.: num computador novo) se o usuário tiver permissão; senão, segue e o erro aparece ao conectar."""
     name = conninfo_to_dict(url).get("dbname")
     if not name:
         return
@@ -133,8 +123,8 @@ def migrate(conn: psycopg.Connection) -> list[int]:
     return applied
 
 
-def _seed(conn: psycopg.Connection) -> None:
-    """Carrega o deck inicial intercalando categorias, pra os cards novos virem variados."""
+def seed_cards(conn: psycopg.Connection, user_id: int) -> None:
+    """Dá à conta nova o deck inicial, intercalando categorias pra os cards novos virem variados."""
     cards = json.loads(SEED_FILE.read_text(encoding="utf-8"))
     by_category: dict[str, list[dict]] = {}
     for card in cards:
@@ -142,12 +132,11 @@ def _seed(conn: psycopg.Connection) -> None:
 
     with conn.cursor() as cur:
         cur.executemany(
-            "INSERT INTO cards (front, back, note, category, source) VALUES (%s, %s, %s, %s, %s)"
-            " ON CONFLICT (front) DO NOTHING",
+            "INSERT INTO cards (user_id, front, back, note, category, source) VALUES (%s, %s, %s, %s, %s, %s)"
+            " ON CONFLICT (user_id, front) DO NOTHING",
             [
-                (card["front"], card["back"], card.get("note", ""), card["category"], SEED_SOURCE)
+                (user_id, card["front"], card["back"], card.get("note", ""), card["category"], SEED_SOURCE)
                 for group in zip_longest(*by_category.values())
                 for card in filter(None, group)
             ],
         )
-    conn.commit()
