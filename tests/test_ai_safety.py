@@ -3,9 +3,11 @@
 Nenhum teste chama a IA de verdade: a correção é sempre falsa.
 """
 
+import inspect
 from types import SimpleNamespace
 
 import psycopg
+import psycopg.rows
 import pytest
 
 from app import main, transcribe, tutor
@@ -161,3 +163,68 @@ def test_mistake_cards_respect_card_limits(client, monkeypatch):
     assert client.post(f"/api/journal/{_entry(client)}/correct").json()["cards_created"] == 1
     card = client.get("/api/cards?category=meus-erros").json()[0]
     assert len(card["front"]) <= 500 and len(card["back"]) <= 500 and len(card["note"]) <= 1000
+
+
+# ---------- Registro de tokens (só o dono do app vê, pelo contas.py) ----------
+
+def test_tutor_reads_the_tokens_spent(monkeypatch):
+    sent = {}
+
+    def parse(**kwargs):
+        sent.update(kwargs)
+        return SimpleNamespace(stop_reason="end_turn", parsed_output=_fake(),
+                               usage=SimpleNamespace(input_tokens=900, output_tokens=650))
+
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    monkeypatch.setattr(tutor, "_get_client", lambda: SimpleNamespace(messages=SimpleNamespace(parse=parse)))
+    result = tutor.correct_journal("I go")
+    assert result._usage == (900, 650)
+    assert "_usage" not in result.model_dump()  # não vai pro banco do diário nem pra tela
+
+
+def _with_usage(tokens):
+    def fake(text, learner):
+        correction = _fake()
+        correction._usage = tokens
+        return correction
+    return fake
+
+
+def test_tokens_are_recorded_but_never_shown_in_the_app(client, database, monkeypatch):
+    monkeypatch.setattr(tutor, "correct_journal", _with_usage((900, 650)))
+    res = client.post(f"/api/journal/{_entry(client)}/correct")
+    with psycopg.connect(database) as conn:
+        row = conn.execute("SELECT input_tokens, output_tokens FROM usage_events WHERE kind = 'correction'").fetchone()
+    assert row == (900, 650)
+    for answer in (res, client.get("/api/journal"), client.get("/api/stats"), client.get("/api/me"), client.get("/api/today")):
+        assert "tokens" not in answer.text
+
+
+def test_no_route_reads_the_usage_table():
+    """O consumo só sai pelo terminal (contas.py consumo): nenhuma rota da API consulta a tabela."""
+    reads = [line for line in inspect.getsource(main).splitlines()
+             if "usage_events" in line and "SELECT" in line and "COUNT(*)" not in line]
+    assert reads == []
+
+
+def test_usage_report_for_the_owner(client, new_user, database, monkeypatch):
+    import contas
+
+    monkeypatch.setattr(tutor, "correct_journal", _with_usage((1000, 1000)))
+    for _ in range(2):
+        client.post(f"/api/journal/{_entry(client)}/correct")
+    bia = new_user("bia@example.com", name="Bia")
+    bia.post(f"/api/journal/{_entry(bia)}/correct")
+
+    with psycopg.connect(database, row_factory=psycopg.rows.dict_row) as conn:
+        report = contas.usage_report(conn)
+    assert "Total: 3 correções, 3,000 + 3,000 tokens = US$ 0.0018" in report
+    assert "Média por correção: US$ 0.00060" in report
+    assert "bia@example.com" in report and "ana@example.com" in report
+
+
+def test_usage_report_when_empty(client, database):
+    import contas
+
+    with psycopg.connect(database, row_factory=psycopg.rows.dict_row) as conn:
+        assert contas.usage_report(conn) == "Nenhuma correção por IA nos últimos 30 dias."

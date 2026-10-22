@@ -6,6 +6,7 @@
     python contas.py redefinir-senha EMAIL             # nova senha pra quem esqueceu (desconecta os aparelhos)
     python contas.py assumir-dados EMAIL               # entrega os dados sem dono (da versão antiga) a essa conta
     python contas.py descricao EMAIL "texto"           # como a IA deve tratar essa pessoa na correção
+    python contas.py consumo                           # quanto a correção por IA gastou (últimos 30 dias)
 
 As senhas são digitadas sem aparecer na tela e nunca passam por argumentos de linha de comando.
 """
@@ -67,6 +68,52 @@ def adopt_orphans(conn: psycopg.Connection, user_id: int) -> dict[str, int]:
     return {"cards": orphans["cards"], "journal": orphans["journal"]}
 
 
+# Preço do Claude Haiku 5.5 (US$ por milhão de tokens, tabela de out/2026). Mude se trocar o modelo.
+PRICE_INPUT = 0.10
+PRICE_OUTPUT = 0.50
+
+
+def cost(input_tokens: int, output_tokens: int) -> float:
+    return (input_tokens * PRICE_INPUT + output_tokens * PRICE_OUTPUT) / 1_000_000
+
+
+# Consultas fixas do relatório de consumo: uma por dia, outra por pessoa.
+USAGE_BY_DAY = (
+    "SELECT used_on AS label, COUNT(*) AS n,"
+    " COALESCE(SUM(input_tokens), 0) AS inp, COALESCE(SUM(output_tokens), 0) AS out"
+    " FROM usage_events WHERE kind = 'correction' AND used_on > CURRENT_DATE - %s"
+    " GROUP BY used_on ORDER BY used_on"
+)
+USAGE_BY_PERSON = (
+    "SELECT u.name || ' <' || u.email || '>' AS label, COUNT(*) AS n,"
+    " COALESCE(SUM(e.input_tokens), 0) AS inp, COALESCE(SUM(e.output_tokens), 0) AS out"
+    " FROM usage_events e JOIN users u ON u.id = e.user_id"
+    " WHERE e.kind = 'correction' AND e.used_on > CURRENT_DATE - %s"
+    " GROUP BY u.id, u.name, u.email ORDER BY n DESC, label"
+)
+
+
+def usage_report(conn: psycopg.Connection, days: int = 30) -> str:
+    """Correções por IA e tokens gastos: por dia e por pessoa. Só números, nunca o texto escrito."""
+    by_day = conn.execute(USAGE_BY_DAY, (days,)).fetchall()
+    by_person = conn.execute(USAGE_BY_PERSON, (days,)).fetchall()
+    if not by_day:
+        return f"Nenhuma correção por IA nos últimos {days} dias."
+
+    def line(r) -> str:
+        label = f"{r['label']:%d/%m}" if hasattr(r["label"], "strftime") else r["label"]
+        return f"  {label:40} {r['n']:>4} correções  {r['inp']:>9,} entrada  {r['out']:>9,} saída  US$ {cost(r['inp'], r['out']):.4f}"
+
+    n, inp, out = (sum(r[k] for r in by_day) for k in ("n", "inp", "out"))
+    return "\n".join([
+        f"Correção por IA nos últimos {days} dias (preço do Haiku 5.5: US$ {PRICE_INPUT}/{PRICE_OUTPUT} por milhão):",
+        "Por dia:", *map(line, by_day),
+        "Por pessoa:", *map(line, by_person),
+        f"Total: {n} correções, {inp:,} + {out:,} tokens = US$ {cost(inp, out):.4f}",
+        f"Média por correção: US$ {cost(inp, out) / n:.5f}",
+    ])
+
+
 def ask_new_password() -> str:
     first = getpass.getpass(f"Nova senha (mínimo {auth.PASSWORD_MIN} caracteres): ")
     if len(first) < auth.PASSWORD_MIN:
@@ -85,6 +132,7 @@ def main() -> None:
     sub.add_parser("listar", help="lista as contas")
     for name in ("redefinir-senha", "assumir-dados"):
         sub.add_parser(name).add_argument("email")
+    sub.add_parser("consumo", help="quanto a correção por IA gastou")
     learner = sub.add_parser("descricao", help="como a IA deve tratar a pessoa")
     learner.add_argument("email")
     learner.add_argument("texto")
@@ -127,6 +175,9 @@ def main() -> None:
             user = find_user(conn, args.email)
             moved = adopt_orphans(conn, user["id"])
             print(f"{moved['cards']} cards e {moved['journal']} entradas do diário agora são de {user['email']}.")
+
+        elif args.command == "consumo":
+            print(usage_report(conn))
 
         elif args.command == "descricao":
             user = find_user(conn, args.email)

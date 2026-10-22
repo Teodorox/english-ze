@@ -537,8 +537,8 @@ def create_journal(entry: JournalIn, user: CurrentUser):
         ).fetchone()
 
 
-def _use(conn, user: auth.User, kind: str, limit: int, message: str) -> None:
-    """Anota mais um uso de hoje, ou recusa com 429 se já chegou no teto."""
+def _use(conn, user: auth.User, kind: str, limit: int, message: str) -> int:
+    """Anota mais um uso de hoje (devolve o id da anotação), ou recusa com 429 se já chegou no teto."""
     today = user.today()
     # Trava a linha da pessoa: pedidos ao mesmo tempo não passam juntos do limite do dia.
     conn.execute("SELECT 1 FROM users WHERE id = %s FOR UPDATE", (user.id,))
@@ -549,9 +549,9 @@ def _use(conn, user: auth.User, kind: str, limit: int, message: str) -> None:
     if used >= limit:
         log.warning("Limite diário de %s atingido (conta %s)", kind, user.id)
         raise HTTPException(429, message)
-    conn.execute(
-        "INSERT INTO usage_events (user_id, kind, used_on) VALUES (%s, %s, %s)", (user.id, kind, today)
-    )
+    return conn.execute(
+        "INSERT INTO usage_events (user_id, kind, used_on) VALUES (%s, %s, %s) RETURNING id", (user.id, kind, today)
+    ).fetchone()["id"]
 
 
 @app.post("/api/journal/{entry_id}/correct")
@@ -565,9 +565,10 @@ def correct_journal(entry_id: EntryId, user: CurrentUser):
         # Cada entrada é corrigida uma vez só: pedir de novo só gastaria a IA.
         if row["correction"] is not None:
             raise HTTPException(409, "Essa entrada já foi corrigida")
+        event_id = None
         if tutor.is_configured():
-            _use(conn, user, "correction", MAX_CORRECTIONS_PER_DAY,
-                 "Você já usou as correções por IA de hoje. Volte amanhã!")
+            event_id = _use(conn, user, "correction", MAX_CORRECTIONS_PER_DAY,
+                            "Você já usou as correções por IA de hoje. Volte amanhã!")
 
     # A chamada à IA fica fora da conexão pra não segurar o banco enquanto espera.
     try:
@@ -581,6 +582,12 @@ def correct_journal(entry_id: EntryId, user: CurrentUser):
             "UPDATE journal SET correction = %s WHERE id = %s AND user_id = %s",
             (Jsonb(correction.model_dump()), entry_id, user.id),
         )
+        if event_id is not None and correction._usage is not None:
+            # Só os números de tokens, pro custo real (veja: python contas.py consumo).
+            conn.execute(
+                "UPDATE usage_events SET input_tokens = %s, output_tokens = %s WHERE id = %s AND user_id = %s",
+                (*correction._usage, event_id, user.id),
+            )
         for mistake in correction.mistakes:
             cur = conn.execute(
                 "INSERT INTO cards (user_id, front, back, note, category, source) VALUES (%s, %s, %s, %s, %s, %s)"

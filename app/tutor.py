@@ -5,7 +5,7 @@ import os
 import re
 
 import anthropic
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PrivateAttr
 
 DEFAULT_MODEL = "claude-haiku-5-5"
 UNAVAILABLE = "A correção por IA não está disponível agora. Tente mais tarde."
@@ -60,6 +60,8 @@ class Correction(BaseModel):
     natural: str
     mistakes: list[Mistake]
     encouragement: str
+    # Tokens gastos (entrada, saída), pro registro de custo. Privado: não vai pro banco nem pra tela.
+    _usage: tuple[int, int] | None = PrivateAttr(default=None)
 
 
 class TutorError(Exception):
@@ -128,7 +130,11 @@ def correct_journal(text: str, learner: str = "") -> Correction:
     correction = response.parsed_output
     # Às vezes o modelo lista como "erro" um trecho que já estava certo; isso viraria card inútil.
     correction.mistakes = [m for m in correction.mistakes if _normalize(m.original) != _normalize(m.correction)]
-    return capped(correction)
+    result = capped(correction)
+    usage = getattr(response, "usage", None)
+    if usage is not None:
+        result._usage = (usage.input_tokens, usage.output_tokens)  # a saída já inclui o raciocínio da IA
+    return result
 
 
 def user_message(text: str) -> str:
