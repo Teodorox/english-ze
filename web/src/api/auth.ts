@@ -24,7 +24,7 @@ export const signup = (data: SignupData) =>
 export const logout = () => api<{ ok: true }>("/api/logout", { method: "POST" });
 
 export const updateMe = (
-  changes: Partial<Pick<Me, "name" | "timezone" | "learner" | "goals" | "daily_minutes">> & { level?: StudyProfile["level"] },
+  changes: Partial<Pick<Me, "name" | "timezone" | "goals" | "daily_minutes">> & { level?: StudyProfile["level"] },
 ) => api<Me>("/api/me", { method: "PATCH", body: changes });
 
 /** Respostas do primeiro acesso: objetivos, nível e tempo por dia. */

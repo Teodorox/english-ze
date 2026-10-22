@@ -15,6 +15,9 @@ from .progress import compute_streak
 MISTAKES_CATEGORY = "meus-erros"
 MAX_ID = 2**31 - 1  # maior id que cabe no banco: acima disso é 404 direto, sem erro 500
 MAX_SPEECH_CHECKS_PER_DAY = 500  # bem acima de qualquer estudo de verdade; impede encher o banco
+# Tetos por dia dos recursos caros: a IA gasta a chave da API, o Whisper pesa no processador.
+MAX_CORRECTIONS_PER_DAY = 20
+MAX_TRANSCRIBES_PER_DAY = 300
 # Plano do dia pelo tempo escolhido: frases novas (~30 s cada) e um teto de revisões (~10 s cada).
 NEW_PER_DAY = {5: 3, 10: 5, 15: 8, 20: 10, 30: 15}
 REVIEWS_PER_MINUTE = 4
@@ -119,7 +122,7 @@ def _unique(goals: list[str] | None) -> list[str] | None:
 class ProfileIn(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=60)
     timezone: str | None = Field(default=None, max_length=64)
-    learner: str | None = Field(default=None, max_length=1000)
+    # Sem "learner": a descrição vai nas instruções da IA, então só o dono do app muda (contas.py).
     goals: Goals | None = None
     level: Level | None = None
     daily_minutes: DailyMinutes | None = None
@@ -167,7 +170,6 @@ def _start_session(request: Request, response: Response, user_id: int) -> None:
 PROFILE_UPDATES = {
     "name": "UPDATE users SET name = %s WHERE id = %s",
     "timezone": "UPDATE users SET timezone = %s WHERE id = %s",
-    "learner": "UPDATE users SET learner = %s WHERE id = %s",
     "goals": "UPDATE users SET goals = %s WHERE id = %s",
     "level": "UPDATE users SET level = %s WHERE id = %s",
     "daily_minutes": "UPDATE users SET daily_minutes = %s WHERE id = %s",
@@ -264,8 +266,6 @@ def update_me(body: ProfileIn, user: CurrentUser):
             raise HTTPException(422, "O nome não pode ficar vazio")
     if "timezone" in changes and not auth.valid_timezone(changes["timezone"]):
         raise HTTPException(422, "Fuso horário desconhecido")
-    if "learner" in changes:
-        changes["learner"] = changes["learner"].strip()
     with db.connect() as conn:
         # Uma consulta fixa por campo: nada do que chega na requisição vira parte do SQL.
         for column, query in PROFILE_UPDATES.items():
@@ -537,14 +537,37 @@ def create_journal(entry: JournalIn, user: CurrentUser):
         ).fetchone()
 
 
+def _use(conn, user: auth.User, kind: str, limit: int, message: str) -> None:
+    """Anota mais um uso de hoje, ou recusa com 429 se já chegou no teto."""
+    today = user.today()
+    # Trava a linha da pessoa: pedidos ao mesmo tempo não passam juntos do limite do dia.
+    conn.execute("SELECT 1 FROM users WHERE id = %s FOR UPDATE", (user.id,))
+    used = conn.execute(
+        "SELECT COUNT(*) AS n FROM usage_events WHERE user_id = %s AND kind = %s AND used_on = %s",
+        (user.id, kind, today),
+    ).fetchone()["n"]
+    if used >= limit:
+        log.warning("Limite diário de %s atingido (conta %s)", kind, user.id)
+        raise HTTPException(429, message)
+    conn.execute(
+        "INSERT INTO usage_events (user_id, kind, used_on) VALUES (%s, %s, %s)", (user.id, kind, today)
+    )
+
+
 @app.post("/api/journal/{entry_id}/correct")
 def correct_journal(entry_id: EntryId, user: CurrentUser):
     with db.connect() as conn:
         row = conn.execute(
             "SELECT * FROM journal WHERE id = %s AND user_id = %s", (entry_id, user.id)
         ).fetchone()
-    if row is None:
-        raise HTTPException(404, "Entrada não encontrada")
+        if row is None:
+            raise HTTPException(404, "Entrada não encontrada")
+        # Cada entrada é corrigida uma vez só: pedir de novo só gastaria a IA.
+        if row["correction"] is not None:
+            raise HTTPException(409, "Essa entrada já foi corrigida")
+        if tutor.is_configured():
+            _use(conn, user, "correction", MAX_CORRECTIONS_PER_DAY,
+                 "Você já usou as correções por IA de hoje. Volte amanhã!")
 
     # A chamada à IA fica fora da conexão pra não segurar o banco enquanto espera.
     try:
@@ -680,10 +703,17 @@ def transcribe_status(_: CurrentUser):
     return {"available": transcribe.available(), "model": transcribe.model_name()}
 
 
+def _use_transcribe(user: auth.User) -> None:
+    with db.connect() as conn:
+        _use(conn, user, "transcribe", MAX_TRANSCRIBES_PER_DAY,
+             "Você já usou as checagens de voz de hoje. Volte amanhã!")
+
+
 @app.post("/api/transcribe")
-async def transcribe_audio(request: Request, _: CurrentUser):
+async def transcribe_audio(request: Request, user: CurrentUser):
     """Recebe a gravação (corpo cru, ex.: audio/webm ou audio/mp4) e devolve o texto entendido."""
     audio = await request.body()
+    await run_in_threadpool(_use_transcribe, user)
     try:
         # O Whisper é pesado: roda numa thread pra não travar o servidor.
         text = await run_in_threadpool(transcribe.transcribe, audio)

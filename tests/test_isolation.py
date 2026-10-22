@@ -1,5 +1,6 @@
 """O mais importante das contas: ninguém vê nem mexe nos dados de outra pessoa, nem adivinhando ids."""
 
+import psycopg
 import pytest
 
 
@@ -51,11 +52,13 @@ def test_same_card_text_in_two_accounts(ana_and_bia):
     assert ana.post("/api/cards", json=body).status_code == 409
 
 
-def test_ai_uses_each_persons_description(ana_and_bia, monkeypatch):
+def test_ai_uses_each_persons_description(ana_and_bia, database, monkeypatch):
     from app import tutor
 
     ana, bia = ana_and_bia
-    ana.patch("/api/me", json={"learner": "Professora, inglês fluente"})
+    # A descrição é posta pelo contas.py (direto no banco), nunca pela própria pessoa.
+    with psycopg.connect(database) as conn:
+        conn.execute("UPDATE users SET learner = 'Professora, inglês fluente' WHERE email = 'ana@example.com'")
     seen = []
     fake = tutor.Correction(corrected="x", natural="x", mistakes=[], encouragement="x")
     monkeypatch.setattr(tutor, "correct_journal", lambda text, learner: seen.append(learner) or fake)

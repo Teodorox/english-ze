@@ -63,8 +63,8 @@ def test_correct_journal_creates_mistake_cards(client, monkeypatch):
     assert [c["front"] for c in cards] == ["I went yesterday"]
     assert client.get("/api/journal").json()[0]["correction"]["corrected"] == "Yesterday I went to work."
 
-    # corrigir de novo não duplica o card
-    assert client.post(f"/api/journal/{entry['id']}/correct").json()["cards_created"] == 0
+    # corrigir de novo é recusado: só gastaria a IA
+    assert client.post(f"/api/journal/{entry['id']}/correct").status_code == 409
 
 
 def test_correct_journal_without_key(client, monkeypatch):
