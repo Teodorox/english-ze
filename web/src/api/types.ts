@@ -80,6 +80,24 @@ export interface Stats {
   due_today: number;
   due_tomorrow: number;
   history: { day: string; reviews: number }[];
+  skills: SkillLevel[];
+}
+
+export type SkillId = "vocabulary" | "listening" | "speaking" | "writing";
+export type Band = "A1" | "A2" | "B1" | "B2";
+
+/** Estimativa do nível numa habilidade (app/skills.py). */
+export interface SkillLevel {
+  id: SkillId;
+  value: number;
+  band: Band;
+  /** Quanto já andou dentro da faixa, de 0 a 1. */
+  progress: number;
+  next_band: Band | null;
+  /** Quantos acertos/erros recentes entraram na conta (0 = só o ponto de partida e o volume). */
+  samples: number;
+  accuracy: number | null;
+  start_band: Band;
 }
 
 /** Quem está logado (GET /api/me). */

@@ -5,13 +5,17 @@ import { PROGRESS_EVENT } from "../api/study";
 import type { Stats } from "../api/types";
 import { ActivityRings } from "../components/ActivityRings";
 import { LargeTitle } from "../components/LargeTitle";
+import { useMe } from "../components/MeContext";
 import { Stepper } from "../components/Stepper";
 import { todayIso } from "../lib/dueLabel";
+import { SKILL_INFO, skillNote } from "../lib/skills";
 import { daysActiveThisWeek, fraction, streakMessage, weekdayInitial } from "../lib/stats";
 import { loadPref, savePref } from "../lib/storage";
+import { levelLabel } from "../lib/studyProfile";
 import type { Tab } from "../tabs";
 
 export function StatsPage({ tab }: { tab: Tab }) {
+  const me = useMe();
   const [stats, setStats] = useState<Stats | null>(null);
   const [error, setError] = useState("");
   const [goal, setGoal] = useState<number>(() => loadPref("dailyGoal", 20));
@@ -98,6 +102,45 @@ export function StatsPage({ tab }: { tab: Tab }) {
           ))}
         </ul>
       </div>
+
+      <h2 className="section-header">Seu nível</h2>
+      <ul className="glass skills-list">
+        {stats.skills.map((skill) => {
+          const info = SKILL_INFO[skill.id];
+          const pct = Math.round(skill.progress * 100);
+          return (
+            <li key={skill.id} className="skill-row">
+              <div className="skill-head">
+                <span className="skill-name">
+                  <span aria-hidden="true">{info.emoji}</span> {info.label}
+                </span>
+                <span className="pill tint skill-band">{skill.band}</span>
+              </div>
+              <div
+                className="skill-bar"
+                role="progressbar"
+                aria-label={`${info.label}: ${skill.band}${skill.next_band ? `, ${pct}% do caminho até ${skill.next_band}` : ""}`}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={pct}
+              >
+                <span style={{ width: `${Math.max(pct, 2)}%` }} />
+              </div>
+              <p className="skill-note">
+                {skillNote(skill)}
+                {skill.next_band ? ` · ${pct}% até ${skill.next_band}` : " · topo da escala do app"}
+              </p>
+            </li>
+          );
+        })}
+      </ul>
+      {stats.skills.length > 0 && (
+        <p className="footnote skills-footnote">
+          Estimativa pelo que você faz no app, partindo do nível que você escolheu (
+          {me ? levelLabel(me.level) : "seu nível"} = {stats.skills[0].start_band}). Sobe com acertos e prática,
+          desce com erros. Não é certificado.
+        </p>
+      )}
 
       <h2 className="section-header">Revisões nos últimos 14 dias</h2>
       <div className="glass card chart-card">

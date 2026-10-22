@@ -8,7 +8,7 @@ from fastapi.concurrency import run_in_threadpool
 from psycopg.types.json import Jsonb
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-from . import auth, db, dayplan, quiz, security, srs, tracks, transcribe, tutor, web
+from . import auth, db, dayplan, quiz, security, skills, srs, tracks, transcribe, tutor, web
 from .config import load_env_file
 from .progress import compute_streak
 
@@ -607,6 +607,7 @@ def stats(user: CurrentUser):
         speech_today = conn.execute(
             "SELECT COUNT(*) AS n FROM speech_checks WHERE user_id = %s AND checked_on = %s", (user.id, today)
         ).fetchone()["n"]
+        evidence = _skill_evidence(conn, user, totals["mature"])
 
     history = []
     for i in range(13, -1, -1):
@@ -619,6 +620,56 @@ def stats(user: CurrentUser):
         "speech_checks_today": speech_today,
         **totals,
         "history": history,
+        "skills": skills.estimate_all(user.level, evidence),
+    }
+
+
+# Quantos dados recentes entram na nota de acerto de cada habilidade.
+RECENT_REVIEWS = 200
+RECENT_SPEECH = 50
+RECENT_JOURNAL = 20
+
+
+def _skill_evidence(conn, user: auth.User, mature: int) -> dict[str, tuple[list[float], int]]:
+    """As notas recentes (0 a 1) e o volume praticado de cada habilidade."""
+    # A primeira revisão de cada frase é só conhecer ("Entendi"): não mede nada e fica de fora.
+    # Revisões sem modo (de antes de existir o Ouvir) contam como Ler.
+    reviews = conn.execute(
+        "WITH later AS ("
+        " SELECT COALESCE(r.mode, 'read') AS kind, r.grade, r.reviewed_at, r.id,"
+        " ROW_NUMBER() OVER (PARTITION BY r.card_id ORDER BY r.reviewed_at, r.id) AS nth"
+        " FROM reviews r JOIN cards c ON c.id = r.card_id WHERE c.user_id = %s),"
+        " ranked AS ("
+        " SELECT kind, grade, ROW_NUMBER() OVER (PARTITION BY kind ORDER BY reviewed_at DESC, id DESC) AS recent,"
+        " COUNT(*) FILTER (WHERE grade >= 2) OVER (PARTITION BY kind) AS right_total"
+        " FROM later WHERE nth > 1)"
+        " SELECT kind, grade, right_total FROM ranked WHERE recent <= %s",
+        (user.id, RECENT_REVIEWS),
+    ).fetchall()
+    speech = conn.execute(
+        "SELECT score, COUNT(*) FILTER (WHERE score >= %s) OVER () AS good FROM speech_checks"
+        " WHERE user_id = %s ORDER BY checked_at DESC, id DESC LIMIT %s",
+        (skills.GOOD_SPEECH, user.id, RECENT_SPEECH),
+    ).fetchall()
+    journal = conn.execute(
+        "SELECT text, correction IS NOT NULL AS corrected,"
+        " COALESCE(jsonb_array_length(correction -> 'mistakes'), 0) AS mistakes, COUNT(*) OVER () AS total"
+        " FROM journal WHERE user_id = %s ORDER BY id DESC LIMIT %s",
+        (user.id, RECENT_JOURNAL),
+    ).fetchall()
+
+    def graded(kind: str) -> list[float]:
+        return [skills.review_score(r["grade"]) for r in reviews if r["kind"] == kind]
+
+    listen_right = next((r["right_total"] for r in reviews if r["kind"] == "listen"), 0)
+    return {
+        "vocabulary": (graded("read"), mature),
+        "listening": (graded("listen"), listen_right),
+        "speaking": ([r["score"] / 100 for r in speech], speech[0]["good"] if speech else 0),
+        "writing": (
+            [skills.writing_score(r["text"], r["mistakes"]) for r in journal if r["corrected"]],
+            journal[0]["total"] if journal else 0,
+        ),
     }
 
 
