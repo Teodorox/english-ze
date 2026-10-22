@@ -1,0 +1,182 @@
+{
+  "category": "trabalho",
+  "situations": [
+    {
+      "level": "iniciante",
+      "title": "No dia a dia",
+      "cards": [
+        {
+          "front": "I work as a software developer.",
+          "back": "Eu trabalho como desenvolvedor de software."
+        },
+        {
+          "front": "I have a meeting at 2.",
+          "back": "Tenho uma reunião às 2."
+        },
+        {
+          "front": "Can you hear me?",
+          "back": "Você tá me ouvindo?",
+          "note": "O clássico da call."
+        },
+        {
+          "front": "You're on mute.",
+          "back": "Você tá no mudo."
+        },
+        {
+          "front": "Sorry, I was on mute.",
+          "back": "Desculpa, eu tava no mudo."
+        },
+        {
+          "front": "Let me share my screen.",
+          "back": "Deixa eu compartilhar minha tela."
+        },
+        {
+          "front": "Can we schedule a quick call?",
+          "back": "Podemos marcar uma call rápida?"
+        },
+        {
+          "front": "Quick question about the report.",
+          "back": "Uma pergunta rápida sobre o relatório."
+        },
+        {
+          "front": "What's the deadline for this?",
+          "back": "Qual é o prazo pra isso?"
+        },
+        {
+          "front": "Can you walk me through it?",
+          "back": "Pode me explicar passo a passo?"
+        },
+        {
+          "front": "I'll look into it.",
+          "back": "Vou dar uma olhada nisso."
+        },
+        {
+          "front": "I'll get back to you.",
+          "back": "Te dou um retorno.",
+          "note": "Muito usado em reunião e e-mail."
+        }
+      ]
+    },
+    {
+      "level": "basico",
+      "title": "Reuniões e e-mail",
+      "cards": [
+        {
+          "front": "Let's touch base next week.",
+          "back": "Vamos alinhar semana que vem.",
+          "note": "\"touch base\" = conversar rapidinho pra alinhar."
+        },
+        {
+          "front": "Could you send me an update?",
+          "back": "Pode me mandar uma atualização?"
+        },
+        {
+          "front": "Just to clarify, is this due Friday?",
+          "back": "Só pra confirmar: é pra sexta?",
+          "note": "\"due\" = com prazo pra."
+        },
+        {
+          "front": "I'm swamped right now.",
+          "back": "Tô atolado agora.",
+          "note": "\"swamped\" = cheio de trabalho."
+        },
+        {
+          "front": "I'm on it.",
+          "back": "Já tô cuidando disso."
+        },
+        {
+          "front": "Thanks for the heads-up.",
+          "back": "Valeu pelo aviso.",
+          "note": "\"heads-up\" = aviso antecipado."
+        },
+        {
+          "front": "Let's take this offline.",
+          "back": "Vamos falar disso depois, fora da reunião.",
+          "note": "Pra tirar da reunião um assunto que só interessa a poucos."
+        },
+        {
+          "front": "I've attached the file.",
+          "back": "Anexei o arquivo.",
+          "note": "Mais natural que \"Please find attached\"."
+        },
+        {
+          "front": "Looking forward to hearing from you.",
+          "back": "Fico no aguardo do seu retorno.",
+          "note": "Fechamento comum de e-mail."
+        }
+      ]
+    },
+    {
+      "level": "basico",
+      "title": "Tecnologia",
+      "cards": [
+        {
+          "front": "I'm working on a new feature.",
+          "back": "Tô trabalhando numa feature nova."
+        },
+        {
+          "front": "Could you review my pull request?",
+          "back": "Você pode revisar meu pull request?"
+        },
+        {
+          "front": "The build is failing.",
+          "back": "O build está falhando."
+        },
+        {
+          "front": "I ran into a bug.",
+          "back": "Esbarrei num bug.",
+          "note": "\"run into\" = topar com, encontrar (um problema)."
+        },
+        {
+          "front": "I have experience with Python and SQL.",
+          "back": "Tenho experiência com Python e SQL."
+        },
+        {
+          "front": "It works on my machine.",
+          "back": "Na minha máquina funciona.",
+          "note": "A desculpa mais famosa de dev."
+        },
+        {
+          "front": "Can we ship this today?",
+          "back": "Dá pra subir isso hoje?",
+          "note": "\"ship\" = entregar, publicar."
+        },
+        {
+          "front": "I'll fix it right away.",
+          "back": "Vou corrigir agora mesmo."
+        }
+      ]
+    },
+    {
+      "level": "basico",
+      "title": "Entrevista de emprego",
+      "cards": [
+        {
+          "front": "Tell me about yourself.",
+          "back": "Me fale sobre você.",
+          "note": "Quase toda entrevista começa assim."
+        },
+        {
+          "front": "I worked there for three years.",
+          "back": "Trabalhei lá por três anos."
+        },
+        {
+          "front": "I'm a fast learner.",
+          "back": "Aprendo rápido."
+        },
+        {
+          "front": "I'm comfortable working in a team.",
+          "back": "Me sinto à vontade trabalhando em equipe."
+        },
+        {
+          "front": "I'm looking for new challenges.",
+          "back": "Tô buscando novos desafios."
+        },
+        {
+          "front": "What would my day-to-day look like?",
+          "back": "Como seria meu dia a dia?"
+        }
+      ]
+    }
+  ]
+}

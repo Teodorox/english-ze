@@ -77,7 +77,7 @@ export function Mine({ tab }: { tab: Tab }) {
       <LargeTitle tab={tab} accessory={<LivePill />} />
       <p className="footnote intro">
         Ouviu ou leu uma frase em inglês que não entendeu? Numa série, música, vídeo, jogo ou conversa: anote aqui e ela
-        vira card. Seus cards entram na fila antes do deck inicial.
+        vira card. Seus cards entram na fila antes das frases das trilhas.
       </p>
 
       <form className="mine-form" onSubmit={handleSave}>

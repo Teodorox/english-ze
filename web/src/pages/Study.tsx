@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { ApiError } from "../api/client";
 import { getSession, reviewCard } from "../api/study";
-import type { Grade } from "../api/types";
+import type { Grade, Session } from "../api/types";
 import { ChatFeed, useChatFeed } from "../components/ChatFeed";
 import { Flashcard, type StudyMode } from "../components/Flashcard";
 import { GradeButtons } from "../components/GradeButtons";
@@ -10,7 +10,6 @@ import { LargeTitle } from "../components/LargeTitle";
 import { LivePill } from "../components/LivePill";
 import { useMe } from "../components/MeContext";
 import { SegmentedControl } from "../components/SegmentedControl";
-import { Stepper } from "../components/Stepper";
 import { greeting } from "../lib/greeting";
 import { loadPref, savePref } from "../lib/storage";
 import { afterGrade, counts, requeue, reveal, startQueue, type QueueState } from "../lib/studyQueue";
@@ -21,24 +20,29 @@ const errorMessage = (err: unknown) => (err instanceof ApiError ? err.message : 
 
 export function Study({ tab }: { tab: Tab }) {
   const [mode, setMode] = useState<StudyMode>(() => loadPref("studyMode", "read"));
-  const [newLimit, setNewLimit] = useState<number>(() => loadPref("newLimit", 10));
   const [state, setState] = useState<QueueState | null>(null);
   const [error, setError] = useState("");
   const chat = useChatFeed();
   const me = useMe();
 
-  const loadSession = useCallback(async (limit: number) => {
+  const [session, setSession] = useState<Session | null>(null);
+
+  const loadSession = useCallback(async () => {
     setError("");
     try {
-      setState(startQueue(await getSession(limit)));
+      const data = await getSession();
+      setSession(data);
+      setState(startQueue(data));
     } catch (err) {
       setError(errorMessage(err));
     }
   }, []);
 
+  // Mudou objetivos, nível ou tempo em Ajustes: o dia é montado de novo.
+  const plan = me ? `${me.goals.join()}|${me.level}|${me.daily_minutes}` : "";
   useEffect(() => {
-    loadSession(newLimit);
-  }, [loadSession, newLimit]);
+    loadSession();
+  }, [loadSession, plan]);
 
   const current = state?.current ?? null;
   const revealed = state?.revealed ?? false;
@@ -94,11 +98,6 @@ export function Study({ tab }: { tab: Tab }) {
     savePref("studyMode", value);
   }
 
-  function changeNewLimit(value: number) {
-    setNewLimit(value);
-    savePref("newLimit", value);
-  }
-
   const { remaining, newCount } = state ? counts(state) : { remaining: 0, newCount: 0 };
   const total = remaining + (state?.done ?? 0);
   const progress = total ? Math.round(((state?.done ?? 0) / total) * 100) : 0;
@@ -143,6 +142,14 @@ export function Study({ tab }: { tab: Tab }) {
         </div>
       )}
 
+      {session?.held_back && (
+        <p className="banner-info" role="status">
+          {session.new_per_day
+            ? `Hoje só ${session.new_per_day} frases novas: tem bastante revisão acumulada.`
+            : "Hoje sem frases novas: primeiro vamos pôr as revisões em dia."}
+        </p>
+      )}
+
       {error && (
         <p className="banner-error" role="alert">
           {error}
@@ -163,6 +170,12 @@ export function Study({ tab }: { tab: Tab }) {
               </div>
               <h2>{state.done ? "That's a W" : "We're all caught up"}</h2>
               <p>{state.done ? `${state.done} revisões hoje. Bro is locked in.` : "Nada pra revisar agora."}</p>
+              {session && session.due_total > session.due.length && (
+                <p className="footnote">
+                  Meta de hoje feita. As outras {session.due_total - session.due.length} revisões acumuladas ficam pra
+                  amanhã.
+                </p>
+              )}
               <p className="footnote">Que tal minerar umas frases da próxima live ou fazer um shadowing rápido?</p>
             </div>
           ))}
@@ -188,10 +201,6 @@ export function Study({ tab }: { tab: Tab }) {
             </dl>
           </div>
         )}
-
-        <div className="glass card study-settings">
-          <Stepper label="Novos por dia" value={newLimit} min={0} max={100} step={5} onChange={changeNewLimit} />
-        </div>
 
         <div className="glass card desktop-only shortcuts">
           <h2 className="card-heading">Atalhos do teclado</h2>

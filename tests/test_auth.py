@@ -64,10 +64,12 @@ def test_signup_rules(anon, make_invite):
     assert signup(TestClient(anon.app), code, email="bia@example.com").status_code == 201
 
 
-def test_new_account_gets_its_own_seed_deck(client):
+def test_cards_come_with_the_first_access(new_user):
+    client = new_user(onboard=False)
+    assert client.get("/api/cards").json() == []  # o cadastro sozinho não dá frases: elas dependem das respostas
+    client.post("/api/me/onboarding", json={"goals": ["viagem"], "level": "iniciante", "daily_minutes": 10})
     cards = client.get("/api/cards").json()
-    assert len(cards) > 50
-    assert {c["source"] for c in cards} == {"deck inicial"}
+    assert cards and {c["source"] for c in cards} == {"deck inicial"}
 
 
 def test_login_logout_and_wrong_password(client, anon):
@@ -126,7 +128,7 @@ def test_update_profile(client):
     assert res.status_code == 200
     assert res.json() | {"id": 0} == {
         "id": 0, "email": "ana@example.com", "name": "Ana Clara", "timezone": "Europe/Lisbon", "learner": "Nível B2",
-        "goals": [], "level": None, "daily_minutes": 10, "onboarded": False,
+        "goals": ["streamers", "conversar"], "level": "iniciante", "daily_minutes": 10, "onboarded": True,
     }
     assert client.patch("/api/me", json={"timezone": "Marte/Base"}).status_code == 422
     assert client.patch("/api/me", json={"name": "   "}).status_code == 422

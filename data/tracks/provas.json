@@ -1,0 +1,232 @@
+{
+  "category": "provas",
+  "situations": [
+    {
+      "level": "iniciante",
+      "title": "Conectivos de adição e contraste",
+      "cards": [
+        {
+          "front": "It's cheap, but it works well.",
+          "back": "É barato, mas funciona bem."
+        },
+        {
+          "front": "However, the results were different.",
+          "back": "No entanto, os resultados foram diferentes.",
+          "note": "however = no entanto, porém. Um dos conectivos mais cobrados no ENEM."
+        },
+        {
+          "front": "Although it was raining, they went out.",
+          "back": "Embora estivesse chovendo, eles saíram.",
+          "note": "although = embora."
+        },
+        {
+          "front": "Even though he studied, he failed the test.",
+          "back": "Mesmo tendo estudado, ele reprovou na prova.",
+          "note": "even though = mesmo que (mais forte que although)."
+        },
+        {
+          "front": "Despite the cold, we had fun.",
+          "back": "Apesar do frio, a gente se divertiu.",
+          "note": "despite + substantivo = apesar de."
+        },
+        {
+          "front": "Nevertheless, she kept trying.",
+          "back": "Mesmo assim, ela continuou tentando.",
+          "note": "nevertheless = mesmo assim, contudo."
+        },
+        {
+          "front": "Some people love it, whereas others hate it.",
+          "back": "Algumas pessoas amam, enquanto outras odeiam.",
+          "note": "whereas = enquanto (pra contrastar)."
+        },
+        {
+          "front": "On the other hand, it's very expensive.",
+          "back": "Por outro lado, é muito caro."
+        },
+        {
+          "front": "Moreover, the city is very safe.",
+          "back": "Além disso, a cidade é muito segura.",
+          "note": "moreover = além disso (formal). Na fala: also, plus."
+        },
+        {
+          "front": "In addition, students need more time.",
+          "back": "Além disso, os alunos precisam de mais tempo."
+        }
+      ]
+    },
+    {
+      "level": "iniciante",
+      "title": "Conectivos de causa e consequência",
+      "cards": [
+        {
+          "front": "Because of the storm, the flight was canceled.",
+          "back": "Por causa da tempestade, o voo foi cancelado.",
+          "note": "because of + substantivo. because + frase."
+        },
+        {
+          "front": "Due to the rain, the game was delayed.",
+          "back": "Devido à chuva, o jogo foi adiado.",
+          "note": "due to = devido a."
+        },
+        {
+          "front": "Since it's late, let's go home.",
+          "back": "Já que é tarde, vamos pra casa.",
+          "note": "since = já que. Também quer dizer \"desde\"."
+        },
+        {
+          "front": "The test was hard, so I studied more.",
+          "back": "A prova era difícil, então estudei mais.",
+          "note": "so = então, por isso."
+        },
+        {
+          "front": "Therefore, we need to act now.",
+          "back": "Portanto, precisamos agir agora.",
+          "note": "therefore = portanto."
+        },
+        {
+          "front": "As a result, prices went up.",
+          "back": "Como resultado, os preços subiram."
+        },
+        {
+          "front": "Unless you study, you won't pass.",
+          "back": "A menos que você estude, não vai passar.",
+          "note": "unless = a menos que."
+        },
+        {
+          "front": "In order to pass, you need to practice.",
+          "back": "Pra passar, você precisa praticar.",
+          "note": "in order to = para, a fim de."
+        }
+      ]
+    },
+    {
+      "level": "iniciante",
+      "title": "Falsos cognatos",
+      "cards": [
+        {
+          "front": "I actually liked the movie.",
+          "back": "Na verdade, eu gostei do filme.",
+          "note": "actually = na verdade. \"Atualmente\" é currently."
+        },
+        {
+          "front": "She pretends to be happy.",
+          "back": "Ela finge estar feliz.",
+          "note": "pretend = fingir. \"Pretender\" é intend."
+        },
+        {
+          "front": "My parents are very supportive.",
+          "back": "Meus pais me apoiam muito.",
+          "note": "parents = pais. Parentes = relatives."
+        },
+        {
+          "front": "Eventually, he found a job.",
+          "back": "No fim, ele conseguiu um emprego.",
+          "note": "eventually = no fim das contas. \"Eventualmente\" é occasionally."
+        },
+        {
+          "front": "I realized I was wrong.",
+          "back": "Percebi que estava errado.",
+          "note": "realize = perceber. \"Realizar\" é achieve ou carry out."
+        },
+        {
+          "front": "He's a very sensible person.",
+          "back": "Ele é uma pessoa muito sensata.",
+          "note": "sensible = sensato. Sensível = sensitive."
+        },
+        {
+          "front": "The college has a big library.",
+          "back": "A faculdade tem uma biblioteca grande.",
+          "note": "library = biblioteca. Livraria = bookstore. college = faculdade."
+        },
+        {
+          "front": "I'm going to attend the lecture.",
+          "back": "Vou assistir à palestra.",
+          "note": "lecture = palestra, aula. Leitura = reading. attend = comparecer."
+        }
+      ]
+    },
+    {
+      "level": "basico",
+      "title": "Lendo um texto",
+      "cards": [
+        {
+          "front": "What is the main idea of the text?",
+          "back": "Qual é a ideia principal do texto?"
+        },
+        {
+          "front": "According to the text, the problem is growing.",
+          "back": "De acordo com o texto, o problema está crescendo.",
+          "note": "according to = de acordo com. Aparece em muitas questões."
+        },
+        {
+          "front": "The word \"it\" refers to the city.",
+          "back": "A palavra \"it\" se refere à cidade.",
+          "note": "Questões de referência perguntam a que palavra um pronome se refere."
+        },
+        {
+          "front": "The author suggests that we should change.",
+          "back": "O autor sugere que deveríamos mudar."
+        },
+        {
+          "front": "For instance, many cities use solar energy.",
+          "back": "Por exemplo, muitas cidades usam energia solar.",
+          "note": "for instance = for example."
+        },
+        {
+          "front": "In other words, it's not enough.",
+          "back": "Em outras palavras, não é suficiente."
+        },
+        {
+          "front": "That is, the policy failed.",
+          "back": "Ou seja, a política fracassou.",
+          "note": "that is (i.e.) = ou seja."
+        },
+        {
+          "front": "In short, the plan worked.",
+          "back": "Em resumo, o plano funcionou.",
+          "note": "in short / in summary = em resumo."
+        }
+      ]
+    },
+    {
+      "level": "basico",
+      "title": "Falando e escrevendo (TOEFL e IELTS)",
+      "cards": [
+        {
+          "front": "In my opinion, schools should teach finance.",
+          "back": "Na minha opinião, as escolas deveriam ensinar finanças."
+        },
+        {
+          "front": "I strongly believe that education is key.",
+          "back": "Acredito firmemente que a educação é fundamental."
+        },
+        {
+          "front": "There are two main reasons for this.",
+          "back": "Há dois motivos principais pra isso."
+        },
+        {
+          "front": "First of all, it saves time.",
+          "back": "Antes de tudo, isso economiza tempo."
+        },
+        {
+          "front": "Another advantage is the cost.",
+          "back": "Outra vantagem é o custo."
+        },
+        {
+          "front": "Let me give you an example.",
+          "back": "Deixa eu te dar um exemplo."
+        },
+        {
+          "front": "That's an interesting question.",
+          "back": "Essa é uma pergunta interessante.",
+          "note": "Na prova oral, ganha uns segundos pra pensar."
+        },
+        {
+          "front": "To sum up, the benefits outweigh the risks.",
+          "back": "Resumindo, os benefícios superam os riscos.",
+          "note": "outweigh = superar, pesar mais que."
+        }
+      ]
+    }
+  ]
+}

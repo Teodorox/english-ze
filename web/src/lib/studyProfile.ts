@@ -20,12 +20,13 @@ export const LEVELS: { id: Level; label: string; description: string }[] = [
   { id: "intermediario", label: "Intermediário", description: "Converso, mas travo com fala rápida e gírias." },
 ];
 
+// As frases novas por dia são as do NEW_PER_DAY em app/main.py (quem decide é o servidor).
 export const MINUTES: { value: DailyMinutes; label: string; description: string }[] = [
-  { value: 5, label: "5 min", description: "Rapidinho, pra não perder a sequência." },
-  { value: 10, label: "10 min", description: "Equilibrado. O recomendado." },
-  { value: 15, label: "15 min", description: "Puxado, pra evoluir mais rápido." },
-  { value: 20, label: "20 min", description: "Focado, pra quem leva a sério." },
-  { value: 30, label: "30 min", description: "Intensivo, pra quem tem tempo livre." },
+  { value: 5, label: "5 min", description: "Rapidinho, pra não perder a sequência. 3 frases novas por dia." },
+  { value: 10, label: "10 min", description: "Equilibrado. O recomendado. 5 frases novas por dia." },
+  { value: 15, label: "15 min", description: "Puxado, pra evoluir mais rápido. 8 frases novas por dia." },
+  { value: 20, label: "20 min", description: "Focado, pra quem leva a sério. 10 frases novas por dia." },
+  { value: 30, label: "30 min", description: "Intensivo, pra quem tem tempo livre. 15 frases novas por dia." },
 ];
 
 /** "Streamers e games, Música" (na ordem da lista, não na ordem em que a pessoa tocou). */

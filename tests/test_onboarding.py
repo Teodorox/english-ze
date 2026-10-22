@@ -6,6 +6,12 @@ import pytest
 ANSWERS = {"goals": ["streamers", "musica"], "level": "basico", "daily_minutes": 10}
 
 
+@pytest.fixture
+def client(new_user):
+    """Aqui a conta começa sem o primeiro acesso: é ele que está sendo testado."""
+    return new_user(onboard=False)
+
+
 def test_new_account_starts_without_onboarding(client):
     me = client.get("/api/me").json()
     assert me["onboarded"] is False
@@ -84,7 +90,8 @@ def test_onboarding_date_is_kept(client, database):
 
 
 def test_onboarding_is_per_account(new_user):
-    ana, bia = new_user("ana@example.com"), new_user("bia@example.com", name="Bia")
+    ana = new_user("ana@example.com", onboard=False)
+    bia = new_user("bia@example.com", name="Bia", onboard=False)
     ana.post("/api/me/onboarding", json=ANSWERS)
     assert bia.get("/api/me").json()["onboarded"] is False
     assert bia.get("/api/me").json()["goals"] == []

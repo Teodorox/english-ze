@@ -31,6 +31,11 @@ export interface NewCard {
 export interface Session {
   due: Card[];
   new: Card[];
+  /** Todas as revisões vencidas (due traz no máximo o teto do dia). */
+  due_total: number;
+  new_per_day: number;
+  /** Revisões acumuladas seguraram as frases novas de hoje. */
+  held_back: boolean;
 }
 
 export interface ReviewResult {

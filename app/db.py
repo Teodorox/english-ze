@@ -1,8 +1,6 @@
-import json
 import os
 from contextlib import contextmanager
 from datetime import date, datetime
-from itertools import zip_longest
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -13,8 +11,7 @@ from psycopg.rows import dict_row
 from psycopg_pool import ConnectionPool
 
 ROOT = Path(__file__).resolve().parent.parent
-SEED_FILE = ROOT / "data" / "seed_cards.json"
-SEED_SOURCE = "deck inicial"
+SEED_SOURCE = "deck inicial"  # frases das trilhas (data/tracks), não criadas pela pessoa
 MIGRATIONS_DIR = Path(__file__).resolve().parent / "migrations"
 DEFAULT_TIMEZONE = "America/Sao_Paulo"
 MIGRATION_LOCK = 4_242_001  # trava do PostgreSQL: dois servidores subindo juntos não migram ao mesmo tempo
@@ -122,21 +119,3 @@ def migrate(conn: psycopg.Connection) -> list[int]:
     conn.commit()
     return applied
 
-
-def seed_cards(conn: psycopg.Connection, user_id: int) -> None:
-    """Dá à conta nova o deck inicial, intercalando categorias pra os cards novos virem variados."""
-    cards = json.loads(SEED_FILE.read_text(encoding="utf-8"))
-    by_category: dict[str, list[dict]] = {}
-    for card in cards:
-        by_category.setdefault(card["category"], []).append(card)
-
-    with conn.cursor() as cur:
-        cur.executemany(
-            "INSERT INTO cards (user_id, front, back, note, category, source) VALUES (%s, %s, %s, %s, %s, %s)"
-            " ON CONFLICT (user_id, front) DO NOTHING",
-            [
-                (user_id, card["front"], card["back"], card.get("note", ""), card["category"], SEED_SOURCE)
-                for group in zip_longest(*by_category.values())
-                for card in filter(None, group)
-            ],
-        )

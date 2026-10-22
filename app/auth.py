@@ -131,16 +131,13 @@ def authenticate(email: str, password: str) -> int | None:
 def create_user(
     conn: psycopg.Connection, *, email: str, name: str, password: str, timezone: str, learner: str = ""
 ) -> int | None:
-    """Cria a conta com o deck inicial. None se já existe uma conta com esse e-mail."""
+    """Cria a conta, ainda sem cards (eles vêm das trilhas no primeiro acesso). None se o e-mail já tem conta."""
     row = conn.execute(
         "INSERT INTO users (email, name, password_hash, timezone, learner) VALUES (%s, %s, %s, %s, %s)"
         " ON CONFLICT ((lower(email))) DO NOTHING RETURNING id",
         (normalize_email(email), name, hash_password(password), timezone, learner),
     ).fetchone()
-    if row is None:
-        return None
-    db.seed_cards(conn, row["id"])
-    return row["id"]
+    return None if row is None else row["id"]
 
 
 def set_password(conn: psycopg.Connection, user_id: int, password: str) -> None:

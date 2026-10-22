@@ -22,7 +22,7 @@ def test_each_account_sees_only_its_own_data(ana_and_bia):
     assert bia.get("/api/journal").json() == []
     assert bia.get("/api/stats").json()["reviews_today"] == 0
     assert ana.get("/api/stats").json()["reviews_today"] == 1
-    # O mesmo card do deck inicial existe nas duas contas, cada um com o seu progresso
+    # A mesma frase da trilha existe nas duas contas, cada um com o seu progresso
     assert card["front"] in [c["front"] for c in bia.get("/api/session?new_limit=100").json()["new"]]
 
 

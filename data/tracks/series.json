@@ -1,0 +1,193 @@
+{
+  "category": "series",
+  "situations": [
+    {
+      "level": "iniciante",
+      "title": "Comentando a série",
+      "cards": [
+        {
+          "front": "Have you seen this show?",
+          "back": "Você já viu essa série?",
+          "note": "Série = \"show\" ou \"series\"."
+        },
+        {
+          "front": "Is it worth watching?",
+          "back": "Vale a pena assistir?"
+        },
+        {
+          "front": "I'm binge-watching it.",
+          "back": "Tô maratonando.",
+          "note": "binge-watch = maratonar."
+        },
+        {
+          "front": "What episode are you on?",
+          "back": "Em qual episódio você tá?"
+        },
+        {
+          "front": "No spoilers, please!",
+          "back": "Sem spoiler, por favor!"
+        },
+        {
+          "front": "That plot twist!",
+          "back": "Que reviravolta!",
+          "note": "plot twist = reviravolta."
+        },
+        {
+          "front": "The ending was so good.",
+          "back": "O final foi muito bom."
+        },
+        {
+          "front": "I can't wait for the next episode.",
+          "back": "Não vejo a hora do próximo episódio.",
+          "note": "\"can't wait\" = não ver a hora."
+        },
+        {
+          "front": "The new season comes out next month.",
+          "back": "A nova temporada sai mês que vem.",
+          "note": "\"come out\" = lançar, estrear."
+        },
+        {
+          "front": "I'm watching it with subtitles.",
+          "back": "Tô assistindo com legenda."
+        }
+      ]
+    },
+    {
+      "level": "iniciante",
+      "title": "Frases que todo personagem fala",
+      "cards": [
+        {
+          "front": "What's going on?",
+          "back": "O que tá acontecendo?"
+        },
+        {
+          "front": "Are you kidding me?",
+          "back": "Tá de brincadeira?"
+        },
+        {
+          "front": "What are you doing here?",
+          "back": "O que você tá fazendo aqui?"
+        },
+        {
+          "front": "We need to talk.",
+          "back": "Precisamos conversar."
+        },
+        {
+          "front": "It's not what it looks like.",
+          "back": "Não é o que parece."
+        },
+        {
+          "front": "Trust me.",
+          "back": "Confia em mim."
+        },
+        {
+          "front": "I've got this.",
+          "back": "Deixa comigo."
+        },
+        {
+          "front": "Oh my God, you scared me!",
+          "back": "Meu Deus, você me assustou!"
+        },
+        {
+          "front": "Get out of here!",
+          "back": "Sai daqui!",
+          "note": "Dependendo do tom, também é \"Não acredito!\"."
+        },
+        {
+          "front": "Shut up!",
+          "back": "Cala a boca!",
+          "note": "Entre amigos, também quer dizer \"Não acredito!\"."
+        }
+      ]
+    },
+    {
+      "level": "basico",
+      "title": "Expressões de série",
+      "cards": [
+        {
+          "front": "Give me a break.",
+          "back": "Me poupe. / Fala sério."
+        },
+        {
+          "front": "You've got to be kidding me.",
+          "back": "Você só pode estar brincando."
+        },
+        {
+          "front": "I'm not buying it.",
+          "back": "Não caio nessa.",
+          "note": "\"buy\" aqui = acreditar (numa desculpa)."
+        },
+        {
+          "front": "You're freaking me out.",
+          "back": "Você tá me assustando.",
+          "note": "\"freak out\" = surtar, assustar."
+        },
+        {
+          "front": "Don't get me wrong.",
+          "back": "Não me entenda mal."
+        },
+        {
+          "front": "It's a long story.",
+          "back": "É uma longa história."
+        },
+        {
+          "front": "I owe you one.",
+          "back": "Te devo uma."
+        },
+        {
+          "front": "What did I miss?",
+          "back": "O que eu perdi?"
+        },
+        {
+          "front": "Spill the tea.",
+          "back": "Conta tudo. / Solta a fofoca.",
+          "note": "\"tea\" = fofoca."
+        },
+        {
+          "front": "Cut it out!",
+          "back": "Para com isso!"
+        },
+        {
+          "front": "Keep it down!",
+          "back": "Fala baixo!"
+        },
+        {
+          "front": "That's the last straw.",
+          "back": "Foi a gota d'água."
+        }
+      ]
+    },
+    {
+      "level": "basico",
+      "title": "Assistindo em inglês",
+      "cards": [
+        {
+          "front": "They talk so fast.",
+          "back": "Eles falam muito rápido."
+        },
+        {
+          "front": "What did he just say?",
+          "back": "O que ele acabou de falar?"
+        },
+        {
+          "front": "Can you rewind a bit?",
+          "back": "Pode voltar um pouco?",
+          "note": "rewind = voltar o vídeo."
+        },
+        {
+          "front": "Pause it for a sec.",
+          "back": "Pausa um segundinho."
+        },
+        {
+          "front": "I watch it in English with English subtitles.",
+          "back": "Assisto em inglês com legenda em inglês.",
+          "note": "Um ótimo passo antes de tirar a legenda."
+        },
+        {
+          "front": "I'm gonna turn off the subtitles.",
+          "back": "Vou tirar a legenda."
+        }
+      ]
+    }
+  ]
+}

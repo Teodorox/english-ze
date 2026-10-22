@@ -1,9 +1,8 @@
-def test_seed_and_new_limit(client):
+def test_new_limit_overrides_the_daily_plan(client):
     data = client.get("/api/session?new_limit=5").json()
     assert data["due"] == []
     assert len(data["new"]) == 5
-    # categorias intercaladas: os primeiros cards não são todos da mesma
-    assert len({c["category"] for c in data["new"][:4]}) == 4
+    assert data["new_per_day"] == 5 and data["held_back"] is False
 
 
 def test_review_moves_card_out_of_today(client):
@@ -112,4 +111,4 @@ def test_personal_cards_come_before_seed_deck(client, monkeypatch):
 
     fronts = [c["front"] for c in client.get("/api/session?new_limit=3").json()["new"]]
     assert fronts[:2] == ["I went", "Bro is not him"]
-    assert fronts[2] == "No cap, that was crazy."  # depois vem o deck inicial
+    assert fronts[2] == "Base I1"  # depois vêm as trilhas

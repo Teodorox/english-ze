@@ -1,0 +1,210 @@
+{
+  "category": "conversa",
+  "situations": [
+    {
+      "level": "iniciante",
+      "title": "Quando não entendo",
+      "cards": [
+        {
+          "front": "Can you say that again?",
+          "back": "Pode repetir?"
+        },
+        {
+          "front": "Could you speak a little slower, please?",
+          "back": "Pode falar um pouco mais devagar, por favor?"
+        },
+        {
+          "front": "Sorry, I didn't get that.",
+          "back": "Desculpa, não entendi.",
+          "note": "\"get\" aqui = entender."
+        },
+        {
+          "front": "What does that mean?",
+          "back": "O que isso significa?"
+        },
+        {
+          "front": "How do you say this in English?",
+          "back": "Como se diz isso em inglês?"
+        },
+        {
+          "front": "How do you spell that?",
+          "back": "Como se escreve isso?",
+          "note": "\"spell\" = soletrar."
+        },
+        {
+          "front": "What's the word for this?",
+          "back": "Qual é a palavra pra isso?",
+          "note": "Pra quando a palavra some da cabeça."
+        },
+        {
+          "front": "I'm still learning English.",
+          "back": "Ainda estou aprendendo inglês."
+        },
+        {
+          "front": "Let me think.",
+          "back": "Deixa eu pensar."
+        },
+        {
+          "front": "I mean...",
+          "back": "Quer dizer... / Digo...",
+          "note": "Pra se corrigir no meio da frase."
+        },
+        {
+          "front": "Got it.",
+          "back": "Entendi. / Pode deixar.",
+          "note": "\"got it\" = entendi. Responde instruções e explicações."
+        },
+        {
+          "front": "Never mind.",
+          "back": "Deixa pra lá."
+        }
+      ]
+    },
+    {
+      "level": "iniciante",
+      "title": "Educação e apresentação",
+      "cards": [
+        {
+          "front": "Hi, I'm Zé.",
+          "back": "Oi, eu sou o Zé.",
+          "note": "Na conversa, \"I'm ...\" é mais natural que \"My name is ...\"."
+        },
+        {
+          "front": "Nice to meet you.",
+          "back": "Prazer em te conhecer."
+        },
+        {
+          "front": "Where are you from?",
+          "back": "De onde você é?"
+        },
+        {
+          "front": "I'm from Brazil.",
+          "back": "Eu sou do Brasil."
+        },
+        {
+          "front": "I live in São Paulo.",
+          "back": "Eu moro em São Paulo."
+        },
+        {
+          "front": "Excuse me.",
+          "back": "Com licença.",
+          "note": "Também serve pra chamar a atenção de alguém."
+        },
+        {
+          "front": "Sorry about that.",
+          "back": "Foi mal. / Desculpa por isso."
+        },
+        {
+          "front": "Thank you so much!",
+          "back": "Muito obrigado!"
+        },
+        {
+          "front": "You're welcome.",
+          "back": "De nada."
+        },
+        {
+          "front": "No worries.",
+          "back": "Sem problema. / Imagina.",
+          "note": "Responde tanto \"sorry\" quanto \"thanks\"."
+        }
+      ]
+    },
+    {
+      "level": "basico",
+      "title": "Fala rápida",
+      "category": "fala-rapida",
+      "cards": [
+        {
+          "front": "I'm gonna stream tomorrow.",
+          "back": "Vou fazer live amanhã.",
+          "note": "gonna = going to"
+        },
+        {
+          "front": "I wanna win this.",
+          "back": "Eu quero ganhar isso.",
+          "note": "wanna = want to"
+        },
+        {
+          "front": "I gotta go.",
+          "back": "Tenho que ir.",
+          "note": "gotta = got to / have to"
+        },
+        {
+          "front": "Lemme see that.",
+          "back": "Deixa eu ver isso.",
+          "note": "lemme = let me"
+        },
+        {
+          "front": "Gimme a sec.",
+          "back": "Me dá um segundo.",
+          "note": "gimme = give me. sec = second"
+        },
+        {
+          "front": "Whatcha doing?",
+          "back": "O que você tá fazendo?",
+          "note": "whatcha = what are you"
+        },
+        {
+          "front": "Y'all ready?",
+          "back": "Vocês estão prontos?",
+          "note": "y'all = you all (vocês)"
+        },
+        {
+          "front": "I dunno, man.",
+          "back": "Sei lá, cara.",
+          "note": "dunno = don't know"
+        },
+        {
+          "front": "Didja see that?",
+          "back": "Você viu isso?",
+          "note": "didja = did you"
+        },
+        {
+          "front": "It's kinda hard.",
+          "back": "É meio difícil.",
+          "note": "kinda = kind of (meio que)"
+        },
+        {
+          "front": "I'm tryna focus.",
+          "back": "Tô tentando focar.",
+          "note": "tryna = trying to"
+        },
+        {
+          "front": "Imma head out.",
+          "back": "Vou nessa.",
+          "note": "Imma = I'm going to. head out = sair, ir embora"
+        },
+        {
+          "front": "You good?",
+          "back": "Tá de boa? / Tá tudo bem?",
+          "note": "Forma curta de \"Are you good?\""
+        },
+        {
+          "front": "Ain't nobody got time for that.",
+          "back": "Ninguém tem tempo pra isso.",
+          "note": "ain't = isn't / don't. A dupla negação é comum na fala informal."
+        },
+        {
+          "front": "Gotcha.",
+          "back": "Saquei. / Entendi.",
+          "note": "gotcha = got you"
+        },
+        {
+          "front": "Whaddya think?",
+          "back": "O que você acha?",
+          "note": "whaddya = what do you"
+        },
+        {
+          "front": "I hafta work tomorrow.",
+          "back": "Tenho que trabalhar amanhã.",
+          "note": "hafta = have to"
+        },
+        {
+          "front": "I shoulda known.",
+          "back": "Eu devia ter imaginado.",
+          "note": "shoulda = should have. Também: coulda (could have), woulda (would have)."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,227 @@
+{
+  "category": "conversa",
+  "situations": [
+    {
+      "level": "iniciante",
+      "title": "Puxando conversa",
+      "cards": [
+        {
+          "front": "What's up? Not much, you?",
+          "back": "E aí? Nada de mais, e você?",
+          "note": "Resposta mais comum pra \"What's up?\""
+        },
+        {
+          "front": "How's it going?",
+          "back": "Como vão as coisas?",
+          "note": "Resposta: \"Pretty good\" / \"Not bad\"."
+        },
+        {
+          "front": "I'm good, thanks. And you?",
+          "back": "Tô bem, valeu. E você?"
+        },
+        {
+          "front": "Not bad.",
+          "back": "Nada mal. / Tudo certo.",
+          "note": "Resposta comum pra \"How are you?\"."
+        },
+        {
+          "front": "How was your day?",
+          "back": "Como foi seu dia?"
+        },
+        {
+          "front": "How was your weekend?",
+          "back": "Como foi seu fim de semana?"
+        },
+        {
+          "front": "What are you up to?",
+          "back": "O que você tá fazendo? / Quais os planos?",
+          "note": "\"up to\" = fazendo, aprontando."
+        },
+        {
+          "front": "Long time no see!",
+          "back": "Quanto tempo!",
+          "note": "Pra quem você não vê faz tempo."
+        },
+        {
+          "front": "What do you do for a living?",
+          "back": "Com o que você trabalha?"
+        },
+        {
+          "front": "Hold on a sec.",
+          "back": "Espera um segundo."
+        },
+        {
+          "front": "I'm on my way.",
+          "back": "Tô a caminho."
+        }
+      ]
+    },
+    {
+      "level": "iniciante",
+      "title": "Dando opinião",
+      "cards": [
+        {
+          "front": "That makes sense.",
+          "back": "Faz sentido."
+        },
+        {
+          "front": "I totally agree with you.",
+          "back": "Concordo totalmente com você."
+        },
+        {
+          "front": "I'm not sure.",
+          "back": "Não tenho certeza."
+        },
+        {
+          "front": "It depends.",
+          "back": "Depende."
+        },
+        {
+          "front": "I think so.",
+          "back": "Acho que sim."
+        },
+        {
+          "front": "I don't think so.",
+          "back": "Acho que não."
+        },
+        {
+          "front": "That's a good point.",
+          "back": "Bem pensado. / Faz sentido o que você disse."
+        },
+        {
+          "front": "Really?",
+          "back": "Sério?"
+        },
+        {
+          "front": "Me too.",
+          "back": "Eu também."
+        },
+        {
+          "front": "Me neither.",
+          "back": "Eu também não.",
+          "note": "Pra concordar com algo negativo: \"I don't like it.\" → \"Me neither.\""
+        }
+      ]
+    },
+    {
+      "level": "basico",
+      "title": "Falando de mim",
+      "cards": [
+        {
+          "front": "I've been learning English for a year.",
+          "back": "Tô aprendendo inglês faz um ano.",
+          "note": "\"have been + -ing\": algo que começou no passado e continua até agora."
+        },
+        {
+          "front": "In my free time, I like to play video games.",
+          "back": "No meu tempo livre, gosto de jogar videogame."
+        },
+        {
+          "front": "I'm really into music.",
+          "back": "Eu curto muito música.",
+          "note": "\"be into\" = curtir, gostar muito."
+        },
+        {
+          "front": "I'm not a big fan of horror movies.",
+          "back": "Não sou muito fã de filme de terror."
+        },
+        {
+          "front": "I used to live in Rio.",
+          "back": "Eu morava no Rio.",
+          "note": "\"used to\" = algo que era assim e não é mais."
+        },
+        {
+          "front": "I have a brother and a sister.",
+          "back": "Tenho um irmão e uma irmã."
+        },
+        {
+          "front": "I work from home.",
+          "back": "Trabalho de casa."
+        }
+      ]
+    },
+    {
+      "level": "basico",
+      "title": "Fazendo planos",
+      "cards": [
+        {
+          "front": "Are you free this weekend?",
+          "back": "Tá livre nesse fim de semana?"
+        },
+        {
+          "front": "Do you want to grab a coffee sometime?",
+          "back": "Bora tomar um café qualquer dia?",
+          "note": "\"grab a coffee\" = tomar um café (informal)."
+        },
+        {
+          "front": "What time works for you?",
+          "back": "Que horário fica bom pra você?"
+        },
+        {
+          "front": "Let's meet at 7.",
+          "back": "Vamos nos encontrar às 7."
+        },
+        {
+          "front": "Sounds good!",
+          "back": "Fechado! / Boa!",
+          "note": "Pra aceitar um convite ou um plano."
+        },
+        {
+          "front": "I can't make it tonight.",
+          "back": "Não vou conseguir ir hoje à noite.",
+          "note": "\"make it\" = conseguir ir / chegar a tempo."
+        },
+        {
+          "front": "Can we do it another time?",
+          "back": "Podemos deixar pra outro dia?"
+        },
+        {
+          "front": "I'm running late.",
+          "back": "Tô atrasado.",
+          "note": "\"run late\" = estar se atrasando."
+        }
+      ]
+    },
+    {
+      "level": "basico",
+      "title": "Mantendo a conversa",
+      "cards": [
+        {
+          "front": "What about you?",
+          "back": "E você?"
+        },
+        {
+          "front": "Tell me more about it.",
+          "back": "Me conta mais."
+        },
+        {
+          "front": "That's so cool!",
+          "back": "Que demais!"
+        },
+        {
+          "front": "No way!",
+          "back": "Não acredito! / Sério?"
+        },
+        {
+          "front": "I know, right?",
+          "back": "Né? / Pois é!",
+          "note": "Pra concordar com empolgação."
+        },
+        {
+          "front": "Anyway...",
+          "back": "Enfim...",
+          "note": "Pra mudar de assunto ou voltar ao ponto."
+        },
+        {
+          "front": "By the way, did you see the game?",
+          "back": "Aliás, você viu o jogo?",
+          "note": "\"by the way\" (BTW) = aliás, a propósito."
+        },
+        {
+          "front": "It was nice talking to you.",
+          "back": "Foi bom conversar com você."
+        }
+      ]
+    }
+  ]
+}

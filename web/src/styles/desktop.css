@@ -105,7 +105,7 @@
   .study-page { display: grid; grid-template-columns: minmax(0, 1fr) 300px; column-gap: 24px; align-items: start; }
   .study-page > .segmented { align-self: end; margin-bottom: 26px; }
   .study-page > .study-progress,
-  .study-page > .banner-error { grid-column: 1 / -1; }
+  .study-page > .banner-error, .study-page > .banner-info { grid-column: 1 / -1; }
   .study-page > .hint { display: none; }
   .study-main { display: block; grid-column: 1; }
   .study-aside { display: flex; flex-direction: column; grid-column: 2; }
@@ -219,8 +219,6 @@
   .study-main { grid-column: 1 / -1; }
   .study-aside { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; align-items: stretch; gap: 16px; }
   .study-aside > .card { flex: 1 1 260px; margin-bottom: 0; }
-  .study-aside > .study-settings { display: flex; align-items: center; flex-basis: 300px; }
-  .study-aside > .study-settings .stepper { flex: 1; }
   .flashcard { min-height: 300px; }
   .flashcard-front { font-size: 38px; }
 }

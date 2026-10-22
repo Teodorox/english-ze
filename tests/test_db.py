@@ -1,4 +1,3 @@
-import json
 import sqlite3
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -37,12 +36,11 @@ def test_migrations_run_once_in_order(database):
     assert versions == sorted(int(p.name[:3]) for p in db.MIGRATIONS_DIR.glob("*.sql"))
 
 
-def test_seed_deck_per_account(database):
+def test_new_account_starts_without_cards(database):
     db.init_db()
     with psycopg.connect(database, row_factory=dict_row) as conn:
         user_id = auth.create_user(conn, email="a@b.co", name="A", password="12345678", timezone="UTC")
-        seeded = conn.execute("SELECT COUNT(*) AS n FROM cards WHERE user_id = %s", (user_id,)).fetchone()["n"]
-    assert seeded == len(json.loads(db.SEED_FILE.read_text(encoding="utf-8")))
+        assert conn.execute("SELECT COUNT(*) AS n FROM cards WHERE user_id = %s", (user_id,)).fetchone()["n"] == 0
 
 
 def test_today_follows_the_app_timezone(monkeypatch):
@@ -130,10 +128,10 @@ def test_adopt_old_data_into_a_fresh_account(database, old_sqlite, monkeypatch):
         other = auth.create_user(conn, email="outra@b.co", name="Outra", password="12345678", timezone="UTC")
         assert contas.adopt_orphans(conn, user_id) == {"cards": 2, "journal": 1}
         fronts = {r["front"] for r in conn.execute("SELECT front FROM cards WHERE user_id = %s", (user_id,))}
-        assert fronts == {"No cap", "That's tuff"}  # o deck novo do cadastro saiu; ficaram os dados antigos
+        assert fronts == {"No cap", "That's tuff"}  # os dados antigos entraram na conta
         assert conn.execute("SELECT COUNT(*) AS n FROM cards WHERE user_id IS NULL").fetchone()["n"] == 0
-        # A outra conta não foi tocada e não pode assumir de novo
-        assert conn.execute("SELECT COUNT(*) AS n FROM cards WHERE user_id = %s", (other,)).fetchone()["n"] > 50
+        # Nada foi pra outra conta, e ela não pode assumir de novo
+        assert conn.execute("SELECT COUNT(*) AS n FROM cards WHERE user_id = %s", (other,)).fetchone()["n"] == 0
         with pytest.raises(SystemExit, match="sem dono"):
             contas.adopt_orphans(conn, other)
 

@@ -23,7 +23,7 @@ Na primeira vez, crie o usuário e os bancos do app (com a senha de superusuári
 & "C:\Program Files\PostgreSQL\17\bin\psql.exe" -h localhost -U postgres -c "CREATE DATABASE english_ze OWNER english_ze" -c "CREATE DATABASE english_ze_test OWNER english_ze"
 ```
 
-As tabelas e o deck inicial são criados sozinhos quando o app sobe. Mudanças na estrutura do banco ficam em `app/migrations/` (arquivos numerados, aplicados em ordem uma vez só).
+As tabelas são criadas sozinhas quando o app sobe. Mudanças na estrutura do banco ficam em `app/migrations/` (arquivos numerados, aplicados em ordem uma vez só).
 
 Vindo da versão com SQLite? Antes de criar qualquer conta, `.venv\Scripts\python importar_sqlite.py` copia o `data/english.db` (cards, progresso, revisões, sequência e diário) pro PostgreSQL e confere as contagens; o arquivo antigo não é alterado. Os dados entram sem dono: depois de criar a sua conta, rode `contas.py assumir-dados SEU-EMAIL` (seção abaixo).
 
@@ -87,7 +87,9 @@ Copie `.env.example` para `.env` e coloque sua `ANTHROPIC_API_KEY`. O Diário pa
 | 💬 **Daily Yap** (Diário) | Produção escrita + correção | Escrever umas linhas por dia; a IA corrige e transforma os erros em cards. |
 | 📊 **Stats** (Progresso) | — | Anéis de meta diária e semana, sequência de dias e gráfico de 14 dias. |
 
-O deck inicial (`data/seed_cards.json`) tem cerca de 70 frases em 4 categorias: gírias de streamer, fala rápida (gonna, wanna, finna...), conversa básica e inglês para trabalho em dev. Seus erros do diário e as frases que você minera entram na fila antes do deck inicial.
+As frases vêm das **trilhas** (`data/tracks/`): uma por objetivo do primeiro acesso, mais a `base` que todo mundo recebe, cada uma dividida em situações (no aeroporto, no hotel...) e níveis (iniciante e básico). No primeiro acesso a pessoa ganha as trilhas dos objetivos que escolheu, a partir do nível dela; mudar os objetivos em Ajustes acrescenta as trilhas novas sem apagar nada. Frases novas escritas nos arquivos chegam a todas as contas quando o servidor sobe de novo.
+
+O tempo por dia define o tamanho do estudo: de 3 frases novas (5 min) a 15 (30 min), com um teto de revisões. Quando as revisões acumulam, as frases novas diminuem até a pessoa pôr em dia. Seus erros do diário e as frases que você minera entram na fila antes das trilhas.
 
 ## Rotina sugerida (10 min)
 

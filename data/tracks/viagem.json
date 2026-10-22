@@ -1,0 +1,275 @@
+{
+  "category": "viagem",
+  "situations": [
+    {
+      "level": "iniciante",
+      "title": "No aeroporto",
+      "cards": [
+        {
+          "front": "Where is the check-in counter?",
+          "back": "Onde fica o balcão do check-in?"
+        },
+        {
+          "front": "Here's my passport.",
+          "back": "Aqui está meu passaporte."
+        },
+        {
+          "front": "I have one bag to check.",
+          "back": "Tenho uma mala pra despachar.",
+          "note": "\"check a bag\" = despachar mala."
+        },
+        {
+          "front": "Can I take this on the plane?",
+          "back": "Posso levar isso no avião?"
+        },
+        {
+          "front": "Where is gate 12?",
+          "back": "Onde fica o portão 12?",
+          "note": "gate = portão de embarque."
+        },
+        {
+          "front": "Is this flight delayed?",
+          "back": "Esse voo está atrasado?",
+          "note": "delayed = atrasado. canceled = cancelado."
+        },
+        {
+          "front": "Window or aisle?",
+          "back": "Janela ou corredor?",
+          "note": "aisle (lê-se \"ail\") = corredor."
+        }
+      ]
+    },
+    {
+      "level": "iniciante",
+      "title": "Na imigração",
+      "cards": [
+        {
+          "front": "I'm here on vacation.",
+          "back": "Estou aqui de férias."
+        },
+        {
+          "front": "This is my first time here.",
+          "back": "É minha primeira vez aqui."
+        },
+        {
+          "front": "I'm staying for two weeks.",
+          "back": "Vou ficar duas semanas."
+        },
+        {
+          "front": "I'm staying at a hotel downtown.",
+          "back": "Vou ficar num hotel no centro.",
+          "note": "downtown = centro da cidade."
+        },
+        {
+          "front": "I'm traveling with my family.",
+          "back": "Estou viajando com minha família."
+        }
+      ]
+    },
+    {
+      "level": "iniciante",
+      "title": "No hotel",
+      "cards": [
+        {
+          "front": "I have a reservation under Silva.",
+          "back": "Tenho uma reserva no nome de Silva.",
+          "note": "\"under (nome)\" = no nome de."
+        },
+        {
+          "front": "What time is check-out?",
+          "back": "Que horas é o check-out?"
+        },
+        {
+          "front": "Is breakfast included?",
+          "back": "O café da manhã está incluído?"
+        },
+        {
+          "front": "What's the Wi-Fi password?",
+          "back": "Qual é a senha do Wi-Fi?"
+        },
+        {
+          "front": "Could I get an extra towel?",
+          "back": "Pode me trazer uma toalha extra?",
+          "note": "\"Could I get...?\" = jeito educado de pedir."
+        }
+      ]
+    },
+    {
+      "level": "iniciante",
+      "title": "Comendo fora",
+      "cards": [
+        {
+          "front": "A table for two, please.",
+          "back": "Uma mesa pra dois, por favor."
+        },
+        {
+          "front": "Can I see the menu?",
+          "back": "Posso ver o cardápio?"
+        },
+        {
+          "front": "I'll have the chicken.",
+          "back": "Vou querer o frango.",
+          "note": "\"I'll have...\" = jeito natural de pedir."
+        },
+        {
+          "front": "For here or to go?",
+          "back": "Pra comer aqui ou pra viagem?",
+          "note": "Pergunta clássica em lanchonete."
+        },
+        {
+          "front": "I'm allergic to peanuts.",
+          "back": "Sou alérgico a amendoim."
+        },
+        {
+          "front": "Can I get the check, please?",
+          "back": "Pode trazer a conta, por favor?",
+          "note": "Nos EUA é \"check\"; no Reino Unido, \"bill\"."
+        },
+        {
+          "front": "Is the tip included?",
+          "back": "A gorjeta está incluída?",
+          "note": "Nos EUA a gorjeta (tip) costuma ser de 15% a 20% e não vem na conta."
+        }
+      ]
+    },
+    {
+      "level": "iniciante",
+      "title": "Pedindo direções",
+      "cards": [
+        {
+          "front": "I'm lost.",
+          "back": "Estou perdido."
+        },
+        {
+          "front": "How do I get to the subway?",
+          "back": "Como chego no metrô?",
+          "note": "subway (EUA). Em Londres: \"the underground\" ou \"the tube\"."
+        },
+        {
+          "front": "Is it far from here?",
+          "back": "É longe daqui?"
+        },
+        {
+          "front": "Is it within walking distance?",
+          "back": "Dá pra ir a pé?"
+        },
+        {
+          "front": "Go straight ahead.",
+          "back": "Siga em frente."
+        },
+        {
+          "front": "Turn left at the corner.",
+          "back": "Vire à esquerda na esquina."
+        }
+      ]
+    },
+    {
+      "level": "basico",
+      "title": "Quando algo dá errado",
+      "cards": [
+        {
+          "front": "My luggage didn't arrive.",
+          "back": "Minha bagagem não chegou."
+        },
+        {
+          "front": "I missed my flight.",
+          "back": "Perdi meu voo.",
+          "note": "\"miss\" aqui = perder (voo, ônibus, aula)."
+        },
+        {
+          "front": "I lost my wallet.",
+          "back": "Perdi minha carteira."
+        },
+        {
+          "front": "There's a problem with my room.",
+          "back": "Tem um problema com meu quarto."
+        },
+        {
+          "front": "The AC isn't working.",
+          "back": "O ar-condicionado não está funcionando.",
+          "note": "AC = air conditioning."
+        },
+        {
+          "front": "I'd like a refund.",
+          "back": "Gostaria de um reembolso."
+        },
+        {
+          "front": "Can you call a taxi for me?",
+          "back": "Pode chamar um táxi pra mim?"
+        },
+        {
+          "front": "I need to see a doctor.",
+          "back": "Preciso ver um médico."
+        },
+        {
+          "front": "Call 911!",
+          "back": "Liga pro 911!",
+          "note": "O número de emergência nos EUA (no Brasil, 190 e 192)."
+        }
+      ]
+    },
+    {
+      "level": "basico",
+      "title": "Transporte e passeios",
+      "cards": [
+        {
+          "front": "How much is a ticket to downtown?",
+          "back": "Quanto custa uma passagem pro centro?"
+        },
+        {
+          "front": "Does this bus go to the airport?",
+          "back": "Esse ônibus vai pro aeroporto?"
+        },
+        {
+          "front": "Which stop do I get off at?",
+          "back": "Em qual parada eu desço?",
+          "note": "\"get off\" = descer (do ônibus, do trem)."
+        },
+        {
+          "front": "I'd like to rent a car.",
+          "back": "Gostaria de alugar um carro."
+        },
+        {
+          "front": "What do you recommend around here?",
+          "back": "O que você recomenda por aqui?"
+        },
+        {
+          "front": "Can you take a picture of us?",
+          "back": "Pode tirar uma foto da gente?"
+        }
+      ]
+    },
+    {
+      "level": "basico",
+      "title": "Compras",
+      "cards": [
+        {
+          "front": "How much is this?",
+          "back": "Quanto custa isso?"
+        },
+        {
+          "front": "I'm just looking, thanks.",
+          "back": "Só estou olhando, obrigado."
+        },
+        {
+          "front": "Do you have this in a medium?",
+          "back": "Tem esse no tamanho M?",
+          "note": "small = P. medium = M. large = G."
+        },
+        {
+          "front": "Can I try this on?",
+          "back": "Posso experimentar?",
+          "note": "\"try on\" = experimentar roupa."
+        },
+        {
+          "front": "Do you take credit cards?",
+          "back": "Vocês aceitam cartão de crédito?"
+        },
+        {
+          "front": "Can I get a receipt?",
+          "back": "Pode me dar o recibo?"
+        }
+      ]
+    }
+  ]
+}

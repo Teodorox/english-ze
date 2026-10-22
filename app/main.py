@@ -8,13 +8,16 @@ from fastapi.concurrency import run_in_threadpool
 from psycopg.types.json import Jsonb
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-from . import auth, db, security, srs, transcribe, tutor, web
+from . import auth, db, security, srs, tracks, transcribe, tutor, web
 from .config import load_env_file
 from .progress import compute_streak
 
 MISTAKES_CATEGORY = "meus-erros"
 MAX_ID = 2**31 - 1  # maior id que cabe no banco: acima disso é 404 direto, sem erro 500
 MAX_SPEECH_CHECKS_PER_DAY = 500  # bem acima de qualquer estudo de verdade; impede encher o banco
+# Plano do dia pelo tempo escolhido: frases novas (~30 s cada) e um teto de revisões (~10 s cada).
+NEW_PER_DAY = {5: 3, 10: 5, 15: 8, 20: 10, 30: 15}
+REVIEWS_PER_MINUTE = 4
 
 load_env_file()
 log = logging.getLogger("english_ze.security")
@@ -29,6 +32,8 @@ EntryId = Annotated[int, Path(ge=1, le=MAX_ID)]
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     db.init_db()
+    with db.connect() as conn:
+        tracks.sync_everyone(conn)
     yield
     db.close_pool()
 
@@ -265,7 +270,10 @@ def update_me(body: ProfileIn, user: CurrentUser):
         for column, query in PROFILE_UPDATES.items():
             if column in changes:
                 conn.execute(query, (changes[column], user.id))
-        return _me(auth.load_user(conn, user.id))
+        updated = auth.load_user(conn, user.id)
+        if "goals" in changes or "level" in changes:
+            tracks.sync_user(conn, user.id, updated.goals, updated.level)
+        return _me(updated)
 
 
 @app.post("/api/me/onboarding")
@@ -277,6 +285,7 @@ def complete_onboarding(body: OnboardingIn, user: CurrentUser):
             " onboarded_at = COALESCE(onboarded_at, now()) WHERE id = %s",
             (body.goals, body.level, body.daily_minutes, user.id),
         )
+        tracks.sync_user(conn, user.id, body.goals, body.level)
         return _me(auth.load_user(conn, user.id))
 
 
@@ -323,25 +332,53 @@ def delete_me(body: ConfirmIn, response: Response, user: CurrentUser):
 # ---------- Estudo ----------
 
 @app.get("/api/session")
-def session(user: CurrentUser, new_limit: int = Query(10, ge=0, le=100)):
+def session(user: CurrentUser, new_limit: int | None = Query(None, ge=0, le=100)):
+    """Revisões vencidas e frases novas de hoje, no tamanho do tempo que a pessoa escolheu.
+
+    Revisões acumuladas seguram as frases novas: com metade do teto, vêm metade; no teto, nenhuma.
+    new_limit troca a conta pelo número pedido (sem segurar).
+    """
     today = user.today()
+    reviews_cap = user.daily_minutes * REVIEWS_PER_MINUTE
     with db.connect() as conn:
-        due = conn.execute(
-            "SELECT * FROM cards WHERE user_id = %s AND introduced_on IS NOT NULL AND due <= %s ORDER BY due, id",
+        due_total = conn.execute(
+            "SELECT COUNT(*) AS n FROM cards WHERE user_id = %s AND introduced_on IS NOT NULL AND due <= %s",
             (user.id, today),
+        ).fetchone()["n"]
+        due = conn.execute(
+            "SELECT * FROM cards WHERE user_id = %s AND introduced_on IS NOT NULL AND due <= %s"
+            " ORDER BY due, id LIMIT %s",
+            (user.id, today, reviews_cap),
         ).fetchall()
+        if new_limit is not None:
+            new_per_day = new_limit
+        elif due_total >= reviews_cap:
+            new_per_day = 0
+        elif due_total >= reviews_cap // 2:
+            new_per_day = (NEW_PER_DAY[user.daily_minutes] + 1) // 2
+        else:
+            new_per_day = NEW_PER_DAY[user.daily_minutes]
         introduced_today = conn.execute(
             "SELECT COUNT(*) AS n FROM cards WHERE user_id = %s AND introduced_on = %s", (user.id, today)
         ).fetchone()["n"]
-        remaining = max(0, new_limit - introduced_today)
-        # Prioridade dos novos: seus erros do diário, depois o que você minerou, depois o deck inicial.
+        remaining = max(0, new_per_day - introduced_today)
+        # Prioridade dos novos: seus erros do diário, depois o que você minerou, depois as trilhas dos
+        # seus objetivos no seu nível (track_step intercala as trilhas), depois o resto do deck.
+        levels = list(tracks.LEVELS_FOR.get(user.level or "", ()))
         new = conn.execute(
             "SELECT * FROM cards WHERE user_id = %s AND introduced_on IS NULL"
-            " ORDER BY CASE WHEN category = %s THEN 0 WHEN source != %s THEN 1 ELSE 2 END, id"
+            " ORDER BY CASE WHEN category = %s THEN 0 WHEN source != %s THEN 1"
+            " WHEN track = ANY(%s) AND track_level = ANY(%s) THEN 2 ELSE 3 END, track_step NULLS LAST, id"
             " LIMIT %s",
-            (user.id, MISTAKES_CATEGORY, db.SEED_SOURCE, remaining),
+            (user.id, MISTAKES_CATEGORY, db.SEED_SOURCE, tracks.tracks_for(user.goals), levels, remaining),
         ).fetchall()
-    return {"due": due, "new": new}
+    return {
+        "due": due,
+        "new": new,
+        "due_total": due_total,
+        "new_per_day": new_per_day,
+        "held_back": new_limit is None and new_per_day < NEW_PER_DAY[user.daily_minutes],
+    }
 
 
 @app.post("/api/cards/{card_id}/review")

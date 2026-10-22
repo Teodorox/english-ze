@@ -8,7 +8,7 @@ export interface QueueState {
   done: number; // avaliações feitas nesta sessão
 }
 
-export function startQueue(session: Session): QueueState {
+export function startQueue(session: Pick<Session, "due" | "new">): QueueState {
   const [current = null, ...queue] = [...session.due, ...session.new];
   return { queue, current, revealed: false, done: 0 };
 }

@@ -1,0 +1,225 @@
+{
+  "category": "streamer",
+  "situations": [
+    {
+      "level": "iniciante",
+      "title": "No chat da live",
+      "cards": [
+        {
+          "front": "Welcome to the stream!",
+          "back": "Bem-vindo à live!"
+        },
+        {
+          "front": "Chat, is this real?",
+          "back": "Chat, isso é real?",
+          "note": "Bordão de live quando algo parece absurdo demais."
+        },
+        {
+          "front": "That's a huge W for chat.",
+          "back": "Isso é uma vitória enorme pro chat.",
+          "note": "\"W\" = win (vitória). \"chat\" = o pessoal da live."
+        },
+        {
+          "front": "That's an L, bro.",
+          "back": "Isso foi uma derrota / mancada, mano.",
+          "note": "\"L\" = loss (derrota). \"take the L\" = aceitar a derrota."
+        },
+        {
+          "front": "My bad, chat.",
+          "back": "Foi mal, chat.",
+          "note": "\"my bad\" = foi mal / erro meu."
+        },
+        {
+          "front": "Run it back.",
+          "back": "Bora de novo.",
+          "note": "Pedir revanche ou repetir algo."
+        },
+        {
+          "front": "No cap, that was crazy.",
+          "back": "Sem mentira, aquilo foi insano.",
+          "note": "\"no cap\" = sério / sem mentira. \"cap\" = mentira."
+        },
+        {
+          "front": "Stop capping, bro.",
+          "back": "Para de mentir, mano.",
+          "note": "\"to cap\" = mentir, exagerar."
+        },
+        {
+          "front": "On God, I didn't do it.",
+          "back": "Juro por Deus, não fui eu.",
+          "note": "\"on God\" (escrito \"ong\" no chat) = eu juro."
+        },
+        {
+          "front": "Deadass, I'm not lying.",
+          "back": "Sério mesmo, não tô mentindo.",
+          "note": "\"deadass\" = sério, de verdade (muito usado em Nova York)."
+        },
+        {
+          "front": "Ain't no way.",
+          "back": "Não acredito / Não tem como.",
+          "note": "Reação clássica de surpresa."
+        },
+        {
+          "front": "I'm dead, bro.",
+          "back": "Morri (de rir), mano.",
+          "note": "\"I'm dead\" / 💀 = morri de rir."
+        },
+        {
+          "front": "Bet, I'll see you there.",
+          "back": "Fechou, te vejo lá.",
+          "note": "\"bet\" = fechado / beleza / combinado."
+        },
+        {
+          "front": "Pull up, bro.",
+          "back": "Cola aí, mano.",
+          "note": "\"pull up\" = aparecer, chegar em algum lugar."
+        },
+        {
+          "front": "Thanks for the follow!",
+          "back": "Valeu pelo follow!"
+        },
+        {
+          "front": "Drop a follow if you're new here.",
+          "back": "Se você é novo aqui, segue o canal.",
+          "note": "\"drop\" = deixar (um like, um follow, um comentário)."
+        }
+      ]
+    },
+    {
+      "level": "iniciante",
+      "title": "Jogando",
+      "cards": [
+        {
+          "front": "GG, well played.",
+          "back": "GG, jogou bem.",
+          "note": "GG = good game."
+        },
+        {
+          "front": "I'm lagging so bad.",
+          "back": "Tô com um lag absurdo.",
+          "note": "lag = atraso da conexão."
+        },
+        {
+          "front": "That was so clutch!",
+          "back": "Que jogada salvadora!",
+          "note": "\"clutch\" = mandar bem no momento decisivo."
+        },
+        {
+          "front": "He carried the whole team.",
+          "back": "Ele carregou o time inteiro.",
+          "note": "\"carry\" = carregar o time nas costas."
+        },
+        {
+          "front": "I got one-shot.",
+          "back": "Morri com um golpe só.",
+          "note": "\"one-shot\" = matar com um tiro ou golpe só."
+        },
+        {
+          "front": "Nerf this character!",
+          "back": "Enfraquece esse personagem!",
+          "note": "nerf = enfraquecer. buff = fortalecer."
+        },
+        {
+          "front": "One more game, then I'm done.",
+          "back": "Mais uma partida e eu paro."
+        },
+        {
+          "front": "Bro is the GOAT.",
+          "back": "O mano é o melhor de todos.",
+          "note": "GOAT = Greatest Of All Time."
+        }
+      ]
+    },
+    {
+      "level": "basico",
+      "title": "Gírias da internet",
+      "cards": [
+        {
+          "front": "Bro is tweaking.",
+          "back": "O mano tá viajando / pirando.",
+          "note": "\"tweaking\" = agindo de um jeito estranho, sem noção."
+        },
+        {
+          "front": "That's lowkey fire.",
+          "back": "Isso é meio que muito bom.",
+          "note": "\"lowkey\" = meio que / discretamente. \"fire\" = muito bom."
+        },
+        {
+          "front": "I'm highkey scared right now.",
+          "back": "Tô com medo de verdade agora.",
+          "note": "\"highkey\" = assumidamente, muito (o oposto de lowkey)."
+        },
+        {
+          "front": "This food is bussin'.",
+          "back": "Essa comida tá muito boa.",
+          "note": "\"bussin'\" = muito gostoso / muito bom."
+        },
+        {
+          "front": "He's got crazy rizz.",
+          "back": "Ele tem um charme absurdo.",
+          "note": "\"rizz\" = habilidade de flertar (vem de charisma)."
+        },
+        {
+          "front": "Stop glazing him.",
+          "back": "Para de puxar o saco dele.",
+          "note": "\"glazing\" = elogiar demais alguém."
+        },
+        {
+          "front": "That's kinda sus.",
+          "back": "Isso é meio suspeito.",
+          "note": "\"sus\" = suspicious (suspeito)."
+        },
+        {
+          "front": "I'm finna go live.",
+          "back": "Eu vou entrar ao vivo já já.",
+          "note": "\"finna\" = fixing to = going to (vou)."
+        },
+        {
+          "front": "It's giving main character.",
+          "back": "Tá com vibe de protagonista.",
+          "note": "\"it's giving ...\" = isso passa a vibe de ..."
+        },
+        {
+          "front": "She ate that.",
+          "back": "Ela arrasou.",
+          "note": "\"ate\" / \"ate and left no crumbs\" = mandou muito bem."
+        },
+        {
+          "front": "Bro fell off.",
+          "back": "O cara decaiu / perdeu a relevância.",
+          "note": "\"fall off\" = deixar de ser bom ou famoso."
+        },
+        {
+          "front": "We're so cooked.",
+          "back": "A gente tá muito ferrado.",
+          "note": "\"cooked\" = ferrado, acabado."
+        },
+        {
+          "front": "Let him cook.",
+          "back": "Deixa ele fazer o lance dele.",
+          "note": "Deixa a pessoa terminar o que está fazendo, ela sabe o que faz."
+        },
+        {
+          "front": "Honestly, that's mid.",
+          "back": "Sinceramente, isso é mediano.",
+          "note": "\"mid\" = meia-boca, nada de especial."
+        },
+        {
+          "front": "He lost so much aura.",
+          "back": "Ele perdeu muita moral.",
+          "note": "\"aura\" = presença / moral. \"aura points\" é a brincadeira de pontuar isso."
+        },
+        {
+          "front": "What are you yapping about?",
+          "back": "Do que você tá tagarelando?",
+          "note": "\"yap\" = falar demais, falar besteira."
+        },
+        {
+          "front": "I'm tight right now.",
+          "back": "Tô bolado agora.",
+          "note": "\"tight\" = irritado, chateado."
+        }
+      ]
+    }
+  ]
+}

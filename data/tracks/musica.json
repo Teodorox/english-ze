@@ -1,0 +1,206 @@
+{
+  "category": "musica",
+  "situations": [
+    {
+      "level": "iniciante",
+      "title": "Falando de música",
+      "cards": [
+        {
+          "front": "What kind of music do you like?",
+          "back": "Que tipo de música você curte?"
+        },
+        {
+          "front": "I love this song!",
+          "back": "Amo essa música!"
+        },
+        {
+          "front": "Who sings this?",
+          "back": "Quem canta essa?"
+        },
+        {
+          "front": "What's your favorite band?",
+          "back": "Qual é sua banda favorita?"
+        },
+        {
+          "front": "Turn it up!",
+          "back": "Aumenta o som!",
+          "note": "\"turn up\" = aumentar. \"turn down\" = abaixar."
+        },
+        {
+          "front": "Can you turn it down a little?",
+          "back": "Pode abaixar um pouco?"
+        },
+        {
+          "front": "This song is stuck in my head.",
+          "back": "Essa música não sai da minha cabeça.",
+          "note": "\"stuck\" = preso, grudado."
+        },
+        {
+          "front": "I've been listening to it on repeat.",
+          "back": "Tô ouvindo no repeat."
+        },
+        {
+          "front": "Their new album is amazing.",
+          "back": "O álbum novo deles tá incrível."
+        },
+        {
+          "front": "I'm going to a concert tonight.",
+          "back": "Vou num show hoje à noite.",
+          "note": "Show de música = \"concert\" ou, informal, \"gig\"."
+        },
+        {
+          "front": "I can't sing at all.",
+          "back": "Eu não sei cantar nada."
+        }
+      ]
+    },
+    {
+      "level": "iniciante",
+      "title": "Palavras de toda música",
+      "cards": [
+        {
+          "front": "Baby, I miss you.",
+          "back": "Amor, sinto sua falta.",
+          "note": "\"miss\" = sentir falta. \"baby\" = amor (apelido)."
+        },
+        {
+          "front": "I need you.",
+          "back": "Preciso de você."
+        },
+        {
+          "front": "You're the only one.",
+          "back": "Você é a única pessoa. / Só você."
+        },
+        {
+          "front": "Don't let me go.",
+          "back": "Não me solta. / Não me deixa ir."
+        },
+        {
+          "front": "I can't stop thinking about you.",
+          "back": "Não paro de pensar em você."
+        },
+        {
+          "front": "You broke my heart.",
+          "back": "Você partiu meu coração."
+        },
+        {
+          "front": "Hold me close.",
+          "back": "Me abraça forte."
+        },
+        {
+          "front": "Let's dance all night.",
+          "back": "Vamos dançar a noite toda."
+        },
+        {
+          "front": "I'll always be there.",
+          "back": "Sempre vou estar aqui."
+        }
+      ]
+    },
+    {
+      "level": "basico",
+      "title": "Linguagem das letras",
+      "cards": [
+        {
+          "front": "'Cause I love you.",
+          "back": "Porque eu te amo.",
+          "note": "'cause = because. Nas letras quase sempre aparece assim."
+        },
+        {
+          "front": "I ain't gonna lie.",
+          "back": "Não vou mentir.",
+          "note": "ain't = am not / isn't. Informal, aparece em toda letra."
+        },
+        {
+          "front": "I'm falling for you.",
+          "back": "Tô me apaixonando por você.",
+          "note": "\"fall for someone\" = se apaixonar."
+        },
+        {
+          "front": "I'm over you.",
+          "back": "Já superei você.",
+          "note": "\"be over someone\" = ter superado alguém."
+        },
+        {
+          "front": "It's time to move on.",
+          "back": "É hora de seguir em frente.",
+          "note": "\"move on\" = superar, seguir em frente."
+        },
+        {
+          "front": "You got me feeling some type of way.",
+          "back": "Você me deixa de um jeito estranho.",
+          "note": "\"some type of way\" = mexido, com um sentimento difícil de explicar."
+        },
+        {
+          "front": "Hit me up.",
+          "back": "Me chama. / Me manda mensagem.",
+          "note": "\"hit someone up\" = chamar, mandar mensagem."
+        },
+        {
+          "front": "I'm down for whatever.",
+          "back": "Topo qualquer coisa.",
+          "note": "\"be down\" = topar."
+        },
+        {
+          "front": "Ride or die.",
+          "back": "Parceiro pra tudo.",
+          "note": "Alguém leal até o fim."
+        },
+        {
+          "front": "Throw your hands up!",
+          "back": "Mãos pro alto!",
+          "note": "Clássico de show e de música de festa."
+        }
+      ]
+    },
+    {
+      "level": "basico",
+      "title": "Entendendo a letra",
+      "cards": [
+        {
+          "front": "What does this line mean?",
+          "back": "O que esse verso significa?",
+          "note": "line = verso. verse = estrofe."
+        },
+        {
+          "front": "I can't understand the lyrics.",
+          "back": "Não consigo entender a letra.",
+          "note": "lyrics = letra da música."
+        },
+        {
+          "front": "The lyrics are so deep.",
+          "back": "A letra é muito profunda."
+        },
+        {
+          "front": "The chorus is so catchy.",
+          "back": "O refrão é muito chiclete.",
+          "note": "chorus = refrão. catchy = que gruda."
+        },
+        {
+          "front": "This beat is hard.",
+          "back": "Essa batida é pesada.",
+          "note": "\"hard\" aqui é elogio: forte, muito boa."
+        },
+        {
+          "front": "This song is a banger.",
+          "back": "Essa música é um hino.",
+          "note": "banger = música animada e muito boa."
+        },
+        {
+          "front": "She has an amazing voice.",
+          "back": "Ela tem uma voz incrível."
+        },
+        {
+          "front": "He's singing off-key.",
+          "back": "Ele tá desafinando.",
+          "note": "off-key = fora do tom."
+        },
+        {
+          "front": "This song gives me chills.",
+          "back": "Essa música me arrepia.",
+          "note": "chills = arrepios."
+        }
+      ]
+    }
+  ]
+}

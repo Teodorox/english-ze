@@ -1,3 +1,4 @@
+import json
 import os
 
 import psycopg
@@ -14,6 +15,36 @@ os.environ["ANTHROPIC_API_KEY"] = "test-key-not-real"
 load_env_file()
 
 PASSWORD = "senha-forte-123"
+ONBOARDING = {"goals": ["streamers", "conversar"], "level": "iniciante", "daily_minutes": 10}
+
+# Trilhas pequenas e fixas: os testes não mudam quando as frases de data/tracks mudam.
+TEST_TRACKS = {
+    "base": {"category": "conversa", "situations": [
+        {"level": "basico", "title": "Base básico", "cards": [
+            {"front": "Base B1", "back": "Base b1"}, {"front": "Base B2", "back": "Base b2"}]},
+        {"level": "iniciante", "title": "Base iniciante", "cards": [
+            {"front": "Base I1", "back": "Base i1", "note": "nota"}, {"front": "Base I2", "back": "Base i2"},
+            {"front": "Base I3", "back": "Base i3"}]},
+    ]},
+    "streamers": {"category": "streamer", "situations": [
+        {"level": "iniciante", "title": "Chat", "cards": [
+            {"front": "No cap, that was crazy.", "back": "Sem mentira, aquilo foi insano."},
+            {"front": "Stream I2", "back": "Stream i2"}, {"front": "Stream I3", "back": "Stream i3"}]},
+        {"level": "basico", "title": "Gírias", "cards": [
+            {"front": "Stream B1", "back": "Stream b1"}, {"front": "Stream B2", "back": "Stream b2"}]},
+    ]},
+    "conversar": {"category": "conversa", "situations": [
+        {"level": "iniciante", "title": "Oi", "cards": [
+            {"front": "Talk I1", "back": "Talk i1"}, {"front": "Talk I2", "back": "Talk i2"},
+            {"front": "Talk I3", "back": "Talk i3"}]},
+    ]},
+    "viagem": {"category": "viagem", "situations": [
+        {"level": "iniciante", "title": "No aeroporto", "cards": [
+            {"front": "Trip I1", "back": "Trip i1"}, {"front": "Trip I2", "back": "Trip i2"}]},
+        {"level": "basico", "title": "No hotel", "category": "hotel", "cards": [
+            {"front": "Trip B1", "back": "Trip b1"}, {"front": "Trip B2", "back": "Trip b2"}]},
+    ]},
+}
 
 
 def _test_database_url() -> str:
@@ -50,6 +81,16 @@ def web_dist(tmp_path, monkeypatch):
     return dist
 
 
+@pytest.fixture(autouse=True)
+def test_tracks(tmp_path, monkeypatch):
+    folder = tmp_path / "tracks"
+    folder.mkdir()
+    for name, track in TEST_TRACKS.items():
+        (folder / f"{name}.json").write_text(json.dumps(track), encoding="utf-8")
+    monkeypatch.setenv("ENGLISH_ZE_TRACKS_DIR", str(folder))
+    return folder
+
+
 @pytest.fixture
 def make_invite(database):
     """Cria um convite direto no banco (como o 'python contas.py convite')."""
@@ -76,12 +117,14 @@ def anon():
 
 @pytest.fixture
 def new_user(anon, make_invite):
-    """Cria contas já logadas, cada uma no seu 'navegador': new_user("ana@x.com")."""
+    """Contas logadas e com o primeiro acesso feito, cada uma no seu 'navegador': new_user("ana@x.com")."""
     from app.main import app
 
     clients = []
 
-    def make(email: str = "ana@example.com", name: str = "Ana", password: str = PASSWORD) -> TestClient:
+    def make(
+        email: str = "ana@example.com", name: str = "Ana", password: str = PASSWORD, onboard: bool = True
+    ) -> TestClient:
         client = TestClient(app)
         clients.append(client)
         res = client.post(
@@ -90,6 +133,8 @@ def new_user(anon, make_invite):
         assert res.status_code == 201, res.text
         res = client.post("/api/login", json={"email": email, "password": password})
         assert res.status_code == 200, res.text
+        if onboard:  # como no app: a pessoa responde o primeiro acesso e ganha as frases das trilhas
+            assert client.post("/api/me/onboarding", json=ONBOARDING).status_code == 200
         return client
 
     yield make
