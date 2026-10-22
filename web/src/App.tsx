@@ -12,11 +12,13 @@ import { Onboarding } from "./pages/Onboarding";
 import { Speak } from "./pages/Speak";
 import { StatsPage } from "./pages/StatsPage";
 import { Study } from "./pages/Study";
+import { Today } from "./pages/Today";
 import { Vault } from "./pages/Vault";
 import { TABS, type Tab } from "./tabs";
 
 // Uma tela por aba.
 const PAGES: Record<string, ComponentType<{ tab: Tab }>> = {
+  "/hoje": Today,
   "/estudar": Study,
   "/falar": Speak,
   "/minerar": Mine,

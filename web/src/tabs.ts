@@ -1,5 +1,5 @@
 import type { ComponentType, SVGProps } from "react";
-import { ArchiveIcon, BubbleIcon, ChartIcon, LockIcon, MicIcon, ScissorsIcon } from "./components/icons";
+import { ArchiveIcon, BubbleIcon, ChartIcon, LockIcon, MicIcon, ScissorsIcon, SunIcon } from "./components/icons";
 
 export interface Tab {
   path: string;
@@ -9,7 +9,9 @@ export interface Tab {
   pt: string; // nome em português: subtítulo e nome acessível
 }
 
+// A primeira é a que abre o app.
 export const TABS: Tab[] = [
+  { path: "/hoje", Icon: SunIcon, title: "Today", short: "Hoje", pt: "Plano de hoje" },
   { path: "/estudar", Icon: LockIcon, title: "Lock In", short: "Lock In", pt: "Estudar" },
   { path: "/falar", Icon: MicIcon, title: "Mic Check", short: "Mic", pt: "Falar" },
   { path: "/minerar", Icon: ScissorsIcon, title: "Clip It", short: "Clip", pt: "Minerar frases" },

@@ -8,7 +8,7 @@ from fastapi.concurrency import run_in_threadpool
 from psycopg.types.json import Jsonb
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-from . import auth, db, quiz, security, srs, tracks, transcribe, tutor, web
+from . import auth, db, dayplan, quiz, security, srs, tracks, transcribe, tutor, web
 from .config import load_env_file
 from .progress import compute_streak
 
@@ -18,6 +18,7 @@ MAX_SPEECH_CHECKS_PER_DAY = 500  # bem acima de qualquer estudo de verdade; impe
 # Plano do dia pelo tempo escolhido: frases novas (~30 s cada) e um teto de revisões (~10 s cada).
 NEW_PER_DAY = {5: 3, 10: 5, 15: 8, 20: 10, 30: 15}
 REVIEWS_PER_MINUTE = 4
+MAX_ROUNDS = 10  # "Mais uma rodada" até 10 vezes o dia escolhido
 
 load_env_file()
 log = logging.getLogger("english_ze.security")
@@ -331,59 +332,93 @@ def delete_me(body: ConfirmIn, response: Response, user: CurrentUser):
 
 # ---------- Estudo ----------
 
-@app.get("/api/session")
-def session(user: CurrentUser, new_limit: int | None = Query(None, ge=0, le=100)):
+def _day_session(conn, user: auth.User, rounds: int = 1, new_limit: int | None = None) -> dict:
     """Revisões vencidas e frases novas de hoje, no tamanho do tempo que a pessoa escolheu.
 
     Revisões acumuladas seguram as frases novas: com metade do teto, vêm metade; no teto, nenhuma.
+    rounds > 1 é o "Mais uma rodada": o dia cresce mais uma vez o tamanho escolhido.
     new_limit troca a conta pelo número pedido (sem segurar).
     """
     today = user.today()
-    reviews_cap = user.daily_minutes * REVIEWS_PER_MINUTE
-    with db.connect() as conn:
-        due_total = conn.execute(
-            "SELECT COUNT(*) AS n FROM cards WHERE user_id = %s AND introduced_on IS NOT NULL AND due <= %s",
-            (user.id, today),
-        ).fetchone()["n"]
-        due = conn.execute(
-            "SELECT * FROM cards WHERE user_id = %s AND introduced_on IS NOT NULL AND due <= %s"
-            " ORDER BY due, id LIMIT %s",
-            (user.id, today, reviews_cap),
-        ).fetchall()
-        if new_limit is not None:
-            new_per_day = new_limit
-        elif due_total >= reviews_cap:
-            new_per_day = 0
-        elif due_total >= reviews_cap // 2:
-            new_per_day = (NEW_PER_DAY[user.daily_minutes] + 1) // 2
-        else:
-            new_per_day = NEW_PER_DAY[user.daily_minutes]
-        introduced_today = conn.execute(
-            "SELECT COUNT(*) AS n FROM cards WHERE user_id = %s AND introduced_on = %s", (user.id, today)
-        ).fetchone()["n"]
-        remaining = max(0, new_per_day - introduced_today)
-        # Prioridade dos novos: seus erros do diário, depois o que você minerou, depois as trilhas dos
-        # seus objetivos no seu nível (track_step intercala as trilhas), depois o resto do deck.
-        levels = list(tracks.LEVELS_FOR.get(user.level or "", ()))
-        new = conn.execute(
-            "SELECT * FROM cards WHERE user_id = %s AND introduced_on IS NULL"
-            " ORDER BY CASE WHEN category = %s THEN 0 WHEN source != %s THEN 1"
-            " WHEN track = ANY(%s) AND track_level = ANY(%s) THEN 2 ELSE 3 END, track_step NULLS LAST, id"
-            " LIMIT %s",
-            (user.id, MISTAKES_CATEGORY, db.SEED_SOURCE, tracks.tracks_for(user.goals), levels, remaining),
-        ).fetchall()
-        # Opções do estudo ativo: traduções erradas tiradas dos outros cards da própria pessoa.
-        pool = conn.execute("SELECT id, back, category FROM cards WHERE user_id = %s", (user.id,)).fetchall()
-    quiz.add_choices(due + new, pool)
-    for card in due + new:
-        del card["traps"]  # já viraram opções: o app não precisa saber quais são as pegadinhas
+    reviews_cap = user.daily_minutes * REVIEWS_PER_MINUTE * rounds
+    due_total = conn.execute(
+        "SELECT COUNT(*) AS n FROM cards WHERE user_id = %s AND introduced_on IS NOT NULL AND due <= %s",
+        (user.id, today),
+    ).fetchone()["n"]
+    due = conn.execute(
+        "SELECT * FROM cards WHERE user_id = %s AND introduced_on IS NOT NULL AND due <= %s"
+        " ORDER BY due, id LIMIT %s",
+        (user.id, today, reviews_cap),
+    ).fetchall()
+    base_cap = user.daily_minutes * REVIEWS_PER_MINUTE
+    if new_limit is not None:
+        new_per_day = new_limit
+    elif due_total >= base_cap:
+        new_per_day = 0
+    elif due_total >= base_cap // 2:
+        new_per_day = (NEW_PER_DAY[user.daily_minutes] + 1) // 2 * rounds
+    else:
+        new_per_day = NEW_PER_DAY[user.daily_minutes] * rounds
+    introduced_today = conn.execute(
+        "SELECT COUNT(*) AS n FROM cards WHERE user_id = %s AND introduced_on = %s", (user.id, today)
+    ).fetchone()["n"]
+    remaining = max(0, new_per_day - introduced_today)
+    # Prioridade dos novos: seus erros do diário, depois o que você minerou, depois as trilhas dos
+    # seus objetivos no seu nível (track_step intercala as trilhas), depois o resto do deck.
+    levels = list(tracks.LEVELS_FOR.get(user.level or "", ()))
+    new = conn.execute(
+        "SELECT * FROM cards WHERE user_id = %s AND introduced_on IS NULL"
+        " ORDER BY CASE WHEN category = %s THEN 0 WHEN source != %s THEN 1"
+        " WHEN track = ANY(%s) AND track_level = ANY(%s) THEN 2 ELSE 3 END, track_step NULLS LAST, id"
+        " LIMIT %s",
+        (user.id, MISTAKES_CATEGORY, db.SEED_SOURCE, tracks.tracks_for(user.goals), levels, remaining),
+    ).fetchall()
     return {
         "due": due,
         "new": new,
         "due_total": due_total,
         "new_per_day": new_per_day,
-        "held_back": new_limit is None and new_per_day < NEW_PER_DAY[user.daily_minutes],
+        "held_back": new_limit is None and new_per_day < NEW_PER_DAY[user.daily_minutes] * rounds,
     }
+
+
+@app.get("/api/session")
+def session(
+    user: CurrentUser,
+    new_limit: int | None = Query(None, ge=0, le=100),
+    rounds: int = Query(1, ge=1, le=MAX_ROUNDS),
+):
+    with db.connect() as conn:
+        data = _day_session(conn, user, rounds, new_limit)
+        # Opções do estudo ativo: traduções erradas tiradas dos outros cards da própria pessoa.
+        pool = conn.execute("SELECT id, back, category FROM cards WHERE user_id = %s", (user.id,)).fetchall()
+    cards = data["due"] + data["new"]
+    quiz.add_choices(cards, pool)
+    for card in cards:
+        del card["traps"]  # já viraram opções: o app não precisa saber quais são as pegadinhas
+    return data
+
+
+@app.get("/api/today")
+def today_plan(user: CurrentUser):
+    """Os passos de hoje (estudar, falar, diário, minerar), cada um com quanto falta e se já foi feito."""
+    day = user.today()
+    with db.connect() as conn:
+        session_left = _day_session(conn, user)
+        counts = conn.execute(
+            "SELECT"
+            " (SELECT COUNT(*) FROM reviews r JOIN cards c ON c.id = r.card_id"
+            "  WHERE c.user_id = %s AND r.reviewed_on = %s) AS reviewed,"
+            " (SELECT COUNT(*) FROM speech_checks WHERE user_id = %s AND checked_on = %s) AS speech,"
+            " (SELECT COUNT(*) FROM journal WHERE user_id = %s"
+            "  AND (created_at AT TIME ZONE %s)::date = %s) AS journal,"
+            " (SELECT COUNT(*) FROM cards WHERE user_id = %s AND source != %s AND category != %s"
+            "  AND (created_at AT TIME ZONE %s)::date = %s) AS mined",
+            (user.id, day, user.id, day, user.id, user.timezone, day,
+             user.id, db.SEED_SOURCE, MISTAKES_CATEGORY, user.timezone, day),
+        ).fetchone()
+    progress = {**counts, "due_left": len(session_left["due"]), "new_left": len(session_left["new"])}
+    return dayplan.plan(user.daily_minutes, user.goals, day, progress)
 
 
 @app.post("/api/cards/{card_id}/review")

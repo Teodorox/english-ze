@@ -8,6 +8,7 @@ import { LargeTitle } from "../components/LargeTitle";
 import { LivePill } from "../components/LivePill";
 import { copyText, correctionPrompt } from "../lib/correctionPrompt";
 import type { Tab } from "../tabs";
+import { NextStep } from "../components/NextStep";
 
 interface Status {
   kind: "info" | "success" | "error";
@@ -185,6 +186,7 @@ export function Journal({ tab }: { tab: Tab }) {
           );
         })}
       </div>
+      <NextStep path="/diario" />
     </section>
   );
 }

@@ -14,6 +14,7 @@ import { toSpeechCheck } from "../lib/speechCheck";
 import { isIOS, isStandalone, listenOnce, recognitionSupported } from "../lib/speechRecognition";
 import { useRecorder } from "../lib/useRecorder";
 import type { Tab } from "../tabs";
+import { NextStep } from "../components/NextStep";
 
 interface CheckResult {
   heard: string;
@@ -254,6 +255,7 @@ export function Speak({ tab }: { tab: Tab }) {
           </div>
         </div>
       </div>
+      <NextStep path="/falar" />
     </section>
   );
 }

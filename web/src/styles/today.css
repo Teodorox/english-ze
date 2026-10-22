@@ -1,0 +1,89 @@
+/* ---------- Hoje: resumo do dia ---------- */
+
+.today-summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px 16px;
+  margin-bottom: 16px;
+}
+.today-summary-text h2 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+.today-summary-text p { margin: 4px 0 0; font-size: 15px; color: var(--secondary); }
+.today-start { grid-column: 1 / -1; }
+
+/* ---------- Hoje: os passos ---------- */
+
+.today-steps { display: flex; flex-direction: column; gap: 10px; margin: 0 0 16px; padding: 0; list-style: none; }
+a.today-step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  color: var(--label);
+  text-decoration: none;
+}
+.today-step-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--separator);
+  border-radius: 50%;
+}
+.today-step-check svg { width: 16px; height: 16px; stroke-width: 3; }
+.today-step.done .today-step-check { border-color: var(--green-text); background: var(--green-text); color: #ffffff; }
+.today-step-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.today-step-text strong { font-size: 17px; }
+.today-step-text span { font-size: 15px; color: var(--secondary); overflow-wrap: anywhere; }
+.today-step.done .today-step-text strong { color: var(--secondary); text-decoration: line-through; }
+.today-step-count {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--fill);
+  color: var(--secondary);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.today-step.done .today-step-count { background: var(--green-fill); color: var(--green-text); }
+.today-more { margin: 0; }
+
+/* ---------- Próximo passo (no fim de cada tela do plano) ---------- */
+
+.next-step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 16px;
+}
+.next-step-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--green-text);
+  color: #ffffff;
+}
+.next-step-check svg { width: 18px; height: 18px; stroke-width: 3; }
+.next-step-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.next-step-text strong { font-size: 17px; }
+.next-step-text span { font-size: 15px; color: var(--secondary); }
+a.next-step-link {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border-radius: 999px;
+  background: var(--tint);
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.study-done button { margin-top: 8px; }

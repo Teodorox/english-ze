@@ -4,6 +4,7 @@ import { getSession, reviewCard } from "../api/study";
 import type { Grade, Session } from "../api/types";
 import { ChatFeed, useChatFeed } from "../components/ChatFeed";
 import { Flashcard, type StudyMode } from "../components/Flashcard";
+import { NextStep } from "../components/NextStep";
 import { HeadphonesIcon } from "../components/icons";
 import { LargeTitle } from "../components/LargeTitle";
 import { LivePill } from "../components/LivePill";
@@ -12,6 +13,7 @@ import { SegmentedControl } from "../components/SegmentedControl";
 import { greeting } from "../lib/greeting";
 import { loadPref, savePref } from "../lib/storage";
 import { afterGrade, counts, requeue, reveal, startQueue, type QueueState } from "../lib/studyQueue";
+import { addRound, roundsToday } from "../lib/todayPlan";
 import { speak } from "../lib/tts";
 import type { Tab } from "../tabs";
 
@@ -25,11 +27,13 @@ export function Study({ tab }: { tab: Tab }) {
   const me = useMe();
 
   const [session, setSession] = useState<Session | null>(null);
+  // "Mais uma rodada" (aqui ou na aba Hoje) aumenta o dia; vale até o fim do dia neste aparelho.
+  const [rounds, setRounds] = useState(roundsToday);
 
-  const loadSession = useCallback(async () => {
+  const loadSession = useCallback(async (rounds: number) => {
     setError("");
     try {
-      const data = await getSession();
+      const data = await getSession(rounds);
       setSession(data);
       setState(startQueue(data));
     } catch (err) {
@@ -40,8 +44,8 @@ export function Study({ tab }: { tab: Tab }) {
   // Mudou objetivos, nível ou tempo em Ajustes: o dia é montado de novo.
   const plan = me ? `${me.goals.join()}|${me.level}|${me.daily_minutes}` : "";
   useEffect(() => {
-    loadSession();
-  }, [loadSession, plan]);
+    loadSession(rounds);
+  }, [loadSession, plan, rounds]);
 
   const current = state?.current ?? null;
   const revealed = state?.revealed ?? false;
@@ -173,13 +177,16 @@ export function Study({ tab }: { tab: Tab }) {
               <p>{state.done ? `${state.done} revisões hoje. Bro is locked in.` : "Nada pra revisar agora."}</p>
               {session && session.due_total > session.due.length && (
                 <p className="footnote">
-                  Meta de hoje feita. As outras {session.due_total - session.due.length} revisões acumuladas ficam pra
-                  amanhã.
+                  Meta de hoje feita. Ainda há {session.due_total - session.due.length} revisões acumuladas: dá pra
+                  adiantar com mais uma rodada ou deixar pra amanhã.
                 </p>
               )}
-              <p className="footnote">Que tal minerar umas frases da próxima live ou fazer um shadowing rápido?</p>
+              <button type="button" className="tinted" onClick={() => setRounds(addRound())}>
+                Mais uma rodada
+              </button>
             </div>
           ))}
+        {state && !current && <NextStep path="/estudar" />}
       </div>
 
       <aside className="study-aside">

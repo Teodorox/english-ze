@@ -199,6 +199,13 @@
 
   /* ---------- Stats: anéis e números lado a lado ---------- */
 
+  /* Hoje: resumo numa linha (anel, texto, botão) e os passos embaixo, numa coluna confortável */
+  .today-page { max-width: 760px; }
+  .today-summary { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .today-start { grid-column: auto; min-width: 200px; }
+  .next-step { grid-template-columns: auto minmax(0, 1fr) auto; }
+  a.next-step-link { grid-column: auto; padding: 0 20px; }
+
   .stats-page { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; align-items: start; }
   .stats-page > * { grid-column: 1 / -1; }
   .stats-page > .stats-summary { display: block; grid-column: 1; }

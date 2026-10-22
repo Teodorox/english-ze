@@ -6,6 +6,7 @@ import { LivePill } from "../components/LivePill";
 import { SpeakButton } from "../components/SpeakButton";
 import { parseBulkLines, toBulkLine } from "../lib/bulkImport";
 import type { Tab } from "../tabs";
+import { NextStep } from "../components/NextStep";
 
 type Notice = { kind: "success" | "error"; text: string } | null;
 
@@ -176,6 +177,7 @@ export function Mine({ tab }: { tab: Tab }) {
           </button>
         </div>
       </div>
+      <NextStep path="/minerar" />
     </section>
   );
 }
