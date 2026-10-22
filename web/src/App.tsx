@@ -81,7 +81,15 @@ function Screen({ auth, onLogin, onLogout, onMeChange }: ScreenProps) {
     case "checking":
       return null;
     case "login":
-      return <Login onSuccess={onLogin} />;
+      return (
+        <Login
+          onSuccess={() => {
+            // Entrou agora: começa pelo plano do dia, mesmo que a aba aberta no navegador fosse outra.
+            window.history.replaceState(null, "", "/");
+            onLogin();
+          }}
+        />
+      );
     case "offline":
       return (
         <main className="login-wrap">
