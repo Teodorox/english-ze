@@ -7,50 +7,90 @@
       "cards": [
         {
           "front": "It's cheap, but it works well.",
-          "back": "É barato, mas funciona bem."
+          "back": "É barato, mas funciona bem.",
+          "traps": [
+            "É caro, mas funciona bem.",
+            "É barato, então funciona bem."
+          ]
         },
         {
           "front": "However, the results were different.",
           "back": "No entanto, os resultados foram diferentes.",
-          "note": "however = no entanto, porém. Um dos conectivos mais cobrados no ENEM."
+          "note": "however = no entanto, porém. Um dos conectivos mais cobrados no ENEM.",
+          "traps": [
+            "Portanto, os resultados foram diferentes.",
+            "No entanto, os resultados foram iguais."
+          ]
         },
         {
           "front": "Although it was raining, they went out.",
           "back": "Embora estivesse chovendo, eles saíram.",
-          "note": "although = embora."
+          "note": "although = embora.",
+          "traps": [
+            "Como estava chovendo, eles saíram.",
+            "Embora estivesse chovendo, eles ficaram em casa."
+          ]
         },
         {
           "front": "Even though he studied, he failed the test.",
           "back": "Mesmo tendo estudado, ele reprovou na prova.",
-          "note": "even though = mesmo que (mais forte que although)."
+          "note": "even though = mesmo que (mais forte que although).",
+          "traps": [
+            "Como ele estudou, passou na prova.",
+            "Mesmo sem estudar, ele reprovou na prova."
+          ]
         },
         {
           "front": "Despite the cold, we had fun.",
           "back": "Apesar do frio, a gente se divertiu.",
-          "note": "despite + substantivo = apesar de."
+          "note": "despite + substantivo = apesar de.",
+          "traps": [
+            "Por causa do frio, a gente se divertiu.",
+            "Apesar do calor, a gente se divertiu."
+          ]
         },
         {
           "front": "Nevertheless, she kept trying.",
           "back": "Mesmo assim, ela continuou tentando.",
-          "note": "nevertheless = mesmo assim, contudo."
+          "note": "nevertheless = mesmo assim, contudo.",
+          "traps": [
+            "Por isso, ela continuou tentando.",
+            "Mesmo assim, ela desistiu."
+          ]
         },
         {
           "front": "Some people love it, whereas others hate it.",
           "back": "Algumas pessoas amam, enquanto outras odeiam.",
-          "note": "whereas = enquanto (pra contrastar)."
+          "note": "whereas = enquanto (pra contrastar).",
+          "traps": [
+            "Algumas pessoas amam, porque outras odeiam.",
+            "Algumas pessoas amam, onde outras odeiam."
+          ]
         },
         {
           "front": "On the other hand, it's very expensive.",
-          "back": "Por outro lado, é muito caro."
+          "back": "Por outro lado, é muito caro.",
+          "traps": [
+            "Além disso, é muito caro.",
+            "Por outro lado, é muito barato."
+          ]
         },
         {
           "front": "Moreover, the city is very safe.",
           "back": "Além disso, a cidade é muito segura.",
-          "note": "moreover = além disso (formal). Na fala: also, plus."
+          "note": "moreover = além disso (formal). Na fala: also, plus.",
+          "traps": [
+            "No entanto, a cidade é muito segura.",
+            "Além disso, a cidade é muito perigosa."
+          ]
         },
         {
           "front": "In addition, students need more time.",
-          "back": "Além disso, os alunos precisam de mais tempo."
+          "back": "Além disso, os alunos precisam de mais tempo.",
+          "traps": [
+            "Por outro lado, os alunos precisam de mais tempo.",
+            "Além disso, os alunos precisam de menos tempo."
+          ]
         }
       ]
     },
@@ -61,41 +101,73 @@
         {
           "front": "Because of the storm, the flight was canceled.",
           "back": "Por causa da tempestade, o voo foi cancelado.",
-          "note": "because of + substantivo. because + frase."
+          "note": "because of + substantivo. because + frase.",
+          "traps": [
+            "Apesar da tempestade, o voo foi cancelado.",
+            "Por causa da tempestade, o voo atrasou."
+          ]
         },
         {
           "front": "Due to the rain, the game was delayed.",
           "back": "Devido à chuva, o jogo foi adiado.",
-          "note": "due to = devido a."
+          "note": "due to = devido a.",
+          "traps": [
+            "Apesar da chuva, o jogo foi adiado.",
+            "Devido à chuva, o jogo foi cancelado."
+          ]
         },
         {
           "front": "Since it's late, let's go home.",
           "back": "Já que é tarde, vamos pra casa.",
-          "note": "since = já que. Também quer dizer \"desde\"."
+          "note": "since = já que. Também quer dizer \"desde\".",
+          "traps": [
+            "Desde tarde, vamos pra casa.",
+            "Embora seja tarde, vamos pra casa."
+          ]
         },
         {
           "front": "The test was hard, so I studied more.",
           "back": "A prova era difícil, então estudei mais.",
-          "note": "so = então, por isso."
+          "note": "so = então, por isso.",
+          "traps": [
+            "A prova era difícil, mas estudei mais.",
+            "A prova era difícil porque estudei mais."
+          ]
         },
         {
           "front": "Therefore, we need to act now.",
           "back": "Portanto, precisamos agir agora.",
-          "note": "therefore = portanto."
+          "note": "therefore = portanto.",
+          "traps": [
+            "No entanto, precisamos agir agora.",
+            "Portanto, precisamos esperar."
+          ]
         },
         {
           "front": "As a result, prices went up.",
-          "back": "Como resultado, os preços subiram."
+          "back": "Como resultado, os preços subiram.",
+          "traps": [
+            "Como resultado, os preços caíram.",
+            "Apesar disso, os preços subiram."
+          ]
         },
         {
           "front": "Unless you study, you won't pass.",
           "back": "A menos que você estude, não vai passar.",
-          "note": "unless = a menos que."
+          "note": "unless = a menos que.",
+          "traps": [
+            "Se você estudar, não vai passar.",
+            "Mesmo que você estude, não vai passar."
+          ]
         },
         {
           "front": "In order to pass, you need to practice.",
           "back": "Pra passar, você precisa praticar.",
-          "note": "in order to = para, a fim de."
+          "note": "in order to = para, a fim de.",
+          "traps": [
+            "Depois de passar, você precisa praticar.",
+            "Em ordem de passar, você precisa praticar."
+          ]
         }
       ]
     },
@@ -106,42 +178,74 @@
         {
           "front": "I actually liked the movie.",
           "back": "Na verdade, eu gostei do filme.",
-          "note": "actually = na verdade. \"Atualmente\" é currently."
+          "note": "actually = na verdade. \"Atualmente\" é currently.",
+          "traps": [
+            "Atualmente, eu gosto do filme.",
+            "Na verdade, eu odiei o filme."
+          ]
         },
         {
           "front": "She pretends to be happy.",
           "back": "Ela finge estar feliz.",
-          "note": "pretend = fingir. \"Pretender\" é intend."
+          "note": "pretend = fingir. \"Pretender\" é intend.",
+          "traps": [
+            "Ela pretende ser feliz.",
+            "Ela finge estar triste."
+          ]
         },
         {
           "front": "My parents are very supportive.",
           "back": "Meus pais me apoiam muito.",
-          "note": "parents = pais. Parentes = relatives."
+          "note": "parents = pais. Parentes = relatives.",
+          "traps": [
+            "Meus parentes me apoiam muito.",
+            "Meus pais me suportam muito."
+          ]
         },
         {
           "front": "Eventually, he found a job.",
           "back": "No fim, ele conseguiu um emprego.",
-          "note": "eventually = no fim das contas. \"Eventualmente\" é occasionally."
+          "note": "eventually = no fim das contas. \"Eventualmente\" é occasionally.",
+          "traps": [
+            "Eventualmente, ele procura um emprego.",
+            "De repente, ele perdeu o emprego."
+          ]
         },
         {
           "front": "I realized I was wrong.",
           "back": "Percebi que estava errado.",
-          "note": "realize = perceber. \"Realizar\" é achieve ou carry out."
+          "note": "realize = perceber. \"Realizar\" é achieve ou carry out.",
+          "traps": [
+            "Realizei meu sonho.",
+            "Percebi que estava certo."
+          ]
         },
         {
           "front": "He's a very sensible person.",
           "back": "Ele é uma pessoa muito sensata.",
-          "note": "sensible = sensato. Sensível = sensitive."
+          "note": "sensible = sensato. Sensível = sensitive.",
+          "traps": [
+            "Ele é uma pessoa muito sensível.",
+            "Ele é uma pessoa muito insensata."
+          ]
         },
         {
           "front": "The college has a big library.",
           "back": "A faculdade tem uma biblioteca grande.",
-          "note": "library = biblioteca. Livraria = bookstore. college = faculdade."
+          "note": "library = biblioteca. Livraria = bookstore. college = faculdade.",
+          "traps": [
+            "O colégio tem uma livraria grande.",
+            "A faculdade tem uma livraria grande."
+          ]
         },
         {
           "front": "I'm going to attend the lecture.",
           "back": "Vou assistir à palestra.",
-          "note": "lecture = palestra, aula. Leitura = reading. attend = comparecer."
+          "note": "lecture = palestra, aula. Leitura = reading. attend = comparecer.",
+          "traps": [
+            "Vou atender a leitura.",
+            "Vou dar a palestra."
+          ]
         }
       ]
     },
@@ -151,40 +255,72 @@
       "cards": [
         {
           "front": "What is the main idea of the text?",
-          "back": "Qual é a ideia principal do texto?"
+          "back": "Qual é a ideia principal do texto?",
+          "traps": [
+            "Qual é o título do texto?",
+            "Qual é a ideia do autor principal?"
+          ]
         },
         {
           "front": "According to the text, the problem is growing.",
           "back": "De acordo com o texto, o problema está crescendo.",
-          "note": "according to = de acordo com. Aparece em muitas questões."
+          "note": "according to = de acordo com. Aparece em muitas questões.",
+          "traps": [
+            "Ao contrário do texto, o problema está crescendo.",
+            "De acordo com o texto, o problema está diminuindo."
+          ]
         },
         {
           "front": "The word \"it\" refers to the city.",
           "back": "A palavra \"it\" se refere à cidade.",
-          "note": "Questões de referência perguntam a que palavra um pronome se refere."
+          "note": "Questões de referência perguntam a que palavra um pronome se refere.",
+          "traps": [
+            "A palavra \"it\" se refere ao país.",
+            "A palavra \"it\" vem depois da cidade."
+          ]
         },
         {
           "front": "The author suggests that we should change.",
-          "back": "O autor sugere que deveríamos mudar."
+          "back": "O autor sugere que deveríamos mudar.",
+          "traps": [
+            "O autor exige que a gente mude.",
+            "O autor sugere que a gente não mude."
+          ]
         },
         {
           "front": "For instance, many cities use solar energy.",
           "back": "Por exemplo, muitas cidades usam energia solar.",
-          "note": "for instance = for example."
+          "note": "for instance = for example.",
+          "traps": [
+            "Por isso, muitas cidades usam energia solar.",
+            "Por exemplo, poucas cidades usam energia solar."
+          ]
         },
         {
           "front": "In other words, it's not enough.",
-          "back": "Em outras palavras, não é suficiente."
+          "back": "Em outras palavras, não é suficiente.",
+          "traps": [
+            "Em outras palavras, é demais.",
+            "Por outro lado, não é suficiente."
+          ]
         },
         {
           "front": "That is, the policy failed.",
           "back": "Ou seja, a política fracassou.",
-          "note": "that is (i.e.) = ou seja."
+          "note": "that is (i.e.) = ou seja.",
+          "traps": [
+            "Isto é, a polícia falhou.",
+            "Ou seja, a política deu certo."
+          ]
         },
         {
           "front": "In short, the plan worked.",
           "back": "Em resumo, o plano funcionou.",
-          "note": "in short / in summary = em resumo."
+          "note": "in short / in summary = em resumo.",
+          "traps": [
+            "Em resumo, o plano falhou.",
+            "Em breve, o plano vai funcionar."
+          ]
         }
       ]
     },
@@ -194,37 +330,69 @@
       "cards": [
         {
           "front": "In my opinion, schools should teach finance.",
-          "back": "Na minha opinião, as escolas deveriam ensinar finanças."
+          "back": "Na minha opinião, as escolas deveriam ensinar finanças.",
+          "traps": [
+            "Na minha opinião, as escolas não deveriam ensinar finanças.",
+            "Na opinião deles, as escolas deveriam ensinar finanças."
+          ]
         },
         {
           "front": "I strongly believe that education is key.",
-          "back": "Acredito firmemente que a educação é fundamental."
+          "back": "Acredito firmemente que a educação é fundamental.",
+          "traps": [
+            "Duvido muito que a educação seja fundamental.",
+            "Acredito um pouco que a educação é importante."
+          ]
         },
         {
           "front": "There are two main reasons for this.",
-          "back": "Há dois motivos principais pra isso."
+          "back": "Há dois motivos principais pra isso.",
+          "traps": [
+            "Há dois motivos pequenos pra isso.",
+            "Há duas soluções principais pra isso."
+          ]
         },
         {
           "front": "First of all, it saves time.",
-          "back": "Antes de tudo, isso economiza tempo."
+          "back": "Antes de tudo, isso economiza tempo.",
+          "traps": [
+            "Antes de tudo, isso perde tempo.",
+            "Por último, isso economiza tempo."
+          ]
         },
         {
           "front": "Another advantage is the cost.",
-          "back": "Outra vantagem é o custo."
+          "back": "Outra vantagem é o custo.",
+          "traps": [
+            "Outra desvantagem é o custo.",
+            "A única vantagem é o custo."
+          ]
         },
         {
           "front": "Let me give you an example.",
-          "back": "Deixa eu te dar um exemplo."
+          "back": "Deixa eu te dar um exemplo.",
+          "traps": [
+            "Me dá um exemplo.",
+            "Deixa eu te fazer uma pergunta."
+          ]
         },
         {
           "front": "That's an interesting question.",
           "back": "Essa é uma pergunta interessante.",
-          "note": "Na prova oral, ganha uns segundos pra pensar."
+          "note": "Na prova oral, ganha uns segundos pra pensar.",
+          "traps": [
+            "Essa é uma pergunta chata.",
+            "Essa é uma resposta interessante."
+          ]
         },
         {
           "front": "To sum up, the benefits outweigh the risks.",
           "back": "Resumindo, os benefícios superam os riscos.",
-          "note": "outweigh = superar, pesar mais que."
+          "note": "outweigh = superar, pesar mais que.",
+          "traps": [
+            "Resumindo, os riscos superam os benefícios.",
+            "Por outro lado, os benefícios superam os riscos."
+          ]
         }
       ]
     }

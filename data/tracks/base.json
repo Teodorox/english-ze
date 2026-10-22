@@ -7,56 +7,104 @@
       "cards": [
         {
           "front": "Can you say that again?",
-          "back": "Pode repetir?"
+          "back": "Pode repetir?",
+          "traps": [
+            "Pode falar mais alto?",
+            "Pode escrever isso?"
+          ]
         },
         {
           "front": "Could you speak a little slower, please?",
-          "back": "Pode falar um pouco mais devagar, por favor?"
+          "back": "Pode falar um pouco mais devagar, por favor?",
+          "traps": [
+            "Pode falar um pouco mais rápido, por favor?",
+            "Pode falar um pouco mais alto, por favor?"
+          ]
         },
         {
           "front": "Sorry, I didn't get that.",
           "back": "Desculpa, não entendi.",
-          "note": "\"get\" aqui = entender."
+          "note": "\"get\" aqui = entender.",
+          "traps": [
+            "Desculpa, eu entendi tudo.",
+            "Desculpa, não trouxe isso."
+          ]
         },
         {
           "front": "What does that mean?",
-          "back": "O que isso significa?"
+          "back": "O que isso significa?",
+          "traps": [
+            "Como isso funciona?",
+            "Por que isso aconteceu?"
+          ]
         },
         {
           "front": "How do you say this in English?",
-          "back": "Como se diz isso em inglês?"
+          "back": "Como se diz isso em inglês?",
+          "traps": [
+            "Como se escreve isso em inglês?",
+            "Como se diz isso em português?"
+          ]
         },
         {
           "front": "How do you spell that?",
           "back": "Como se escreve isso?",
-          "note": "\"spell\" = soletrar."
+          "note": "\"spell\" = soletrar.",
+          "traps": [
+            "Como se pronuncia isso?",
+            "Como se diz isso?"
+          ]
         },
         {
           "front": "What's the word for this?",
           "back": "Qual é a palavra pra isso?",
-          "note": "Pra quando a palavra some da cabeça."
+          "note": "Pra quando a palavra some da cabeça.",
+          "traps": [
+            "Qual é o preço disso?",
+            "Qual é o nome dele?"
+          ]
         },
         {
           "front": "I'm still learning English.",
-          "back": "Ainda estou aprendendo inglês."
+          "back": "Ainda estou aprendendo inglês.",
+          "traps": [
+            "Já aprendi inglês.",
+            "Ainda estou ensinando inglês."
+          ]
         },
         {
           "front": "Let me think.",
-          "back": "Deixa eu pensar."
+          "back": "Deixa eu pensar.",
+          "traps": [
+            "Deixa eu falar.",
+            "Me deixa em paz."
+          ]
         },
         {
           "front": "I mean...",
           "back": "Quer dizer... / Digo...",
-          "note": "Pra se corrigir no meio da frase."
+          "note": "Pra se corrigir no meio da frase.",
+          "traps": [
+            "Eu acho...",
+            "Eu sei..."
+          ]
         },
         {
           "front": "Got it.",
           "back": "Entendi. / Pode deixar.",
-          "note": "\"got it\" = entendi. Responde instruções e explicações."
+          "note": "\"got it\" = entendi. Responde instruções e explicações.",
+          "traps": [
+            "Esqueci.",
+            "Não entendi."
+          ]
         },
         {
           "front": "Never mind.",
-          "back": "Deixa pra lá."
+          "back": "Deixa pra lá.",
+          "traps": [
+            "Nunca mais.",
+            "Não me importo."
+          ]
         }
       ]
     },
@@ -67,45 +115,85 @@
         {
           "front": "Hi, I'm Zé.",
           "back": "Oi, eu sou o Zé.",
-          "note": "Na conversa, \"I'm ...\" é mais natural que \"My name is ...\"."
+          "note": "Na conversa, \"I'm ...\" é mais natural que \"My name is ...\".",
+          "traps": [
+            "Oi, eu sou do Zé.",
+            "Tchau, eu sou o Zé."
+          ]
         },
         {
           "front": "Nice to meet you.",
-          "back": "Prazer em te conhecer."
+          "back": "Prazer em te conhecer.",
+          "traps": [
+            "Bom te ver de novo.",
+            "Prazer em te ajudar."
+          ]
         },
         {
           "front": "Where are you from?",
-          "back": "De onde você é?"
+          "back": "De onde você é?",
+          "traps": [
+            "Onde você está?",
+            "Pra onde você vai?"
+          ]
         },
         {
           "front": "I'm from Brazil.",
-          "back": "Eu sou do Brasil."
+          "back": "Eu sou do Brasil.",
+          "traps": [
+            "Eu moro no Brasil.",
+            "Eu vou pro Brasil."
+          ]
         },
         {
           "front": "I live in São Paulo.",
-          "back": "Eu moro em São Paulo."
+          "back": "Eu moro em São Paulo.",
+          "traps": [
+            "Eu nasci em São Paulo.",
+            "Eu morava em São Paulo."
+          ]
         },
         {
           "front": "Excuse me.",
           "back": "Com licença.",
-          "note": "Também serve pra chamar a atenção de alguém."
+          "note": "Também serve pra chamar a atenção de alguém.",
+          "traps": [
+            "Muito prazer.",
+            "Pode entrar."
+          ]
         },
         {
           "front": "Sorry about that.",
-          "back": "Foi mal. / Desculpa por isso."
+          "back": "Foi mal. / Desculpa por isso.",
+          "traps": [
+            "Que pena.",
+            "Sinto muito por você."
+          ]
         },
         {
           "front": "Thank you so much!",
-          "back": "Muito obrigado!"
+          "back": "Muito obrigado!",
+          "traps": [
+            "Obrigado de novo!",
+            "Muito prazer!"
+          ]
         },
         {
           "front": "You're welcome.",
-          "back": "De nada."
+          "back": "De nada.",
+          "traps": [
+            "Seja bem-vindo.",
+            "Você é legal."
+          ]
         },
         {
           "front": "No worries.",
           "back": "Sem problema. / Imagina.",
-          "note": "Responde tanto \"sorry\" quanto \"thanks\"."
+          "note": "Responde tanto \"sorry\" quanto \"thanks\".",
+          "traps": [
+            "Sem dúvida.",
+            "Sem pressa."
+          ]
         }
       ]
     },
@@ -117,92 +205,164 @@
         {
           "front": "I'm gonna stream tomorrow.",
           "back": "Vou fazer live amanhã.",
-          "note": "gonna = going to"
+          "note": "gonna = going to",
+          "traps": [
+            "Fiz live ontem.",
+            "Vou ver a live amanhã."
+          ]
         },
         {
           "front": "I wanna win this.",
           "back": "Eu quero ganhar isso.",
-          "note": "wanna = want to"
+          "note": "wanna = want to",
+          "traps": [
+            "Eu vou ganhar isso.",
+            "Eu ganhei isso."
+          ]
         },
         {
           "front": "I gotta go.",
           "back": "Tenho que ir.",
-          "note": "gotta = got to / have to"
+          "note": "gotta = got to / have to",
+          "traps": [
+            "Eu consegui ir.",
+            "Eu quero ir."
+          ]
         },
         {
           "front": "Lemme see that.",
           "back": "Deixa eu ver isso.",
-          "note": "lemme = let me"
+          "note": "lemme = let me",
+          "traps": [
+            "Deixa eu ver você.",
+            "Me deixa ver depois."
+          ]
         },
         {
           "front": "Gimme a sec.",
           "back": "Me dá um segundo.",
-          "note": "gimme = give me. sec = second"
+          "note": "gimme = give me. sec = second",
+          "traps": [
+            "Me dá um segredo.",
+            "Te dou um minuto."
+          ]
         },
         {
           "front": "Whatcha doing?",
           "back": "O que você tá fazendo?",
-          "note": "whatcha = what are you"
+          "note": "whatcha = what are you",
+          "traps": [
+            "O que você fez?",
+            "O que você vai fazer?"
+          ]
         },
         {
           "front": "Y'all ready?",
           "back": "Vocês estão prontos?",
-          "note": "y'all = you all (vocês)"
+          "note": "y'all = you all (vocês)",
+          "traps": [
+            "Você está pronto?",
+            "Vocês já foram?"
+          ]
         },
         {
           "front": "I dunno, man.",
           "back": "Sei lá, cara.",
-          "note": "dunno = don't know"
+          "note": "dunno = don't know",
+          "traps": [
+            "Eu sei, cara.",
+            "Não fiz, cara."
+          ]
         },
         {
           "front": "Didja see that?",
           "back": "Você viu isso?",
-          "note": "didja = did you"
+          "note": "didja = did you",
+          "traps": [
+            "Você fez isso?",
+            "Você vai ver isso?"
+          ]
         },
         {
           "front": "It's kinda hard.",
           "back": "É meio difícil.",
-          "note": "kinda = kind of (meio que)"
+          "note": "kinda = kind of (meio que)",
+          "traps": [
+            "É muito difícil.",
+            "É meio fácil."
+          ]
         },
         {
           "front": "I'm tryna focus.",
           "back": "Tô tentando focar.",
-          "note": "tryna = trying to"
+          "note": "tryna = trying to",
+          "traps": [
+            "Tô conseguindo focar.",
+            "Tô tentando dormir."
+          ]
         },
         {
           "front": "Imma head out.",
           "back": "Vou nessa.",
-          "note": "Imma = I'm going to. head out = sair, ir embora"
+          "note": "Imma = I'm going to. head out = sair, ir embora",
+          "traps": [
+            "Vou ficar aqui.",
+            "Bati a cabeça."
+          ]
         },
         {
           "front": "You good?",
           "back": "Tá de boa? / Tá tudo bem?",
-          "note": "Forma curta de \"Are you good?\""
+          "note": "Forma curta de \"Are you good?\"",
+          "traps": [
+            "Você é bom?",
+            "Tá pronto?"
+          ]
         },
         {
           "front": "Ain't nobody got time for that.",
           "back": "Ninguém tem tempo pra isso.",
-          "note": "ain't = isn't / don't. A dupla negação é comum na fala informal."
+          "note": "ain't = isn't / don't. A dupla negação é comum na fala informal.",
+          "traps": [
+            "Todo mundo tem tempo pra isso.",
+            "Ninguém tem paciência pra você."
+          ]
         },
         {
           "front": "Gotcha.",
           "back": "Saquei. / Entendi.",
-          "note": "gotcha = got you"
+          "note": "gotcha = got you",
+          "traps": [
+            "Esqueci.",
+            "Discordo."
+          ]
         },
         {
           "front": "Whaddya think?",
           "back": "O que você acha?",
-          "note": "whaddya = what do you"
+          "note": "whaddya = what do you",
+          "traps": [
+            "O que você quer?",
+            "O que você pensou?"
+          ]
         },
         {
           "front": "I hafta work tomorrow.",
           "back": "Tenho que trabalhar amanhã.",
-          "note": "hafta = have to"
+          "note": "hafta = have to",
+          "traps": [
+            "Trabalhei ontem.",
+            "Não preciso trabalhar amanhã."
+          ]
         },
         {
           "front": "I shoulda known.",
           "back": "Eu devia ter imaginado.",
-          "note": "shoulda = should have. Também: coulda (could have), woulda (would have)."
+          "note": "shoulda = should have. Também: coulda (could have), woulda (would have).",
+          "traps": [
+            "Eu sabia.",
+            "Eu vou saber."
+          ]
         }
       ]
     }

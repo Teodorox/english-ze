@@ -18,6 +18,8 @@ export interface Card {
   lapses: number;
   due: string | null;
   introduced_on: string | null;
+  /** Só na sessão de estudo: traduções erradas pra opções (vazia se a pessoa tem poucos cards). */
+  choices?: string[];
 }
 
 export interface NewCard {

@@ -48,6 +48,7 @@ describe("fila de estudo", () => {
     state = afterGrade(reveal(state), 0);
     expect(state.queue.map((c) => c.id)).toEqual([1]);
     expect(state.queue[0].introduced_on).not.toBeNull();
+    expect(state.queue[0].reps).toBe(0); // volta pras opções
     expect(counts(state)).toEqual({ remaining: 2, newCount: 1 });
   });
 

@@ -8,51 +8,95 @@
         {
           "front": "What's up? Not much, you?",
           "back": "E aí? Nada de mais, e você?",
-          "note": "Resposta mais comum pra \"What's up?\""
+          "note": "Resposta mais comum pra \"What's up?\"",
+          "traps": [
+            "E aí? Muita coisa, e você?",
+            "E aí? Nada de mais, e ele?"
+          ]
         },
         {
           "front": "How's it going?",
           "back": "Como vão as coisas?",
-          "note": "Resposta: \"Pretty good\" / \"Not bad\"."
+          "note": "Resposta: \"Pretty good\" / \"Not bad\".",
+          "traps": [
+            "Pra onde você vai?",
+            "Como foi a viagem?"
+          ]
         },
         {
           "front": "I'm good, thanks. And you?",
-          "back": "Tô bem, valeu. E você?"
+          "back": "Tô bem, valeu. E você?",
+          "traps": [
+            "Tô cansado, valeu. E você?",
+            "Tô bem, valeu. E ela?"
+          ]
         },
         {
           "front": "Not bad.",
           "back": "Nada mal. / Tudo certo.",
-          "note": "Resposta comum pra \"How are you?\"."
+          "note": "Resposta comum pra \"How are you?\".",
+          "traps": [
+            "Muito ruim.",
+            "Nada bem."
+          ]
         },
         {
           "front": "How was your day?",
-          "back": "Como foi seu dia?"
+          "back": "Como foi seu dia?",
+          "traps": [
+            "Como vai ser seu dia?",
+            "Como foi sua semana?"
+          ]
         },
         {
           "front": "How was your weekend?",
-          "back": "Como foi seu fim de semana?"
+          "back": "Como foi seu fim de semana?",
+          "traps": [
+            "Como vai ser seu fim de semana?",
+            "Como foi seu dia?"
+          ]
         },
         {
           "front": "What are you up to?",
           "back": "O que você tá fazendo? / Quais os planos?",
-          "note": "\"up to\" = fazendo, aprontando."
+          "note": "\"up to\" = fazendo, aprontando.",
+          "traps": [
+            "Pra onde você está subindo?",
+            "Quanto você ganha?"
+          ]
         },
         {
           "front": "Long time no see!",
           "back": "Quanto tempo!",
-          "note": "Pra quem você não vê faz tempo."
+          "note": "Pra quem você não vê faz tempo.",
+          "traps": [
+            "Até mais tarde!",
+            "Te vejo daqui a pouco!"
+          ]
         },
         {
           "front": "What do you do for a living?",
-          "back": "Com o que você trabalha?"
+          "back": "Com o que você trabalha?",
+          "traps": [
+            "Onde você mora?",
+            "O que você faz pra se divertir?"
+          ]
         },
         {
           "front": "Hold on a sec.",
-          "back": "Espera um segundo."
+          "back": "Espera um segundo.",
+          "traps": [
+            "Segura isso aqui.",
+            "Vai na frente."
+          ]
         },
         {
           "front": "I'm on my way.",
-          "back": "Tô a caminho."
+          "back": "Tô a caminho.",
+          "traps": [
+            "Já cheguei.",
+            "Saia da minha frente."
+          ]
         }
       ]
     },
@@ -62,44 +106,84 @@
       "cards": [
         {
           "front": "That makes sense.",
-          "back": "Faz sentido."
+          "back": "Faz sentido.",
+          "traps": [
+            "Não faz sentido.",
+            "Isso dá trabalho."
+          ]
         },
         {
           "front": "I totally agree with you.",
-          "back": "Concordo totalmente com você."
+          "back": "Concordo totalmente com você.",
+          "traps": [
+            "Discordo totalmente de você.",
+            "Concordo em parte com você."
+          ]
         },
         {
           "front": "I'm not sure.",
-          "back": "Não tenho certeza."
+          "back": "Não tenho certeza.",
+          "traps": [
+            "Tenho certeza.",
+            "Não estou seguro aqui."
+          ]
         },
         {
           "front": "It depends.",
-          "back": "Depende."
+          "back": "Depende.",
+          "traps": [
+            "Tanto faz.",
+            "Com certeza."
+          ]
         },
         {
           "front": "I think so.",
-          "back": "Acho que sim."
+          "back": "Acho que sim.",
+          "traps": [
+            "Acho que não.",
+            "Eu penso assim."
+          ]
         },
         {
           "front": "I don't think so.",
-          "back": "Acho que não."
+          "back": "Acho que não.",
+          "traps": [
+            "Acho que sim.",
+            "Eu não penso nisso."
+          ]
         },
         {
           "front": "That's a good point.",
-          "back": "Bem pensado. / Faz sentido o que você disse."
+          "back": "Bem pensado. / Faz sentido o que você disse.",
+          "traps": [
+            "Esse é um bom lugar.",
+            "Isso é um bom sinal."
+          ]
         },
         {
           "front": "Really?",
-          "back": "Sério?"
+          "back": "Sério?",
+          "traps": [
+            "Realmente.",
+            "De novo?"
+          ]
         },
         {
           "front": "Me too.",
-          "back": "Eu também."
+          "back": "Eu também.",
+          "traps": [
+            "Eu também não.",
+            "Comigo não."
+          ]
         },
         {
           "front": "Me neither.",
           "back": "Eu também não.",
-          "note": "Pra concordar com algo negativo: \"I don't like it.\" → \"Me neither.\""
+          "note": "Pra concordar com algo negativo: \"I don't like it.\" → \"Me neither.\"",
+          "traps": [
+            "Eu também.",
+            "Nem ela."
+          ]
         }
       ]
     },
@@ -110,33 +194,61 @@
         {
           "front": "I've been learning English for a year.",
           "back": "Tô aprendendo inglês faz um ano.",
-          "note": "\"have been + -ing\": algo que começou no passado e continua até agora."
+          "note": "\"have been + -ing\": algo que começou no passado e continua até agora.",
+          "traps": [
+            "Vou aprender inglês daqui a um ano.",
+            "Aprendi inglês em um ano."
+          ]
         },
         {
           "front": "In my free time, I like to play video games.",
-          "back": "No meu tempo livre, gosto de jogar videogame."
+          "back": "No meu tempo livre, gosto de jogar videogame.",
+          "traps": [
+            "No meu trabalho, gosto de jogar videogame.",
+            "No meu tempo livre, odeio jogar videogame."
+          ]
         },
         {
           "front": "I'm really into music.",
           "back": "Eu curto muito música.",
-          "note": "\"be into\" = curtir, gostar muito."
+          "note": "\"be into\" = curtir, gostar muito.",
+          "traps": [
+            "Eu estou dentro da música.",
+            "Eu não curto muito música."
+          ]
         },
         {
           "front": "I'm not a big fan of horror movies.",
-          "back": "Não sou muito fã de filme de terror."
+          "back": "Não sou muito fã de filme de terror.",
+          "traps": [
+            "Sou muito fã de filme de terror.",
+            "Não sou muito fã de filme de comédia."
+          ]
         },
         {
           "front": "I used to live in Rio.",
           "back": "Eu morava no Rio.",
-          "note": "\"used to\" = algo que era assim e não é mais."
+          "note": "\"used to\" = algo que era assim e não é mais.",
+          "traps": [
+            "Eu moro no Rio.",
+            "Eu me acostumei a morar no Rio."
+          ]
         },
         {
           "front": "I have a brother and a sister.",
-          "back": "Tenho um irmão e uma irmã."
+          "back": "Tenho um irmão e uma irmã.",
+          "traps": [
+            "Tenho uma irmã e uma prima.",
+            "Não tenho irmãos."
+          ]
         },
         {
           "front": "I work from home.",
-          "back": "Trabalho de casa."
+          "back": "Trabalho de casa.",
+          "traps": [
+            "Trabalho longe de casa.",
+            "Vou pro trabalho a pé."
+          ]
         }
       ]
     },
@@ -146,39 +258,71 @@
       "cards": [
         {
           "front": "Are you free this weekend?",
-          "back": "Tá livre nesse fim de semana?"
+          "back": "Tá livre nesse fim de semana?",
+          "traps": [
+            "Você está livre agora?",
+            "A entrada é grátis nesse fim de semana?"
+          ]
         },
         {
           "front": "Do you want to grab a coffee sometime?",
           "back": "Bora tomar um café qualquer dia?",
-          "note": "\"grab a coffee\" = tomar um café (informal)."
+          "note": "\"grab a coffee\" = tomar um café (informal).",
+          "traps": [
+            "Você quer pegar meu café?",
+            "Você quer tomar um café agora?"
+          ]
         },
         {
           "front": "What time works for you?",
-          "back": "Que horário fica bom pra você?"
+          "back": "Que horário fica bom pra você?",
+          "traps": [
+            "A que horas você trabalha?",
+            "Quanto tempo você tem?"
+          ]
         },
         {
           "front": "Let's meet at 7.",
-          "back": "Vamos nos encontrar às 7."
+          "back": "Vamos nos encontrar às 7.",
+          "traps": [
+            "Vamos jantar às 7.",
+            "Vamos nos encontrar dia 7."
+          ]
         },
         {
           "front": "Sounds good!",
           "back": "Fechado! / Boa!",
-          "note": "Pra aceitar um convite ou um plano."
+          "note": "Pra aceitar um convite ou um plano.",
+          "traps": [
+            "Que som bom!",
+            "Parece difícil!"
+          ]
         },
         {
           "front": "I can't make it tonight.",
           "back": "Não vou conseguir ir hoje à noite.",
-          "note": "\"make it\" = conseguir ir / chegar a tempo."
+          "note": "\"make it\" = conseguir ir / chegar a tempo.",
+          "traps": [
+            "Não consigo fazer isso hoje à noite.",
+            "Vou conseguir ir hoje à noite."
+          ]
         },
         {
           "front": "Can we do it another time?",
-          "back": "Podemos deixar pra outro dia?"
+          "back": "Podemos deixar pra outro dia?",
+          "traps": [
+            "Podemos fazer de novo?",
+            "Podemos fazer agora mesmo?"
+          ]
         },
         {
           "front": "I'm running late.",
           "back": "Tô atrasado.",
-          "note": "\"run late\" = estar se atrasando."
+          "note": "\"run late\" = estar se atrasando.",
+          "traps": [
+            "Tô correndo agora.",
+            "Tô adiantado."
+          ]
         }
       ]
     },
@@ -188,38 +332,70 @@
       "cards": [
         {
           "front": "What about you?",
-          "back": "E você?"
+          "back": "E você?",
+          "traps": [
+            "E sobre o quê?",
+            "E ele?"
+          ]
         },
         {
           "front": "Tell me more about it.",
-          "back": "Me conta mais."
+          "back": "Me conta mais.",
+          "traps": [
+            "Me conta menos.",
+            "Me fala depois."
+          ]
         },
         {
           "front": "That's so cool!",
-          "back": "Que demais!"
+          "back": "Que demais!",
+          "traps": [
+            "Que frio!",
+            "Que chato!"
+          ]
         },
         {
           "front": "No way!",
-          "back": "Não acredito! / Sério?"
+          "back": "Não acredito! / Sério?",
+          "traps": [
+            "Sem caminho!",
+            "Claro que sim!"
+          ]
         },
         {
           "front": "I know, right?",
           "back": "Né? / Pois é!",
-          "note": "Pra concordar com empolgação."
+          "note": "Pra concordar com empolgação.",
+          "traps": [
+            "Eu sei, à direita?",
+            "Eu não sabia!"
+          ]
         },
         {
           "front": "Anyway...",
           "back": "Enfim...",
-          "note": "Pra mudar de assunto ou voltar ao ponto."
+          "note": "Pra mudar de assunto ou voltar ao ponto.",
+          "traps": [
+            "Além disso...",
+            "Por exemplo..."
+          ]
         },
         {
           "front": "By the way, did you see the game?",
           "back": "Aliás, você viu o jogo?",
-          "note": "\"by the way\" (BTW) = aliás, a propósito."
+          "note": "\"by the way\" (BTW) = aliás, a propósito.",
+          "traps": [
+            "Pelo caminho, você viu o jogo?",
+            "Aliás, você jogou o jogo?"
+          ]
         },
         {
           "front": "It was nice talking to you.",
-          "back": "Foi bom conversar com você."
+          "back": "Foi bom conversar com você.",
+          "traps": [
+            "Foi chato conversar com você.",
+            "Vai ser bom conversar com você."
+          ]
         }
       ]
     }

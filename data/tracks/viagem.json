@@ -7,35 +7,63 @@
       "cards": [
         {
           "front": "Where is the check-in counter?",
-          "back": "Onde fica o balcão do check-in?"
+          "back": "Onde fica o balcão do check-in?",
+          "traps": [
+            "Onde fica a esteira de bagagem?",
+            "Quando abre o check-in?"
+          ]
         },
         {
           "front": "Here's my passport.",
-          "back": "Aqui está meu passaporte."
+          "back": "Aqui está meu passaporte.",
+          "traps": [
+            "Aqui está minha passagem.",
+            "Cadê meu passaporte?"
+          ]
         },
         {
           "front": "I have one bag to check.",
           "back": "Tenho uma mala pra despachar.",
-          "note": "\"check a bag\" = despachar mala."
+          "note": "\"check a bag\" = despachar mala.",
+          "traps": [
+            "Tenho uma mala de mão.",
+            "Tenho uma mala pra conferir."
+          ]
         },
         {
           "front": "Can I take this on the plane?",
-          "back": "Posso levar isso no avião?"
+          "back": "Posso levar isso no avião?",
+          "traps": [
+            "Posso tirar isso do avião?",
+            "Posso comprar isso no avião?"
+          ]
         },
         {
           "front": "Where is gate 12?",
           "back": "Onde fica o portão 12?",
-          "note": "gate = portão de embarque."
+          "note": "gate = portão de embarque.",
+          "traps": [
+            "Onde fica o assento 12?",
+            "Quando abre o portão 12?"
+          ]
         },
         {
           "front": "Is this flight delayed?",
           "back": "Esse voo está atrasado?",
-          "note": "delayed = atrasado. canceled = cancelado."
+          "note": "delayed = atrasado. canceled = cancelado.",
+          "traps": [
+            "Esse voo foi cancelado?",
+            "Esse voo está no horário?"
+          ]
         },
         {
           "front": "Window or aisle?",
           "back": "Janela ou corredor?",
-          "note": "aisle (lê-se \"ail\") = corredor."
+          "note": "aisle (lê-se \"ail\") = corredor.",
+          "traps": [
+            "Janela ou meio?",
+            "Porta ou corredor?"
+          ]
         }
       ]
     },
@@ -45,24 +73,44 @@
       "cards": [
         {
           "front": "I'm here on vacation.",
-          "back": "Estou aqui de férias."
+          "back": "Estou aqui de férias.",
+          "traps": [
+            "Estou aqui a trabalho.",
+            "Estou aqui de passagem."
+          ]
         },
         {
           "front": "This is my first time here.",
-          "back": "É minha primeira vez aqui."
+          "back": "É minha primeira vez aqui.",
+          "traps": [
+            "Já vim aqui antes.",
+            "É minha última vez aqui."
+          ]
         },
         {
           "front": "I'm staying for two weeks.",
-          "back": "Vou ficar duas semanas."
+          "back": "Vou ficar duas semanas.",
+          "traps": [
+            "Vou ficar dois meses.",
+            "Fiquei duas semanas."
+          ]
         },
         {
           "front": "I'm staying at a hotel downtown.",
           "back": "Vou ficar num hotel no centro.",
-          "note": "downtown = centro da cidade."
+          "note": "downtown = centro da cidade.",
+          "traps": [
+            "Vou ficar num hotel perto do aeroporto.",
+            "Vou ficar na casa de um amigo no centro."
+          ]
         },
         {
           "front": "I'm traveling with my family.",
-          "back": "Estou viajando com minha família."
+          "back": "Estou viajando com minha família.",
+          "traps": [
+            "Estou viajando sozinho.",
+            "Estou viajando com meus amigos."
+          ]
         }
       ]
     },
@@ -73,24 +121,44 @@
         {
           "front": "I have a reservation under Silva.",
           "back": "Tenho uma reserva no nome de Silva.",
-          "note": "\"under (nome)\" = no nome de."
+          "note": "\"under (nome)\" = no nome de.",
+          "traps": [
+            "Tenho uma reserva embaixo do Silva.",
+            "Quero fazer uma reserva no nome de Silva."
+          ]
         },
         {
           "front": "What time is check-out?",
-          "back": "Que horas é o check-out?"
+          "back": "Que horas é o check-out?",
+          "traps": [
+            "Que horas é o check-in?",
+            "Que horas é o café da manhã?"
+          ]
         },
         {
           "front": "Is breakfast included?",
-          "back": "O café da manhã está incluído?"
+          "back": "O café da manhã está incluído?",
+          "traps": [
+            "O jantar está incluído?",
+            "Onde é o café da manhã?"
+          ]
         },
         {
           "front": "What's the Wi-Fi password?",
-          "back": "Qual é a senha do Wi-Fi?"
+          "back": "Qual é a senha do Wi-Fi?",
+          "traps": [
+            "Qual é o nome do Wi-Fi?",
+            "O Wi-Fi é de graça?"
+          ]
         },
         {
           "front": "Could I get an extra towel?",
           "back": "Pode me trazer uma toalha extra?",
-          "note": "\"Could I get...?\" = jeito educado de pedir."
+          "note": "\"Could I get...?\" = jeito educado de pedir.",
+          "traps": [
+            "Pode me trazer um travesseiro extra?",
+            "Posso levar a toalha?"
+          ]
         }
       ]
     },
@@ -100,35 +168,63 @@
       "cards": [
         {
           "front": "A table for two, please.",
-          "back": "Uma mesa pra dois, por favor."
+          "back": "Uma mesa pra dois, por favor.",
+          "traps": [
+            "Uma mesa pra quatro, por favor.",
+            "Dois cafés, por favor."
+          ]
         },
         {
           "front": "Can I see the menu?",
-          "back": "Posso ver o cardápio?"
+          "back": "Posso ver o cardápio?",
+          "traps": [
+            "Posso ver a conta?",
+            "Posso ver a cozinha?"
+          ]
         },
         {
           "front": "I'll have the chicken.",
           "back": "Vou querer o frango.",
-          "note": "\"I'll have...\" = jeito natural de pedir."
+          "note": "\"I'll have...\" = jeito natural de pedir.",
+          "traps": [
+            "Vou querer o peixe.",
+            "Eu tenho frango."
+          ]
         },
         {
           "front": "For here or to go?",
           "back": "Pra comer aqui ou pra viagem?",
-          "note": "Pergunta clássica em lanchonete."
+          "note": "Pergunta clássica em lanchonete.",
+          "traps": [
+            "Pra viagem ou delivery?",
+            "Daqui pra onde?"
+          ]
         },
         {
           "front": "I'm allergic to peanuts.",
-          "back": "Sou alérgico a amendoim."
+          "back": "Sou alérgico a amendoim.",
+          "traps": [
+            "Sou alérgico a camarão.",
+            "Adoro amendoim."
+          ]
         },
         {
           "front": "Can I get the check, please?",
           "back": "Pode trazer a conta, por favor?",
-          "note": "Nos EUA é \"check\"; no Reino Unido, \"bill\"."
+          "note": "Nos EUA é \"check\"; no Reino Unido, \"bill\".",
+          "traps": [
+            "Pode trazer o cardápio, por favor?",
+            "Pode conferir, por favor?"
+          ]
         },
         {
           "front": "Is the tip included?",
           "back": "A gorjeta está incluída?",
-          "note": "Nos EUA a gorjeta (tip) costuma ser de 15% a 20% e não vem na conta."
+          "note": "Nos EUA a gorjeta (tip) costuma ser de 15% a 20% e não vem na conta.",
+          "traps": [
+            "A taxa de entrega está incluída?",
+            "Posso deixar gorjeta?"
+          ]
         }
       ]
     },
@@ -138,28 +234,52 @@
       "cards": [
         {
           "front": "I'm lost.",
-          "back": "Estou perdido."
+          "back": "Estou perdido.",
+          "traps": [
+            "Estou atrasado.",
+            "Eu perdi."
+          ]
         },
         {
           "front": "How do I get to the subway?",
           "back": "Como chego no metrô?",
-          "note": "subway (EUA). Em Londres: \"the underground\" ou \"the tube\"."
+          "note": "subway (EUA). Em Londres: \"the underground\" ou \"the tube\".",
+          "traps": [
+            "Como chego no aeroporto?",
+            "Como saio do metrô?"
+          ]
         },
         {
           "front": "Is it far from here?",
-          "back": "É longe daqui?"
+          "back": "É longe daqui?",
+          "traps": [
+            "É perto daqui?",
+            "Fica longe de casa?"
+          ]
         },
         {
           "front": "Is it within walking distance?",
-          "back": "Dá pra ir a pé?"
+          "back": "Dá pra ir a pé?",
+          "traps": [
+            "Dá pra ir de ônibus?",
+            "É longe pra ir a pé?"
+          ]
         },
         {
           "front": "Go straight ahead.",
-          "back": "Siga em frente."
+          "back": "Siga em frente.",
+          "traps": [
+            "Vire à direita.",
+            "Volte pra trás."
+          ]
         },
         {
           "front": "Turn left at the corner.",
-          "back": "Vire à esquerda na esquina."
+          "back": "Vire à esquerda na esquina.",
+          "traps": [
+            "Vire à direita na esquina.",
+            "Vire à esquerda no semáforo."
+          ]
         }
       ]
     },
@@ -169,42 +289,78 @@
       "cards": [
         {
           "front": "My luggage didn't arrive.",
-          "back": "Minha bagagem não chegou."
+          "back": "Minha bagagem não chegou.",
+          "traps": [
+            "Minha bagagem chegou quebrada.",
+            "Meu voo não chegou."
+          ]
         },
         {
           "front": "I missed my flight.",
           "back": "Perdi meu voo.",
-          "note": "\"miss\" aqui = perder (voo, ônibus, aula)."
+          "note": "\"miss\" aqui = perder (voo, ônibus, aula).",
+          "traps": [
+            "Perdi minha mala.",
+            "Senti falta do meu voo."
+          ]
         },
         {
           "front": "I lost my wallet.",
-          "back": "Perdi minha carteira."
+          "back": "Perdi minha carteira.",
+          "traps": [
+            "Perdi meu celular.",
+            "Achei minha carteira."
+          ]
         },
         {
           "front": "There's a problem with my room.",
-          "back": "Tem um problema com meu quarto."
+          "back": "Tem um problema com meu quarto.",
+          "traps": [
+            "Tem um problema com minha reserva.",
+            "Não tem problema com meu quarto."
+          ]
         },
         {
           "front": "The AC isn't working.",
           "back": "O ar-condicionado não está funcionando.",
-          "note": "AC = air conditioning."
+          "note": "AC = air conditioning.",
+          "traps": [
+            "O chuveiro não está funcionando.",
+            "O ar-condicionado está muito forte."
+          ]
         },
         {
           "front": "I'd like a refund.",
-          "back": "Gostaria de um reembolso."
+          "back": "Gostaria de um reembolso.",
+          "traps": [
+            "Gostaria de uma troca.",
+            "Gostaria de pagar."
+          ]
         },
         {
           "front": "Can you call a taxi for me?",
-          "back": "Pode chamar um táxi pra mim?"
+          "back": "Pode chamar um táxi pra mim?",
+          "traps": [
+            "Pode chamar um médico pra mim?",
+            "Posso chamar um táxi pra você?"
+          ]
         },
         {
           "front": "I need to see a doctor.",
-          "back": "Preciso ver um médico."
+          "back": "Preciso ver um médico.",
+          "traps": [
+            "Preciso ir à farmácia.",
+            "Sou médico."
+          ]
         },
         {
           "front": "Call 911!",
           "back": "Liga pro 911!",
-          "note": "O número de emergência nos EUA (no Brasil, 190 e 192)."
+          "note": "O número de emergência nos EUA (no Brasil, 190 e 192).",
+          "traps": [
+            "Liga pra mim!",
+            "Não liga pro 911!"
+          ]
         }
       ]
     },
@@ -214,28 +370,52 @@
       "cards": [
         {
           "front": "How much is a ticket to downtown?",
-          "back": "Quanto custa uma passagem pro centro?"
+          "back": "Quanto custa uma passagem pro centro?",
+          "traps": [
+            "Quanto tempo leva até o centro?",
+            "Quanto custa um táxi pro centro?"
+          ]
         },
         {
           "front": "Does this bus go to the airport?",
-          "back": "Esse ônibus vai pro aeroporto?"
+          "back": "Esse ônibus vai pro aeroporto?",
+          "traps": [
+            "Esse trem vai pro aeroporto?",
+            "Esse ônibus vem do aeroporto?"
+          ]
         },
         {
           "front": "Which stop do I get off at?",
           "back": "Em qual parada eu desço?",
-          "note": "\"get off\" = descer (do ônibus, do trem)."
+          "note": "\"get off\" = descer (do ônibus, do trem).",
+          "traps": [
+            "Em qual parada eu subo?",
+            "Em qual ônibus eu pego?"
+          ]
         },
         {
           "front": "I'd like to rent a car.",
-          "back": "Gostaria de alugar um carro."
+          "back": "Gostaria de alugar um carro.",
+          "traps": [
+            "Gostaria de comprar um carro.",
+            "Gostaria de devolver o carro."
+          ]
         },
         {
           "front": "What do you recommend around here?",
-          "back": "O que você recomenda por aqui?"
+          "back": "O que você recomenda por aqui?",
+          "traps": [
+            "O que tem pra comer aqui?",
+            "O que você não recomenda por aqui?"
+          ]
         },
         {
           "front": "Can you take a picture of us?",
-          "back": "Pode tirar uma foto da gente?"
+          "back": "Pode tirar uma foto da gente?",
+          "traps": [
+            "Posso tirar uma foto de vocês?",
+            "Pode mandar a foto pra gente?"
+          ]
         }
       ]
     },
@@ -245,29 +425,53 @@
       "cards": [
         {
           "front": "How much is this?",
-          "back": "Quanto custa isso?"
+          "back": "Quanto custa isso?",
+          "traps": [
+            "Quantos são esses?",
+            "Quanto custava isso?"
+          ]
         },
         {
           "front": "I'm just looking, thanks.",
-          "back": "Só estou olhando, obrigado."
+          "back": "Só estou olhando, obrigado.",
+          "traps": [
+            "Estou procurando uma coisa, obrigado.",
+            "Só vou levar isso, obrigado."
+          ]
         },
         {
           "front": "Do you have this in a medium?",
           "back": "Tem esse no tamanho M?",
-          "note": "small = P. medium = M. large = G."
+          "note": "small = P. medium = M. large = G.",
+          "traps": [
+            "Tem esse no tamanho G?",
+            "Tem esse em outra cor?"
+          ]
         },
         {
           "front": "Can I try this on?",
           "back": "Posso experimentar?",
-          "note": "\"try on\" = experimentar roupa."
+          "note": "\"try on\" = experimentar roupa.",
+          "traps": [
+            "Posso tentar isso?",
+            "Posso levar isso?"
+          ]
         },
         {
           "front": "Do you take credit cards?",
-          "back": "Vocês aceitam cartão de crédito?"
+          "back": "Vocês aceitam cartão de crédito?",
+          "traps": [
+            "Vocês aceitam dinheiro?",
+            "Vocês dão cartão de crédito?"
+          ]
         },
         {
           "front": "Can I get a receipt?",
-          "back": "Pode me dar o recibo?"
+          "back": "Pode me dar o recibo?",
+          "traps": [
+            "Pode me dar uma sacola?",
+            "Pode me dar um desconto?"
+          ]
         }
       ]
     }

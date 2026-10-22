@@ -7,50 +7,94 @@
       "cards": [
         {
           "front": "What kind of music do you like?",
-          "back": "Que tipo de música você curte?"
+          "back": "Que tipo de música você curte?",
+          "traps": [
+            "Que tipo de filme você curte?",
+            "Que música você tá ouvindo?"
+          ]
         },
         {
           "front": "I love this song!",
-          "back": "Amo essa música!"
+          "back": "Amo essa música!",
+          "traps": [
+            "Odeio essa música!",
+            "Amo esse cantor!"
+          ]
         },
         {
           "front": "Who sings this?",
-          "back": "Quem canta essa?"
+          "back": "Quem canta essa?",
+          "traps": [
+            "Quem escreveu essa?",
+            "Você canta essa?"
+          ]
         },
         {
           "front": "What's your favorite band?",
-          "back": "Qual é sua banda favorita?"
+          "back": "Qual é sua banda favorita?",
+          "traps": [
+            "Qual é sua música favorita?",
+            "Qual banda você odeia?"
+          ]
         },
         {
           "front": "Turn it up!",
           "back": "Aumenta o som!",
-          "note": "\"turn up\" = aumentar. \"turn down\" = abaixar."
+          "note": "\"turn up\" = aumentar. \"turn down\" = abaixar.",
+          "traps": [
+            "Abaixa o som!",
+            "Desliga o som!"
+          ]
         },
         {
           "front": "Can you turn it down a little?",
-          "back": "Pode abaixar um pouco?"
+          "back": "Pode abaixar um pouco?",
+          "traps": [
+            "Pode aumentar um pouco?",
+            "Pode virar um pouco?"
+          ]
         },
         {
           "front": "This song is stuck in my head.",
           "back": "Essa música não sai da minha cabeça.",
-          "note": "\"stuck\" = preso, grudado."
+          "note": "\"stuck\" = preso, grudado.",
+          "traps": [
+            "Essa música me dá dor de cabeça.",
+            "Essa música saiu da minha cabeça."
+          ]
         },
         {
           "front": "I've been listening to it on repeat.",
-          "back": "Tô ouvindo no repeat."
+          "back": "Tô ouvindo no repeat.",
+          "traps": [
+            "Ouvi uma vez só.",
+            "Tô repetindo a letra."
+          ]
         },
         {
           "front": "Their new album is amazing.",
-          "back": "O álbum novo deles tá incrível."
+          "back": "O álbum novo deles tá incrível.",
+          "traps": [
+            "O álbum antigo deles é incrível.",
+            "O álbum novo dela tá incrível."
+          ]
         },
         {
           "front": "I'm going to a concert tonight.",
           "back": "Vou num show hoje à noite.",
-          "note": "Show de música = \"concert\" ou, informal, \"gig\"."
+          "note": "Show de música = \"concert\" ou, informal, \"gig\".",
+          "traps": [
+            "Fui num show ontem à noite.",
+            "Vou num conserto hoje à noite."
+          ]
         },
         {
           "front": "I can't sing at all.",
-          "back": "Eu não sei cantar nada."
+          "back": "Eu não sei cantar nada.",
+          "traps": [
+            "Eu canto muito bem.",
+            "Não posso cantar agora."
+          ]
         }
       ]
     },
@@ -61,39 +105,75 @@
         {
           "front": "Baby, I miss you.",
           "back": "Amor, sinto sua falta.",
-          "note": "\"miss\" = sentir falta. \"baby\" = amor (apelido)."
+          "note": "\"miss\" = sentir falta. \"baby\" = amor (apelido).",
+          "traps": [
+            "Amor, eu perdi você.",
+            "Amor, eu errei com você."
+          ]
         },
         {
           "front": "I need you.",
-          "back": "Preciso de você."
+          "back": "Preciso de você.",
+          "traps": [
+            "Eu quero você.",
+            "Você precisa de mim."
+          ]
         },
         {
           "front": "You're the only one.",
-          "back": "Você é a única pessoa. / Só você."
+          "back": "Você é a única pessoa. / Só você.",
+          "traps": [
+            "Você é mais uma.",
+            "Você está sozinha."
+          ]
         },
         {
           "front": "Don't let me go.",
-          "back": "Não me solta. / Não me deixa ir."
+          "back": "Não me solta. / Não me deixa ir.",
+          "traps": [
+            "Não me deixa ficar.",
+            "Me deixa ir."
+          ]
         },
         {
           "front": "I can't stop thinking about you.",
-          "back": "Não paro de pensar em você."
+          "back": "Não paro de pensar em você.",
+          "traps": [
+            "Não consigo pensar em você.",
+            "Não paro de falar de você."
+          ]
         },
         {
           "front": "You broke my heart.",
-          "back": "Você partiu meu coração."
+          "back": "Você partiu meu coração.",
+          "traps": [
+            "Você ganhou meu coração.",
+            "Você quebrou meu celular."
+          ]
         },
         {
           "front": "Hold me close.",
-          "back": "Me abraça forte."
+          "back": "Me abraça forte.",
+          "traps": [
+            "Me deixa sozinho.",
+            "Fecha a porta."
+          ]
         },
         {
           "front": "Let's dance all night.",
-          "back": "Vamos dançar a noite toda."
+          "back": "Vamos dançar a noite toda.",
+          "traps": [
+            "Vamos dormir a noite toda.",
+            "Vamos dançar só um pouco."
+          ]
         },
         {
           "front": "I'll always be there.",
-          "back": "Sempre vou estar aqui."
+          "back": "Sempre vou estar aqui.",
+          "traps": [
+            "Nunca vou estar aqui.",
+            "Eu sempre estive lá."
+          ]
         }
       ]
     },
@@ -104,52 +184,92 @@
         {
           "front": "'Cause I love you.",
           "back": "Porque eu te amo.",
-          "note": "'cause = because. Nas letras quase sempre aparece assim."
+          "note": "'cause = because. Nas letras quase sempre aparece assim.",
+          "traps": [
+            "Mas eu te amo.",
+            "Porque você me ama."
+          ]
         },
         {
           "front": "I ain't gonna lie.",
           "back": "Não vou mentir.",
-          "note": "ain't = am not / isn't. Informal, aparece em toda letra."
+          "note": "ain't = am not / isn't. Informal, aparece em toda letra.",
+          "traps": [
+            "Vou mentir.",
+            "Eu não vou deitar."
+          ]
         },
         {
           "front": "I'm falling for you.",
           "back": "Tô me apaixonando por você.",
-          "note": "\"fall for someone\" = se apaixonar."
+          "note": "\"fall for someone\" = se apaixonar.",
+          "traps": [
+            "Tô caindo por você.",
+            "Tô desistindo de você."
+          ]
         },
         {
           "front": "I'm over you.",
           "back": "Já superei você.",
-          "note": "\"be over someone\" = ter superado alguém."
+          "note": "\"be over someone\" = ter superado alguém.",
+          "traps": [
+            "Tô em cima de você.",
+            "Ainda gosto de você."
+          ]
         },
         {
           "front": "It's time to move on.",
           "back": "É hora de seguir em frente.",
-          "note": "\"move on\" = superar, seguir em frente."
+          "note": "\"move on\" = superar, seguir em frente.",
+          "traps": [
+            "É hora de se mudar.",
+            "É hora de voltar atrás."
+          ]
         },
         {
           "front": "You got me feeling some type of way.",
           "back": "Você me deixa de um jeito estranho.",
-          "note": "\"some type of way\" = mexido, com um sentimento difícil de explicar."
+          "note": "\"some type of way\" = mexido, com um sentimento difícil de explicar.",
+          "traps": [
+            "Você me deixa indiferente.",
+            "Você me deu um tipo de coisa."
+          ]
         },
         {
           "front": "Hit me up.",
           "back": "Me chama. / Me manda mensagem.",
-          "note": "\"hit someone up\" = chamar, mandar mensagem."
+          "note": "\"hit someone up\" = chamar, mandar mensagem.",
+          "traps": [
+            "Me bate.",
+            "Me esquece."
+          ]
         },
         {
           "front": "I'm down for whatever.",
           "back": "Topo qualquer coisa.",
-          "note": "\"be down\" = topar."
+          "note": "\"be down\" = topar.",
+          "traps": [
+            "Tô pra baixo com tudo.",
+            "Não topo nada."
+          ]
         },
         {
           "front": "Ride or die.",
           "back": "Parceiro pra tudo.",
-          "note": "Alguém leal até o fim."
+          "note": "Alguém leal até o fim.",
+          "traps": [
+            "Anda ou morre.",
+            "Amigo só nas horas boas."
+          ]
         },
         {
           "front": "Throw your hands up!",
           "back": "Mãos pro alto!",
-          "note": "Clássico de show e de música de festa."
+          "note": "Clássico de show e de música de festa.",
+          "traps": [
+            "Mãos pra baixo!",
+            "Bate palmas!"
+          ]
         }
       ]
     },
@@ -160,45 +280,81 @@
         {
           "front": "What does this line mean?",
           "back": "O que esse verso significa?",
-          "note": "line = verso. verse = estrofe."
+          "note": "line = verso. verse = estrofe.",
+          "traps": [
+            "O que essa fila significa?",
+            "O que esse refrão significa?"
+          ]
         },
         {
           "front": "I can't understand the lyrics.",
           "back": "Não consigo entender a letra.",
-          "note": "lyrics = letra da música."
+          "note": "lyrics = letra da música.",
+          "traps": [
+            "Não consigo entender a melodia.",
+            "Consigo entender a letra."
+          ]
         },
         {
           "front": "The lyrics are so deep.",
-          "back": "A letra é muito profunda."
+          "back": "A letra é muito profunda.",
+          "traps": [
+            "A letra é muito boba.",
+            "A música é muito longa."
+          ]
         },
         {
           "front": "The chorus is so catchy.",
           "back": "O refrão é muito chiclete.",
-          "note": "chorus = refrão. catchy = que gruda."
+          "note": "chorus = refrão. catchy = que gruda.",
+          "traps": [
+            "O refrão é muito chato.",
+            "O coral é muito grande."
+          ]
         },
         {
           "front": "This beat is hard.",
           "back": "Essa batida é pesada.",
-          "note": "\"hard\" aqui é elogio: forte, muito boa."
+          "note": "\"hard\" aqui é elogio: forte, muito boa.",
+          "traps": [
+            "Essa batida é difícil.",
+            "Essa batida é fraca."
+          ]
         },
         {
           "front": "This song is a banger.",
           "back": "Essa música é um hino.",
-          "note": "banger = música animada e muito boa."
+          "note": "banger = música animada e muito boa.",
+          "traps": [
+            "Essa música é muito ruim.",
+            "Essa música é barulhenta."
+          ]
         },
         {
           "front": "She has an amazing voice.",
-          "back": "Ela tem uma voz incrível."
+          "back": "Ela tem uma voz incrível.",
+          "traps": [
+            "Ela tem uma voz horrível.",
+            "Ele tem uma voz incrível."
+          ]
         },
         {
           "front": "He's singing off-key.",
           "back": "Ele tá desafinando.",
-          "note": "off-key = fora do tom."
+          "note": "off-key = fora do tom.",
+          "traps": [
+            "Ele tá cantando muito bem.",
+            "Ele tá cantando sem chave."
+          ]
         },
         {
           "front": "This song gives me chills.",
           "back": "Essa música me arrepia.",
-          "note": "chills = arrepios."
+          "note": "chills = arrepios.",
+          "traps": [
+            "Essa música me dá sono.",
+            "Essa música me dá frio."
+          ]
         }
       ]
     }

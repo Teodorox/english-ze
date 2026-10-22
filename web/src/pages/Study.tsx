@@ -4,7 +4,6 @@ import { getSession, reviewCard } from "../api/study";
 import type { Grade, Session } from "../api/types";
 import { ChatFeed, useChatFeed } from "../components/ChatFeed";
 import { Flashcard, type StudyMode } from "../components/Flashcard";
-import { GradeButtons } from "../components/GradeButtons";
 import { HeadphonesIcon } from "../components/icons";
 import { LargeTitle } from "../components/LargeTitle";
 import { LivePill } from "../components/LivePill";
@@ -58,7 +57,7 @@ export function Study({ tab }: { tab: Tab }) {
   // Avança na hora e salva em segundo plano; se falhar, o card volta pra fila.
   const handleGrade = useCallback(
     (grade: Grade) => {
-      if (!current || !revealed) return;
+      if (!current) return;
       const card = current;
       setError("");
       setState((s) => s && afterGrade(s, grade));
@@ -68,20 +67,16 @@ export function Study({ tab }: { tab: Tab }) {
         setState((s) => s && requeue(s, card));
       });
     },
-    [current, revealed, chat, mode],
+    [current, chat, mode],
   );
 
-  // Atalhos: Espaço/Enter mostra a resposta, 1–4 avaliam, R repete o áudio, S toca devagar.
+  // Atalhos: R repete o áudio, S toca devagar e, depois de "Só mostrar a resposta", 1–4 avaliam.
+  // Enter confirma pelo botão em foco; as opções (1–4) ficam no próprio card.
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       const target = e.target instanceof HTMLElement ? e.target : null;
       if (target?.closest("input, textarea, select")) return;
-      if (e.key === " " || e.key === "Enter") {
-        if (target?.closest("button, a")) return; // o próprio botão focado responde
-
-        e.preventDefault();
-        handleReveal();
-      } else if (["1", "2", "3", "4"].includes(e.key)) {
+      if (revealed && ["1", "2", "3", "4"].includes(e.key)) {
         handleGrade((Number(e.key) - 1) as Grade);
       } else if (e.key.toLowerCase() === "r" && current) {
         speak(current.front);
@@ -91,7 +86,7 @@ export function Study({ tab }: { tab: Tab }) {
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [handleReveal, handleGrade, current]);
+  }, [handleGrade, current, revealed]);
 
   function changeMode(value: StudyMode) {
     setMode(value);
@@ -160,8 +155,14 @@ export function Study({ tab }: { tab: Tab }) {
         {state &&
           (current ? (
             <>
-              <Flashcard card={current} mode={mode} revealed={revealed} onReveal={handleReveal} />
-              {revealed && <GradeButtons card={current} onGrade={handleGrade} />}
+              <Flashcard
+                key={turn}
+                card={current}
+                mode={mode}
+                revealed={revealed}
+                onReveal={handleReveal}
+                onGrade={handleGrade}
+              />
             </>
           ) : (
             <div className="glass card study-done">
@@ -206,13 +207,22 @@ export function Study({ tab }: { tab: Tab }) {
           <h2 className="card-heading">Atalhos do teclado</h2>
           <dl>
             <div>
-              <dt>Mostrar resposta</dt>
+              <dt>Escolher opção</dt>
               <dd>
-                <kbd>Espaço</kbd>
+                <kbd>1</kbd>
+                <kbd>2</kbd>
+                <kbd>3</kbd>
+                <kbd>4</kbd>
               </dd>
             </div>
             <div>
-              <dt>Avaliar</dt>
+              <dt>Conferir e continuar</dt>
+              <dd>
+                <kbd>Enter</kbd>
+              </dd>
+            </div>
+            <div>
+              <dt>Avaliar (resposta rápida)</dt>
               <dd>
                 <kbd>1</kbd>
                 <kbd>2</kbd>
@@ -237,7 +247,8 @@ export function Study({ tab }: { tab: Tab }) {
       </aside>
 
       <p className="hint">
-        Atalhos: <kbd>Espaço</kbd> mostra a resposta · <kbd>1</kbd>–<kbd>4</kbd> avaliam · <kbd>R</kbd> repete o áudio
+        Atalhos: <kbd>1</kbd>–<kbd>4</kbd> escolhem a opção · <kbd>Enter</kbd> confere e continua · <kbd>R</kbd> repete o
+        áudio
       </p>
 
       <ChatFeed messages={chat.messages} />

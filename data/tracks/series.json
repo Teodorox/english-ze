@@ -8,47 +8,87 @@
         {
           "front": "Have you seen this show?",
           "back": "Você já viu essa série?",
-          "note": "Série = \"show\" ou \"series\"."
+          "note": "Série = \"show\" ou \"series\".",
+          "traps": [
+            "Você vai ver essa série?",
+            "Você já foi nesse show?"
+          ]
         },
         {
           "front": "Is it worth watching?",
-          "back": "Vale a pena assistir?"
+          "back": "Vale a pena assistir?",
+          "traps": [
+            "Vale a pena ler?",
+            "Quanto custa assistir?"
+          ]
         },
         {
           "front": "I'm binge-watching it.",
           "back": "Tô maratonando.",
-          "note": "binge-watch = maratonar."
+          "note": "binge-watch = maratonar.",
+          "traps": [
+            "Tô assistindo um episódio por semana.",
+            "Tô começando a assistir."
+          ]
         },
         {
           "front": "What episode are you on?",
-          "back": "Em qual episódio você tá?"
+          "back": "Em qual episódio você tá?",
+          "traps": [
+            "Em qual temporada você tá?",
+            "Em qual episódio você aparece?"
+          ]
         },
         {
           "front": "No spoilers, please!",
-          "back": "Sem spoiler, por favor!"
+          "back": "Sem spoiler, por favor!",
+          "traps": [
+            "Me conta o final, por favor!",
+            "Sem propaganda, por favor!"
+          ]
         },
         {
           "front": "That plot twist!",
           "back": "Que reviravolta!",
-          "note": "plot twist = reviravolta."
+          "note": "plot twist = reviravolta.",
+          "traps": [
+            "Que final previsível!",
+            "Que trama chata!"
+          ]
         },
         {
           "front": "The ending was so good.",
-          "back": "O final foi muito bom."
+          "back": "O final foi muito bom.",
+          "traps": [
+            "O começo foi muito bom.",
+            "O final foi muito ruim."
+          ]
         },
         {
           "front": "I can't wait for the next episode.",
           "back": "Não vejo a hora do próximo episódio.",
-          "note": "\"can't wait\" = não ver a hora."
+          "note": "\"can't wait\" = não ver a hora.",
+          "traps": [
+            "Não gostei do último episódio.",
+            "Vou esperar o próximo episódio sair."
+          ]
         },
         {
           "front": "The new season comes out next month.",
           "back": "A nova temporada sai mês que vem.",
-          "note": "\"come out\" = lançar, estrear."
+          "note": "\"come out\" = lançar, estrear.",
+          "traps": [
+            "A nova temporada saiu mês passado.",
+            "A nova estação começa mês que vem."
+          ]
         },
         {
           "front": "I'm watching it with subtitles.",
-          "back": "Tô assistindo com legenda."
+          "back": "Tô assistindo com legenda.",
+          "traps": [
+            "Tô assistindo dublado.",
+            "Tô assistindo sem legenda."
+          ]
         }
       ]
     },
@@ -58,45 +98,85 @@
       "cards": [
         {
           "front": "What's going on?",
-          "back": "O que tá acontecendo?"
+          "back": "O que tá acontecendo?",
+          "traps": [
+            "Pra onde você vai?",
+            "O que vai passar?"
+          ]
         },
         {
           "front": "Are you kidding me?",
-          "back": "Tá de brincadeira?"
+          "back": "Tá de brincadeira?",
+          "traps": [
+            "Você tá me ouvindo?",
+            "Você tá me seguindo?"
+          ]
         },
         {
           "front": "What are you doing here?",
-          "back": "O que você tá fazendo aqui?"
+          "back": "O que você tá fazendo aqui?",
+          "traps": [
+            "O que você veio buscar?",
+            "Como você chegou aqui?"
+          ]
         },
         {
           "front": "We need to talk.",
-          "back": "Precisamos conversar."
+          "back": "Precisamos conversar.",
+          "traps": [
+            "Precisamos sair.",
+            "Não precisamos conversar."
+          ]
         },
         {
           "front": "It's not what it looks like.",
-          "back": "Não é o que parece."
+          "back": "Não é o que parece.",
+          "traps": [
+            "É exatamente o que parece.",
+            "Não é o que eu gosto."
+          ]
         },
         {
           "front": "Trust me.",
-          "back": "Confia em mim."
+          "back": "Confia em mim.",
+          "traps": [
+            "Confio em você.",
+            "Me espera."
+          ]
         },
         {
           "front": "I've got this.",
-          "back": "Deixa comigo."
+          "back": "Deixa comigo.",
+          "traps": [
+            "Eu tenho isso.",
+            "Me ajuda aqui."
+          ]
         },
         {
           "front": "Oh my God, you scared me!",
-          "back": "Meu Deus, você me assustou!"
+          "back": "Meu Deus, você me assustou!",
+          "traps": [
+            "Meu Deus, você me salvou!",
+            "Meu Deus, você me enganou!"
+          ]
         },
         {
           "front": "Get out of here!",
           "back": "Sai daqui!",
-          "note": "Dependendo do tom, também é \"Não acredito!\"."
+          "note": "Dependendo do tom, também é \"Não acredito!\".",
+          "traps": [
+            "Entra aqui!",
+            "Vem pra cá!"
+          ]
         },
         {
           "front": "Shut up!",
           "back": "Cala a boca!",
-          "note": "Entre amigos, também quer dizer \"Não acredito!\"."
+          "note": "Entre amigos, também quer dizer \"Não acredito!\".",
+          "traps": [
+            "Fala mais alto!",
+            "Fecha a porta!"
+          ]
         }
       ]
     },
@@ -106,54 +186,102 @@
       "cards": [
         {
           "front": "Give me a break.",
-          "back": "Me poupe. / Fala sério."
+          "back": "Me poupe. / Fala sério.",
+          "traps": [
+            "Me dá um intervalo.",
+            "Me dá uma chance."
+          ]
         },
         {
           "front": "You've got to be kidding me.",
-          "back": "Você só pode estar brincando."
+          "back": "Você só pode estar brincando.",
+          "traps": [
+            "Você tem que me ajudar.",
+            "Você precisa me levar."
+          ]
         },
         {
           "front": "I'm not buying it.",
           "back": "Não caio nessa.",
-          "note": "\"buy\" aqui = acreditar (numa desculpa)."
+          "note": "\"buy\" aqui = acreditar (numa desculpa).",
+          "traps": [
+            "Não vou comprar isso.",
+            "Não tô vendendo isso."
+          ]
         },
         {
           "front": "You're freaking me out.",
           "back": "Você tá me assustando.",
-          "note": "\"freak out\" = surtar, assustar."
+          "note": "\"freak out\" = surtar, assustar.",
+          "traps": [
+            "Você tá me acalmando.",
+            "Você tá me irritando."
+          ]
         },
         {
           "front": "Don't get me wrong.",
-          "back": "Não me entenda mal."
+          "back": "Não me entenda mal.",
+          "traps": [
+            "Não me pegue errado.",
+            "Não me deixe errar."
+          ]
         },
         {
           "front": "It's a long story.",
-          "back": "É uma longa história."
+          "back": "É uma longa história.",
+          "traps": [
+            "É uma história curta.",
+            "É uma história antiga."
+          ]
         },
         {
           "front": "I owe you one.",
-          "back": "Te devo uma."
+          "back": "Te devo uma.",
+          "traps": [
+            "Você me deve uma.",
+            "Te dou uma."
+          ]
         },
         {
           "front": "What did I miss?",
-          "back": "O que eu perdi?"
+          "back": "O que eu perdi?",
+          "traps": [
+            "Do que eu senti falta?",
+            "O que eu errei?"
+          ]
         },
         {
           "front": "Spill the tea.",
           "back": "Conta tudo. / Solta a fofoca.",
-          "note": "\"tea\" = fofoca."
+          "note": "\"tea\" = fofoca.",
+          "traps": [
+            "Derrama o chá.",
+            "Esquece a fofoca."
+          ]
         },
         {
           "front": "Cut it out!",
-          "back": "Para com isso!"
+          "back": "Para com isso!",
+          "traps": [
+            "Corta isso fora!",
+            "Continua assim!"
+          ]
         },
         {
           "front": "Keep it down!",
-          "back": "Fala baixo!"
+          "back": "Fala baixo!",
+          "traps": [
+            "Fala mais alto!",
+            "Guarda isso aí!"
+          ]
         },
         {
           "front": "That's the last straw.",
-          "back": "Foi a gota d'água."
+          "back": "Foi a gota d'água.",
+          "traps": [
+            "É o último canudo.",
+            "Foi a primeira vez."
+          ]
         }
       ]
     },
@@ -163,29 +291,53 @@
       "cards": [
         {
           "front": "They talk so fast.",
-          "back": "Eles falam muito rápido."
+          "back": "Eles falam muito rápido.",
+          "traps": [
+            "Eles falam muito devagar.",
+            "Eles andam muito rápido."
+          ]
         },
         {
           "front": "What did he just say?",
-          "back": "O que ele acabou de falar?"
+          "back": "O que ele acabou de falar?",
+          "traps": [
+            "O que ela acabou de falar?",
+            "O que ele vai falar?"
+          ]
         },
         {
           "front": "Can you rewind a bit?",
           "back": "Pode voltar um pouco?",
-          "note": "rewind = voltar o vídeo."
+          "note": "rewind = voltar o vídeo.",
+          "traps": [
+            "Pode adiantar um pouco?",
+            "Pode pausar um pouco?"
+          ]
         },
         {
           "front": "Pause it for a sec.",
-          "back": "Pausa um segundinho."
+          "back": "Pausa um segundinho.",
+          "traps": [
+            "Volta um segundinho.",
+            "Aumenta um pouquinho."
+          ]
         },
         {
           "front": "I watch it in English with English subtitles.",
           "back": "Assisto em inglês com legenda em inglês.",
-          "note": "Um ótimo passo antes de tirar a legenda."
+          "note": "Um ótimo passo antes de tirar a legenda.",
+          "traps": [
+            "Assisto em inglês com legenda em português.",
+            "Assisto dublado com legenda em inglês."
+          ]
         },
         {
           "front": "I'm gonna turn off the subtitles.",
-          "back": "Vou tirar a legenda."
+          "back": "Vou tirar a legenda.",
+          "traps": [
+            "Vou ligar a legenda.",
+            "Vou desligar o som."
+          ]
         }
       ]
     }

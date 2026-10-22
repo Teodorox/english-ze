@@ -8,7 +8,7 @@ from fastapi.concurrency import run_in_threadpool
 from psycopg.types.json import Jsonb
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-from . import auth, db, security, srs, tracks, transcribe, tutor, web
+from . import auth, db, quiz, security, srs, tracks, transcribe, tutor, web
 from .config import load_env_file
 from .progress import compute_streak
 
@@ -372,6 +372,11 @@ def session(user: CurrentUser, new_limit: int | None = Query(None, ge=0, le=100)
             " LIMIT %s",
             (user.id, MISTAKES_CATEGORY, db.SEED_SOURCE, tracks.tracks_for(user.goals), levels, remaining),
         ).fetchall()
+        # Opções do estudo ativo: traduções erradas tiradas dos outros cards da própria pessoa.
+        pool = conn.execute("SELECT id, back, category FROM cards WHERE user_id = %s", (user.id,)).fetchall()
+    quiz.add_choices(due + new, pool)
+    for card in due + new:
+        del card["traps"]  # já viraram opções: o app não precisa saber quais são as pegadinhas
     return {
         "due": due,
         "new": new,

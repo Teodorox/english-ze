@@ -17,10 +17,17 @@ export function reveal(state: QueueState): QueueState {
   return state.current ? { ...state, revealed: true } : state;
 }
 
-/** Depois de avaliar: se errou (L), o card volta pro fim da fila e aparece de novo hoje. */
+/**
+ * Depois de avaliar: se errou (L), o card volta pro fim da fila e aparece de novo hoje,
+ * com os acertos zerados como no servidor (assim volta no exercício mais fácil).
+ */
 export function afterGrade(state: QueueState, grade: Grade): QueueState {
   if (!state.current) return state;
-  const reviewed: Card = { ...state.current, introduced_on: state.current.introduced_on ?? "hoje" };
+  const reviewed: Card = {
+    ...state.current,
+    introduced_on: state.current.introduced_on ?? "hoje",
+    reps: grade === 0 ? 0 : state.current.reps + 1,
+  };
   const queue = grade === 0 ? [...state.queue, reviewed] : state.queue;
   const [current = null, ...rest] = queue;
   return { queue: rest, current, revealed: false, done: state.done + 1 };

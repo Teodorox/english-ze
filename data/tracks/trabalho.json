@@ -7,53 +7,101 @@
       "cards": [
         {
           "front": "I work as a software developer.",
-          "back": "Eu trabalho como desenvolvedor de software."
+          "back": "Eu trabalho como desenvolvedor de software.",
+          "traps": [
+            "Eu estudo desenvolvimento de software.",
+            "Eu trabalhava como desenvolvedor de software."
+          ]
         },
         {
           "front": "I have a meeting at 2.",
-          "back": "Tenho uma reunião às 2."
+          "back": "Tenho uma reunião às 2.",
+          "traps": [
+            "Tive uma reunião às 2.",
+            "Tenho duas reuniões."
+          ]
         },
         {
           "front": "Can you hear me?",
           "back": "Você tá me ouvindo?",
-          "note": "O clássico da call."
+          "note": "O clássico da call.",
+          "traps": [
+            "Você tá me vendo?",
+            "Você pode me ajudar?"
+          ]
         },
         {
           "front": "You're on mute.",
-          "back": "Você tá no mudo."
+          "back": "Você tá no mudo.",
+          "traps": [
+            "Você tá sem câmera.",
+            "Eu tô no mudo."
+          ]
         },
         {
           "front": "Sorry, I was on mute.",
-          "back": "Desculpa, eu tava no mudo."
+          "back": "Desculpa, eu tava no mudo.",
+          "traps": [
+            "Desculpa, você tava no mudo.",
+            "Desculpa, eu tava sem internet."
+          ]
         },
         {
           "front": "Let me share my screen.",
-          "back": "Deixa eu compartilhar minha tela."
+          "back": "Deixa eu compartilhar minha tela.",
+          "traps": [
+            "Deixa eu desligar minha tela.",
+            "Compartilha sua tela."
+          ]
         },
         {
           "front": "Can we schedule a quick call?",
-          "back": "Podemos marcar uma call rápida?"
+          "back": "Podemos marcar uma call rápida?",
+          "traps": [
+            "Podemos cancelar a call rápida?",
+            "Podemos fazer uma call longa?"
+          ]
         },
         {
           "front": "Quick question about the report.",
-          "back": "Uma pergunta rápida sobre o relatório."
+          "back": "Uma pergunta rápida sobre o relatório.",
+          "traps": [
+            "Uma resposta rápida sobre o relatório.",
+            "Uma pergunta rápida sobre a reunião."
+          ]
         },
         {
           "front": "What's the deadline for this?",
-          "back": "Qual é o prazo pra isso?"
+          "back": "Qual é o prazo pra isso?",
+          "traps": [
+            "Qual é o preço disso?",
+            "Quem é o responsável por isso?"
+          ]
         },
         {
           "front": "Can you walk me through it?",
-          "back": "Pode me explicar passo a passo?"
+          "back": "Pode me explicar passo a passo?",
+          "traps": [
+            "Pode caminhar comigo?",
+            "Pode fazer isso por mim?"
+          ]
         },
         {
           "front": "I'll look into it.",
-          "back": "Vou dar uma olhada nisso."
+          "back": "Vou dar uma olhada nisso.",
+          "traps": [
+            "Já olhei isso.",
+            "Vou olhar pra dentro disso."
+          ]
         },
         {
           "front": "I'll get back to you.",
           "back": "Te dou um retorno.",
-          "note": "Muito usado em reunião e e-mail."
+          "note": "Muito usado em reunião e e-mail.",
+          "traps": [
+            "Vou voltar pra sua casa.",
+            "Você me dá um retorno."
+          ]
         }
       ]
     },
@@ -64,45 +112,81 @@
         {
           "front": "Let's touch base next week.",
           "back": "Vamos alinhar semana que vem.",
-          "note": "\"touch base\" = conversar rapidinho pra alinhar."
+          "note": "\"touch base\" = conversar rapidinho pra alinhar.",
+          "traps": [
+            "Vamos alinhar hoje à tarde.",
+            "Vamos visitar a base semana que vem."
+          ]
         },
         {
           "front": "Could you send me an update?",
-          "back": "Pode me mandar uma atualização?"
+          "back": "Pode me mandar uma atualização?",
+          "traps": [
+            "Você pode atualizar o sistema?",
+            "Posso te mandar uma atualização?"
+          ]
         },
         {
           "front": "Just to clarify, is this due Friday?",
           "back": "Só pra confirmar: é pra sexta?",
-          "note": "\"due\" = com prazo pra."
+          "note": "\"due\" = com prazo pra.",
+          "traps": [
+            "Só pra confirmar: é pra hoje?",
+            "Só pra confirmar: venceu na sexta?"
+          ]
         },
         {
           "front": "I'm swamped right now.",
           "back": "Tô atolado agora.",
-          "note": "\"swamped\" = cheio de trabalho."
+          "note": "\"swamped\" = cheio de trabalho.",
+          "traps": [
+            "Tô de folga agora.",
+            "Tô molhado agora."
+          ]
         },
         {
           "front": "I'm on it.",
-          "back": "Já tô cuidando disso."
+          "back": "Já tô cuidando disso.",
+          "traps": [
+            "Já terminei isso.",
+            "Não vou fazer isso."
+          ]
         },
         {
           "front": "Thanks for the heads-up.",
           "back": "Valeu pelo aviso.",
-          "note": "\"heads-up\" = aviso antecipado."
+          "note": "\"heads-up\" = aviso antecipado.",
+          "traps": [
+            "Valeu pela ajuda.",
+            "Valeu pelo elogio."
+          ]
         },
         {
           "front": "Let's take this offline.",
           "back": "Vamos falar disso depois, fora da reunião.",
-          "note": "Pra tirar da reunião um assunto que só interessa a poucos."
+          "note": "Pra tirar da reunião um assunto que só interessa a poucos.",
+          "traps": [
+            "Vamos desligar a internet.",
+            "Vamos falar disso agora, na reunião."
+          ]
         },
         {
           "front": "I've attached the file.",
           "back": "Anexei o arquivo.",
-          "note": "Mais natural que \"Please find attached\"."
+          "note": "Mais natural que \"Please find attached\".",
+          "traps": [
+            "Apaguei o arquivo.",
+            "Anexe o arquivo."
+          ]
         },
         {
           "front": "Looking forward to hearing from you.",
           "back": "Fico no aguardo do seu retorno.",
-          "note": "Fechamento comum de e-mail."
+          "note": "Fechamento comum de e-mail.",
+          "traps": [
+            "Estou olhando pra frente.",
+            "Obrigado pelo seu retorno."
+          ]
         }
       ]
     },
@@ -112,38 +196,70 @@
       "cards": [
         {
           "front": "I'm working on a new feature.",
-          "back": "Tô trabalhando numa feature nova."
+          "back": "Tô trabalhando numa feature nova.",
+          "traps": [
+            "Terminei uma feature nova.",
+            "Tô trabalhando num projeto novo."
+          ]
         },
         {
           "front": "Could you review my pull request?",
-          "back": "Você pode revisar meu pull request?"
+          "back": "Você pode revisar meu pull request?",
+          "traps": [
+            "Posso revisar seu pull request?",
+            "Você pode fechar meu pull request?"
+          ]
         },
         {
           "front": "The build is failing.",
-          "back": "O build está falhando."
+          "back": "O build está falhando.",
+          "traps": [
+            "O build passou.",
+            "O prédio está caindo."
+          ]
         },
         {
           "front": "I ran into a bug.",
           "back": "Esbarrei num bug.",
-          "note": "\"run into\" = topar com, encontrar (um problema)."
+          "note": "\"run into\" = topar com, encontrar (um problema).",
+          "traps": [
+            "Corri de um bug.",
+            "Corrigi um bug."
+          ]
         },
         {
           "front": "I have experience with Python and SQL.",
-          "back": "Tenho experiência com Python e SQL."
+          "back": "Tenho experiência com Python e SQL.",
+          "traps": [
+            "Quero aprender Python e SQL.",
+            "Não tenho experiência com Python e SQL."
+          ]
         },
         {
           "front": "It works on my machine.",
           "back": "Na minha máquina funciona.",
-          "note": "A desculpa mais famosa de dev."
+          "note": "A desculpa mais famosa de dev.",
+          "traps": [
+            "Não funciona na minha máquina.",
+            "Funciona na sua máquina."
+          ]
         },
         {
           "front": "Can we ship this today?",
           "back": "Dá pra subir isso hoje?",
-          "note": "\"ship\" = entregar, publicar."
+          "note": "\"ship\" = entregar, publicar.",
+          "traps": [
+            "Dá pra mandar isso de navio hoje?",
+            "Dá pra testar isso hoje?"
+          ]
         },
         {
           "front": "I'll fix it right away.",
-          "back": "Vou corrigir agora mesmo."
+          "back": "Vou corrigir agora mesmo.",
+          "traps": [
+            "Vou corrigir amanhã.",
+            "Já corrigi isso."
+          ]
         }
       ]
     },
@@ -154,27 +270,51 @@
         {
           "front": "Tell me about yourself.",
           "back": "Me fale sobre você.",
-          "note": "Quase toda entrevista começa assim."
+          "note": "Quase toda entrevista começa assim.",
+          "traps": [
+            "Me fale sobre a empresa.",
+            "Fale de mim."
+          ]
         },
         {
           "front": "I worked there for three years.",
-          "back": "Trabalhei lá por três anos."
+          "back": "Trabalhei lá por três anos.",
+          "traps": [
+            "Trabalho lá há três anos.",
+            "Trabalhei lá por três meses."
+          ]
         },
         {
           "front": "I'm a fast learner.",
-          "back": "Aprendo rápido."
+          "back": "Aprendo rápido.",
+          "traps": [
+            "Ensino rápido.",
+            "Aprendo devagar."
+          ]
         },
         {
           "front": "I'm comfortable working in a team.",
-          "back": "Me sinto à vontade trabalhando em equipe."
+          "back": "Me sinto à vontade trabalhando em equipe.",
+          "traps": [
+            "Prefiro trabalhar sozinho.",
+            "Me sinto à vontade trabalhando em casa."
+          ]
         },
         {
           "front": "I'm looking for new challenges.",
-          "back": "Tô buscando novos desafios."
+          "back": "Tô buscando novos desafios.",
+          "traps": [
+            "Estou cansado de novos desafios.",
+            "Estou procurando um novo emprego."
+          ]
         },
         {
           "front": "What would my day-to-day look like?",
-          "back": "Como seria meu dia a dia?"
+          "back": "Como seria meu dia a dia?",
+          "traps": [
+            "Como foi seu dia a dia?",
+            "Qual seria meu salário?"
+          ]
         }
       ]
     }

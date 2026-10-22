@@ -80,7 +80,7 @@ Copie `.env.example` para `.env` e coloque sua `ANTHROPIC_API_KEY`. O Diário pa
 
 | Aba | Método | Pra quê |
 |---|---|---|
-| 🔒 **Lock In** (Estudar) | Repetição espaçada (SM-2, igual ao Anki) | Revisar frases logo antes de esquecer. O modo *Ouvir* esconde o texto e treina listening. Notas: L / MID / W / GOAT. |
+| 🔒 **Lock In** (Estudar) | Repetição espaçada (SM-2, igual ao Anki) + estudo ativo | Revisar frases logo antes de esquecer, respondendo: frase nova é só pra conhecer; depois vem com 4 opções (com pegadinhas: traduções quase certas, escritas à mão pra cada frase das trilhas); quando você já acerta, pede a tradução digitada. O modo *Ouvir* vira ditado (escrever em inglês o que ouviu). A nota sai da resposta; "Só mostrar a resposta" mantém o jeito rápido com L / MID / W / GOAT. |
 | 🎤 **Mic Check** (Falar) | Shadowing + reconhecimento de voz | Ouvir, imitar, gravar e ver a pontuação de pronúncia palavra por palavra. |
 | ✂️ **Clip It** (Minerar) | Sentence mining | Anotar frases das lives e transformar em cards (uma por vez ou em lote). |
 | 🗂️ **The Vault** (Cards) | — | Buscar, filtrar, ouvir e apagar cards, e ver quando cada um volta. |

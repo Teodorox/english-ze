@@ -116,6 +116,18 @@ def test_tracks_are_interleaved(client):
                                          "Base I2", "Stream I2", "Talk I2"]
 
 
+def test_traps_reach_existing_cards(client, database, test_tracks):
+    track = json.loads((test_tracks / "streamers.json").read_text(encoding="utf-8"))
+    track["situations"][0]["cards"][0]["traps"] = ["Com boné, aquilo foi insano.", "Mentira, aquilo foi normal."]
+    (test_tracks / "streamers.json").write_text(json.dumps(track), encoding="utf-8")
+    tracks._load.cache_clear()
+    with TestClient(main.app):  # subir o servidor de novo
+        pass
+    with psycopg.connect(database) as conn:
+        traps = conn.execute("SELECT traps FROM cards WHERE front = 'No cap, that was crazy.'").fetchone()[0]
+    assert traps == ["Com boné, aquilo foi insano.", "Mentira, aquilo foi normal."]
+
+
 def test_a_phrase_the_person_already_mined_stays_theirs(fresh, database):
     fresh.post("/api/cards", json={"front": "Trip I1", "back": "Minha tradução", "source": "live"})
     fresh.post("/api/me/onboarding", json=_answers(["viagem"]))
@@ -196,6 +208,14 @@ def _situation(**changes):
         ("viagem", {"category": "x", "situations": [_situation(cards=[{"front": "x" * 501, "back": "y"}])]}, "front"),
         ("viagem", {"category": "", "situations": [_situation()]}, "category"),
         ("viagem", {"category": "x", "situations": [_situation(), _situation()]}, "duas vezes"),
+        ("viagem", {"category": "x", "situations": [_situation(cards=[{"front": "Hi", "back": "Oi", "traps": ["oi!"]}])]},
+         "igual à resposta"),
+        ("viagem", {"category": "x", "situations": [_situation(cards=[{"front": "Hi", "back": "Oi", "traps": ["a", "A"]}])]},
+         "repetidas"),
+        ("viagem", {"category": "x", "situations": [_situation(cards=[{"front": "Hi", "back": "Oi", "traps": list("abcd")}])]},
+         "até 3"),
+        ("viagem", {"category": "x", "situations": [_situation(cards=[{"front": "Hi", "back": "Oi", "traps": "Tchau"}])]},
+         "lista"),
     ],
 )
 def test_broken_track_files_are_rejected(tmp_path, name, track, message):
@@ -223,3 +243,4 @@ def test_real_tracks_are_valid():
         levels = {c.level for c in cards}
         assert {"iniciante", "basico"} <= levels, name
         assert all(c.back != c.front for c in cards), name
+        assert all(len(c.traps) == 2 for c in cards), name  # toda frase tem as 2 pegadinhas

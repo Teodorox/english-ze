@@ -7,81 +7,145 @@
       "cards": [
         {
           "front": "Welcome to the stream!",
-          "back": "Bem-vindo à live!"
+          "back": "Bem-vindo à live!",
+          "traps": [
+            "Bem-vindo ao rio!",
+            "Valeu por assistir!"
+          ]
         },
         {
           "front": "Chat, is this real?",
           "back": "Chat, isso é real?",
-          "note": "Bordão de live quando algo parece absurdo demais."
+          "note": "Bordão de live quando algo parece absurdo demais.",
+          "traps": [
+            "Chat, isso é falso?",
+            "Chat, isso é meu?"
+          ]
         },
         {
           "front": "That's a huge W for chat.",
           "back": "Isso é uma vitória enorme pro chat.",
-          "note": "\"W\" = win (vitória). \"chat\" = o pessoal da live."
+          "note": "\"W\" = win (vitória). \"chat\" = o pessoal da live.",
+          "traps": [
+            "Isso é uma derrota enorme pro chat.",
+            "Isso é uma vitória pequena pro chat."
+          ]
         },
         {
           "front": "That's an L, bro.",
           "back": "Isso foi uma derrota / mancada, mano.",
-          "note": "\"L\" = loss (derrota). \"take the L\" = aceitar a derrota."
+          "note": "\"L\" = loss (derrota). \"take the L\" = aceitar a derrota.",
+          "traps": [
+            "Isso foi uma vitória, mano.",
+            "Isso é grande, mano."
+          ]
         },
         {
           "front": "My bad, chat.",
           "back": "Foi mal, chat.",
-          "note": "\"my bad\" = foi mal / erro meu."
+          "note": "\"my bad\" = foi mal / erro meu.",
+          "traps": [
+            "Que ruim, chat.",
+            "Meu chat é ruim."
+          ]
         },
         {
           "front": "Run it back.",
           "back": "Bora de novo.",
-          "note": "Pedir revanche ou repetir algo."
+          "note": "Pedir revanche ou repetir algo.",
+          "traps": [
+            "Corre pra trás.",
+            "Desiste dessa."
+          ]
         },
         {
           "front": "No cap, that was crazy.",
           "back": "Sem mentira, aquilo foi insano.",
-          "note": "\"no cap\" = sério / sem mentira. \"cap\" = mentira."
+          "note": "\"no cap\" = sério / sem mentira. \"cap\" = mentira.",
+          "traps": [
+            "Sem boné, aquilo foi insano.",
+            "Mentira, aquilo foi normal."
+          ]
         },
         {
           "front": "Stop capping, bro.",
           "back": "Para de mentir, mano.",
-          "note": "\"to cap\" = mentir, exagerar."
+          "note": "\"to cap\" = mentir, exagerar.",
+          "traps": [
+            "Tira o boné, mano.",
+            "Para de gritar, mano."
+          ]
         },
         {
           "front": "On God, I didn't do it.",
           "back": "Juro por Deus, não fui eu.",
-          "note": "\"on God\" (escrito \"ong\" no chat) = eu juro."
+          "note": "\"on God\" (escrito \"ong\" no chat) = eu juro.",
+          "traps": [
+            "Juro por Deus, fui eu.",
+            "Graças a Deus, não fiz isso."
+          ]
         },
         {
           "front": "Deadass, I'm not lying.",
           "back": "Sério mesmo, não tô mentindo.",
-          "note": "\"deadass\" = sério, de verdade (muito usado em Nova York)."
+          "note": "\"deadass\" = sério, de verdade (muito usado em Nova York).",
+          "traps": [
+            "Sério mesmo, tô mentindo.",
+            "Tô morto, não tô mentindo."
+          ]
         },
         {
           "front": "Ain't no way.",
           "back": "Não acredito / Não tem como.",
-          "note": "Reação clássica de surpresa."
+          "note": "Reação clássica de surpresa.",
+          "traps": [
+            "Não tem caminho.",
+            "Claro, faz sentido."
+          ]
         },
         {
           "front": "I'm dead, bro.",
           "back": "Morri (de rir), mano.",
-          "note": "\"I'm dead\" / 💀 = morri de rir."
+          "note": "\"I'm dead\" / 💀 = morri de rir.",
+          "traps": [
+            "Tô morrendo de medo, mano.",
+            "Tô cansado, mano."
+          ]
         },
         {
           "front": "Bet, I'll see you there.",
           "back": "Fechou, te vejo lá.",
-          "note": "\"bet\" = fechado / beleza / combinado."
+          "note": "\"bet\" = fechado / beleza / combinado.",
+          "traps": [
+            "Aposto que te vejo lá.",
+            "Fechou, não vou."
+          ]
         },
         {
           "front": "Pull up, bro.",
           "back": "Cola aí, mano.",
-          "note": "\"pull up\" = aparecer, chegar em algum lugar."
+          "note": "\"pull up\" = aparecer, chegar em algum lugar.",
+          "traps": [
+            "Puxa pra cima, mano.",
+            "Vai embora, mano."
+          ]
         },
         {
           "front": "Thanks for the follow!",
-          "back": "Valeu pelo follow!"
+          "back": "Valeu pelo follow!",
+          "traps": [
+            "Valeu pela doação!",
+            "Valeu pelo like!"
+          ]
         },
         {
           "front": "Drop a follow if you're new here.",
           "back": "Se você é novo aqui, segue o canal.",
-          "note": "\"drop\" = deixar (um like, um follow, um comentário)."
+          "note": "\"drop\" = deixar (um like, um follow, um comentário).",
+          "traps": [
+            "Deixa de seguir se você é novo aqui.",
+            "Se você é novo aqui, deixa um like."
+          ]
         }
       ]
     },
@@ -92,41 +156,73 @@
         {
           "front": "GG, well played.",
           "back": "GG, jogou bem.",
-          "note": "GG = good game."
+          "note": "GG = good game.",
+          "traps": [
+            "GG, jogou mal.",
+            "GG, vamos jogar de novo."
+          ]
         },
         {
           "front": "I'm lagging so bad.",
           "back": "Tô com um lag absurdo.",
-          "note": "lag = atraso da conexão."
+          "note": "lag = atraso da conexão.",
+          "traps": [
+            "Tô jogando muito mal.",
+            "Tô com a perna doendo."
+          ]
         },
         {
           "front": "That was so clutch!",
           "back": "Que jogada salvadora!",
-          "note": "\"clutch\" = mandar bem no momento decisivo."
+          "note": "\"clutch\" = mandar bem no momento decisivo.",
+          "traps": [
+            "Que jogada desastrada!",
+            "Que embreagem!"
+          ]
         },
         {
           "front": "He carried the whole team.",
           "back": "Ele carregou o time inteiro.",
-          "note": "\"carry\" = carregar o time nas costas."
+          "note": "\"carry\" = carregar o time nas costas.",
+          "traps": [
+            "Ele afundou o time inteiro.",
+            "Ele carregou a mochila do time."
+          ]
         },
         {
           "front": "I got one-shot.",
           "back": "Morri com um golpe só.",
-          "note": "\"one-shot\" = matar com um tiro ou golpe só."
+          "note": "\"one-shot\" = matar com um tiro ou golpe só.",
+          "traps": [
+            "Matei com um tiro só.",
+            "Tive só uma chance."
+          ]
         },
         {
           "front": "Nerf this character!",
           "back": "Enfraquece esse personagem!",
-          "note": "nerf = enfraquecer. buff = fortalecer."
+          "note": "nerf = enfraquecer. buff = fortalecer.",
+          "traps": [
+            "Fortalece esse personagem!",
+            "Escolhe esse personagem!"
+          ]
         },
         {
           "front": "One more game, then I'm done.",
-          "back": "Mais uma partida e eu paro."
+          "back": "Mais uma partida e eu paro.",
+          "traps": [
+            "Mais uma partida e eu começo.",
+            "Só uma partida, depois mais uma."
+          ]
         },
         {
           "front": "Bro is the GOAT.",
           "back": "O mano é o melhor de todos.",
-          "note": "GOAT = Greatest Of All Time."
+          "note": "GOAT = Greatest Of All Time.",
+          "traps": [
+            "O mano é um bode.",
+            "O mano é o pior de todos."
+          ]
         }
       ]
     },
@@ -137,87 +233,155 @@
         {
           "front": "Bro is tweaking.",
           "back": "O mano tá viajando / pirando.",
-          "note": "\"tweaking\" = agindo de um jeito estranho, sem noção."
+          "note": "\"tweaking\" = agindo de um jeito estranho, sem noção.",
+          "traps": [
+            "O mano tá ajustando.",
+            "O mano tá trabalhando."
+          ]
         },
         {
           "front": "That's lowkey fire.",
           "back": "Isso é meio que muito bom.",
-          "note": "\"lowkey\" = meio que / discretamente. \"fire\" = muito bom."
+          "note": "\"lowkey\" = meio que / discretamente. \"fire\" = muito bom.",
+          "traps": [
+            "Isso tá pegando fogo.",
+            "Isso é muito ruim."
+          ]
         },
         {
           "front": "I'm highkey scared right now.",
           "back": "Tô com medo de verdade agora.",
-          "note": "\"highkey\" = assumidamente, muito (o oposto de lowkey)."
+          "note": "\"highkey\" = assumidamente, muito (o oposto de lowkey).",
+          "traps": [
+            "Tô meio que tranquilo agora.",
+            "Tô com medo de altura agora."
+          ]
         },
         {
           "front": "This food is bussin'.",
           "back": "Essa comida tá muito boa.",
-          "note": "\"bussin'\" = muito gostoso / muito bom."
+          "note": "\"bussin'\" = muito gostoso / muito bom.",
+          "traps": [
+            "Essa comida tá ruim.",
+            "Essa comida tá no ônibus."
+          ]
         },
         {
           "front": "He's got crazy rizz.",
           "back": "Ele tem um charme absurdo.",
-          "note": "\"rizz\" = habilidade de flertar (vem de charisma)."
+          "note": "\"rizz\" = habilidade de flertar (vem de charisma).",
+          "traps": [
+            "Ele tá muito louco.",
+            "Ele não tem charme nenhum."
+          ]
         },
         {
           "front": "Stop glazing him.",
           "back": "Para de puxar o saco dele.",
-          "note": "\"glazing\" = elogiar demais alguém."
+          "note": "\"glazing\" = elogiar demais alguém.",
+          "traps": [
+            "Para de criticar ele.",
+            "Para de encarar ele."
+          ]
         },
         {
           "front": "That's kinda sus.",
           "back": "Isso é meio suspeito.",
-          "note": "\"sus\" = suspicious (suspeito)."
+          "note": "\"sus\" = suspicious (suspeito).",
+          "traps": [
+            "Isso é bem óbvio.",
+            "Isso é meio sujo."
+          ]
         },
         {
           "front": "I'm finna go live.",
           "back": "Eu vou entrar ao vivo já já.",
-          "note": "\"finna\" = fixing to = going to (vou)."
+          "note": "\"finna\" = fixing to = going to (vou).",
+          "traps": [
+            "Acabei de sair da live.",
+            "Vou viver minha vida."
+          ]
         },
         {
           "front": "It's giving main character.",
           "back": "Tá com vibe de protagonista.",
-          "note": "\"it's giving ...\" = isso passa a vibe de ..."
+          "note": "\"it's giving ...\" = isso passa a vibe de ...",
+          "traps": [
+            "Tá dando o personagem principal.",
+            "Tá com vibe de figurante."
+          ]
         },
         {
           "front": "She ate that.",
           "back": "Ela arrasou.",
-          "note": "\"ate\" / \"ate and left no crumbs\" = mandou muito bem."
+          "note": "\"ate\" / \"ate and left no crumbs\" = mandou muito bem.",
+          "traps": [
+            "Ela comeu aquilo.",
+            "Ela errou feio."
+          ]
         },
         {
           "front": "Bro fell off.",
           "back": "O cara decaiu / perdeu a relevância.",
-          "note": "\"fall off\" = deixar de ser bom ou famoso."
+          "note": "\"fall off\" = deixar de ser bom ou famoso.",
+          "traps": [
+            "O cara caiu da cadeira.",
+            "O cara bombou."
+          ]
         },
         {
           "front": "We're so cooked.",
           "back": "A gente tá muito ferrado.",
-          "note": "\"cooked\" = ferrado, acabado."
+          "note": "\"cooked\" = ferrado, acabado.",
+          "traps": [
+            "A gente cozinhou muito.",
+            "A gente tá muito bem."
+          ]
         },
         {
           "front": "Let him cook.",
           "back": "Deixa ele fazer o lance dele.",
-          "note": "Deixa a pessoa terminar o que está fazendo, ela sabe o que faz."
+          "note": "Deixa a pessoa terminar o que está fazendo, ela sabe o que faz.",
+          "traps": [
+            "Deixa ele cozinhar o jantar.",
+            "Tira ele daí."
+          ]
         },
         {
           "front": "Honestly, that's mid.",
           "back": "Sinceramente, isso é mediano.",
-          "note": "\"mid\" = meia-boca, nada de especial."
+          "note": "\"mid\" = meia-boca, nada de especial.",
+          "traps": [
+            "Sinceramente, isso é incrível.",
+            "Sinceramente, isso tá no meio."
+          ]
         },
         {
           "front": "He lost so much aura.",
           "back": "Ele perdeu muita moral.",
-          "note": "\"aura\" = presença / moral. \"aura points\" é a brincadeira de pontuar isso."
+          "note": "\"aura\" = presença / moral. \"aura points\" é a brincadeira de pontuar isso.",
+          "traps": [
+            "Ele ganhou muita moral.",
+            "Ele perdeu muito peso."
+          ]
         },
         {
           "front": "What are you yapping about?",
           "back": "Do que você tá tagarelando?",
-          "note": "\"yap\" = falar demais, falar besteira."
+          "note": "\"yap\" = falar demais, falar besteira.",
+          "traps": [
+            "Do que você tá rindo?",
+            "O que você tá comendo?"
+          ]
         },
         {
           "front": "I'm tight right now.",
           "back": "Tô bolado agora.",
-          "note": "\"tight\" = irritado, chateado."
+          "note": "\"tight\" = irritado, chateado.",
+          "traps": [
+            "Tô apertado agora.",
+            "Tô tranquilo agora."
+          ]
         }
       ]
     }

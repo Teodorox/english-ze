@@ -14,7 +14,7 @@ from pathlib import Path
 
 import psycopg
 
-from . import db
+from . import db, quiz
 
 DEFAULT_DIR = db.ROOT / "data" / "tracks"
 BASE_TRACK = "base"
@@ -25,6 +25,7 @@ LEVELS = ("iniciante", "basico", "intermediario")
 # (vêm da IA na etapa 6), então quem é intermediário começa pelo básico.
 LEVELS_FOR = {"iniciante": ("iniciante", "basico"), "basico": ("basico",), "intermediario": ("basico",)}
 MAX_FRONT, MAX_BACK, MAX_NOTE, MAX_CATEGORY, MAX_SITUATION = 500, 500, 1000, 40, 80
+MAX_TRAPS = 3  # o mesmo limite do banco (migração 008)
 
 
 class TrackError(ValueError):
@@ -41,6 +42,7 @@ class TrackCard:
     back: str
     note: str
     category: str
+    traps: tuple[str, ...] = ()  # traduções quase certas, pras opções do estudo ativo
 
 
 def tracks_dir() -> Path:
@@ -51,6 +53,18 @@ def _text(value, limit: int, where: str, *, required: bool = True) -> str:
     if not isinstance(value, str) or (required and not value.strip()) or len(value) > limit:
         raise TrackError(f"{where}: texto vazio, inválido ou maior que {limit} caracteres")
     return value.strip()
+
+
+def _traps(value, back: str, where: str) -> tuple[str, ...]:
+    if not isinstance(value, list) or len(value) > MAX_TRAPS:
+        raise TrackError(f"{where}: traps tem que ser uma lista com até {MAX_TRAPS} frases")
+    traps = tuple(_text(t, MAX_BACK, f"{where} traps") for t in value)
+    keys = [quiz.answer_key(t) for t in traps]
+    if quiz.answer_key(back) in keys:
+        raise TrackError(f"{where}: uma pegadinha é igual à resposta certa")
+    if len(set(keys)) != len(keys):
+        raise TrackError(f"{where}: pegadinhas repetidas")
+    return traps
 
 
 def _load_file(path: Path) -> list[TrackCard]:
@@ -75,15 +89,17 @@ def _load_file(path: Path) -> list[TrackCard]:
             raise TrackError(f"{path.name} {title}: sem frases")
         for c in s["cards"]:
             where = f"{path.name} {title}"
+            back = _text(c.get("back"), MAX_BACK, f"{where} back")
             cards.append(TrackCard(
                 track=track,
                 level=s["level"],
                 situation=title,
                 step=len(cards),
                 front=_text(c.get("front"), MAX_FRONT, f"{where} front"),
-                back=_text(c.get("back"), MAX_BACK, f"{where} back"),
+                back=back,
                 note=_text(c.get("note", ""), MAX_NOTE, f"{where} note", required=False),
                 category=category,
+                traps=_traps(c.get("traps", []), back, f"{where} {c.get('front')!r}"),
             ))
     return cards
 
@@ -121,12 +137,12 @@ def cards_for(goals: list[str], level: str | None) -> list[TrackCard]:
 def sync_user(conn: psycopg.Connection, user_id: int, goals: list[str], level: str | None) -> None:
     """Põe na conta as frases das trilhas dela que ainda faltam (não apaga nem mexe no progresso).
 
-    Se a frase já existe como card do deck inicial, só atualiza de que trilha ela é. Um card
+    Se a frase já existe como card do deck inicial, só atualiza de que trilha ela é e as pegadinhas. Um card
     que a pessoa criou com a mesma frase (minerado, do diário) continua sendo dela, intocado.
     """
     rows = [
         (user_id, c.front, c.back, c.note, c.category, db.SEED_SOURCE, c.track, c.level, c.situation, c.step,
-         db.SEED_SOURCE)
+         list(c.traps), db.SEED_SOURCE)
         for c in cards_for(goals, level)
     ]
     if not rows:
@@ -134,11 +150,11 @@ def sync_user(conn: psycopg.Connection, user_id: int, goals: list[str], level: s
     with conn.cursor() as cur:
         cur.executemany(
             "INSERT INTO cards (user_id, front, back, note, category, source,"
-            " track, track_level, track_situation, track_step)"
-            " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            " track, track_level, track_situation, track_step, traps)"
+            " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             " ON CONFLICT (user_id, front) DO UPDATE SET track = EXCLUDED.track,"
             " track_level = EXCLUDED.track_level, track_situation = EXCLUDED.track_situation,"
-            " track_step = EXCLUDED.track_step"
+            " track_step = EXCLUDED.track_step, traps = EXCLUDED.traps"
             " WHERE cards.source = %s",
             rows,
         )
